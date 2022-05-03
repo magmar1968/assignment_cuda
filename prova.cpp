@@ -2,7 +2,7 @@
 
 int main()
 {
-    std::cout << "xx";
+    std::cout << "xx" <<endl;
 }
 
 // Per eseguire il programma: CTRL+F5 oppure Debug > Avvia senza eseguire debug
