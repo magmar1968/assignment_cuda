@@ -60,10 +60,11 @@ int main(int argc, char ** argv)
     std::fstream ofs(filename,std::fstream::out);
     
     // definition of the problem variable
-    cint min_size   = 1000000;
-    cint max_size   = 1000100;
+    cint min_size   = 100000;
+    cint max_size   = 500000;
+    cint step       = 1000;
     cint block_size = 256;
-    cint iteration  = 10;
+    cint iteration  = 100;
    
     //intialize the random engine
     std::random_device rnd;  
@@ -71,9 +72,8 @@ int main(int argc, char ** argv)
 
     float *devA, *devB, *devC;
 
-    std::cerr<< "fino a qui\n";
-    int cont = 0;
-    for (int N = min_size; N < max_size; ++N)
+    
+    for (int N = min_size; N < max_size; N += step)
     {
         double time = 0;
         float A[N] = {};
@@ -90,8 +90,6 @@ int main(int argc, char ** argv)
         cint grid_size = ((N + block_size)/block_size);
         for(int it = 0; it < iteration ; ++it)
         {
-            ++ cont;
-            std::cerr << "iterazione " <<  cont << std::endl;
             //gen vectors
             fillArray(A,N,eng);
             fillArray(B,N,eng);
@@ -112,7 +110,7 @@ int main(int argc, char ** argv)
             time += myTimer.getTimeDiff();
         }
         //normalize to the number of iteration
-        time/= iteration;
+        time /= (double)iteration;
         // print on file
         ofs << N << "," << time << "\n";
         
