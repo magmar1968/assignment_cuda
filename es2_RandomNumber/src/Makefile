@@ -1,7 +1,7 @@
 SRC= myRandom.cu main.cu  #source files
 OBJECTS=$(SRC:.cu=.o) #file compilati da linkare
 FLAG=                 #eventuali flag
-TARGET=main           #nome del file da compilare
+TARGET=../main.x           #nome del file da compilare
 CC=nvcc               #compilatore
 
 
@@ -24,7 +24,7 @@ main.o: main.cu
 	$(CC) -c $< -o $@
 
 clear:
-	rm *.o
+	rm *.o $(TARGET)
 # questo makefile è leggermente pià arzigogolato perchè usa delle
 # variabili predefinite il cui significato si può ritrovare a questa
 # pagina http://labmaster.mi.infn.it/Laboratorio2/serale/l1/index.html
