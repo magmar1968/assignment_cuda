@@ -21,7 +21,7 @@ namespace rnd
         T genGaussian(const T mean = 0, const T dev_std = 1) const
         {
             T u = genUniform(), v = genUniform();
-            T num = (sqrt(-2 * log( u) ) * cos( v * (2 * M_1_PIf64)));
+            T num = (sqrt(-2 * log( u) ) * cos( v * (2 * M_PI)));
             //normalize the number for the required mean and dev_std 
             return  num * dev_std  + mean;   
         }
@@ -48,12 +48,12 @@ namespace rnd
         :_current(seed),_a(a),_b(b),_m(m)
       {};
       ~LinGenCongruential(){};
-      T genUniform(const T min = 0, const T max = 1) 
+      T genUniform(const T min = 0, const T max = 1)
       {
           _current = ( _a * _current + _b) % _m;
           T num = _current / (T) _m;
-          return num * max + min;
-    }
+          return num *(max - min) + min;
+      }
     private:
       uint _a, _b, _m; 
       uint _current;
@@ -64,7 +64,7 @@ namespace rnd
     public MyRandom<T>
   {
     public:
-      GenTausworth(uint seed = 256, uint k1 = 13, uint k2 = 19,uint k3 = 12, uint m = 4294967294UL)
+      GenTausworth(uint seed = 256, uint k1 = 13, uint k2 = 19,uint k3 = 12, uint m = UINT_MAX)
         :_current(seed),_k1(k1),_k2(k2),_k3(k3),_m(m)
       {
           if(seed < 128)
@@ -80,7 +80,7 @@ namespace rnd
           uint b    = (((_current << _k1) ^ _current ) >> _k2);
           _current  = (((_current & _m ) << _k3) ^ b);
           T num = _current / (T)_m;
-          return num * max + min;
+          return num * (max - min) + min;
         
       }
 
@@ -88,10 +88,4 @@ namespace rnd
       uint _k1,_k2,_k3,_m;
       uint _current;
   };
-
-
-
-
-
-
 }

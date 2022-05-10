@@ -1,8 +1,8 @@
 SRC= myRandom.cu main.cu  #source files
-OBJECTS=$(SRC:.cu=.o) #file compilati da linkare
-FLAG=                 #eventuali flag
-TARGET=../main.x           #nome del file da compilare
-CC=nvcc               #compilatore
+OBJECTS=$(SRC:.cu=.o)     #file compilati da linkare
+FLAG=                     #eventuali flag
+TARGET=../main.x          #nome del file da compilare
+CC=nvcc                   #compilatore
 
 
 # Nel makefile si definiscono dei comandi a cui si associano 
