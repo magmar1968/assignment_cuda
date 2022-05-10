@@ -41,7 +41,7 @@ __global__ void gpuArraySum(float* a, float* b, float* c, int n) {
        for (int p = 0; p < 750; p++) {
             c[tid] += exp(a[tid]) + exp(b[tid]);
         }
-        tid += blockDim.x;
+        tid += blockDim.x*gridDim.x;
     }
 }*/
 
