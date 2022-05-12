@@ -3,38 +3,63 @@
 #include <climits>  //INT_MAX
 
 
+
+
 namespace rnd
 {
+    #define TAUSWORTH_1 0
+    #define TAUSWORTH_2 1
+    #define TAUSWORTH_3 2
 
+    #define TAUS_1_K1 13
+    #define TAUS_1_K2 19
+    #define TAUS_1_K3 12
 
-  // =========================
-  //      abstract class 
-    template<typename T>
+    #define TAUS_2_K1 2
+    #define TAUS_2_K2 25
+    #define TAUS_2_K3 4
+
+    #define TAUS_3_K1 3
+    #define TAUS_3_K2 11
+    #define TAUS_3_K3 17
+    // typedef unsigned int uint; for windows
+    
+    //---------------------------------------------------------------------------------------- 
+    
+    //      abstract class 
     class MyRandom
     {
       public:
         MyRandom(){};
         ~MyRandom(){};
       
-        virtual T genUniform(const T min = 0, const T max = 1) = 0;
+        virtual double genUniform(const double min = 0, const double max = 1) = 0;
         
-        T genGaussian(const T mean = 0, const T dev_std = 1) const
-        {
-            T u = genUniform(), v = genUniform();
-            T num = (sqrt(-2 * log( u) ) * cos( v * (2 * M_PI)));
-            //normalize the number for the required mean and dev_std 
-            return  num * dev_std  + mean;   
-        }
+        virtual double genGaussian(const double mean = 0, const double dev_std = 1) = 0;
+      protected:
+        virtual int genUniformInt() = 0;
     };
 
-  // =========================
-  //   linear congruential
 
-  template< typename T>
-  class LinGenCongruential : 
-    public MyRandom<T>
+    class MyRandomImplementation : public MyRandom
+    {
+      public:
+        double genUniform(const double min = 0, const double max = 1);
+        double genGaussian(const double mean = 0, const double dev_std = 1);
+    
+      protected:
+        bool    _storedValue = false;
+        double  _value;
+    };
+      
+
+  class GenLinCongruential : public MyRandomImplementation
   {
+    protected:
     public:
+      static const uint DEFAULT_A = 1664525;
+      static const uint DEFAULT_B = 1013904223;
+      GenLinCongruential(){};
       /**
        * @brief Construct a new Linnear Generator Congruential object that generate random
        *        number following the rule: S_{i+1} = (a* S_i + b) mod m
@@ -44,48 +69,46 @@ namespace rnd
        * @param b (default 1013904223)
        * @param m (default MAX_INT) 
        */
-      LinGenCongruential(int seed, uint a = 1664525, uint b = 1013904223, uint m = UINT_MAX)
-        :_current(seed),_a(a),_b(b),_m(m)
-      {};
-      ~LinGenCongruential(){};
-      T genUniform(const T min = 0, const T max = 1)
-      {
-          _current = ( _a * _current + _b) % _m;
-          T num = _current / (T) _m;
-          return num *(max - min) + min;
-      }
+      GenLinCongruential(uint seed, uint a = DEFAULT_A, uint b = DEFAULT_B , uint m = UINT_MAX);
+      ~GenLinCongruential(){};
+      int genUniformInt();
     private:
       uint _a, _b, _m; 
       uint _current;
   };
 
-  template<typename T>
-  class GenTausworth :
-    public MyRandom<T>
+  
+
+  class GenTausworth : public MyRandomImplementation
   {
+    protected:
     public:
-      GenTausworth(uint seed = 256, uint k1 = 13, uint k2 = 19,uint k3 = 12, uint m = UINT_MAX)
-        :_current(seed),_k1(k1),_k2(k2),_k3(k3),_m(m)
-      {
-          if(seed < 128)
-          {
-              _current += 128;
-              std::cerr<< "ERROR: in __FUNCTION__             \n"
-                       << "       seed must be grater than 128\n";
-          } 
-      }
-
-      T genUniform(const T min = 0, const T max = 1)
-      {
-          uint b    = (((_current << _k1) ^ _current ) >> _k2);
-          _current  = (((_current & _m ) << _k3) ^ b);
-          T num = _current / (T)_m;
-          return num * (max - min) + min;
-        
-      }
-
+      GenTausworth(){};
+      GenTausworth(uint seed, uint type, uint m = UINT_MAX);
+      ~GenTausworth(){};
+      int  genUniformInt();
+      bool getStatus() const;
     private: 
       uint _k1,_k2,_k3,_m;
       uint _current;
+      bool _status = true;
+  };
+
+  class GenCombined : MyRandomImplementation
+  {
+    protected:
+      int genUniformInt();
+    public:
+      GenCombined(uint seed1, uint seed2, uint seed3, uint seed4, uint m = UINT_MAX);
+      ~GenCombined(){};
+      bool getStatus() const;
+
+    private:
+      uint _seed1, _seed2, _seed3, _seed4, _m;
+      uint _current;
+
+      GenTausworth genT1, genT2, genT3;
+      GenLinCongruential genL1;
+      bool _status = true;
   };
 }
