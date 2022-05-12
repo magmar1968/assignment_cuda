@@ -7,7 +7,7 @@ namespace rnd
         return genUniformInt() *(max - min) + min;
     }
 
-    double MyRandomImplementation::genGaussian(const double mean = 0, const double dev_std = 1)
+    double MyRandomImplementation::genGaussian(const double mean, const double dev_std)
     {
         if(_storedValue)
             return _value;
