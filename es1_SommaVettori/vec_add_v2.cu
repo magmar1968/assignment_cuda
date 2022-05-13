@@ -24,8 +24,8 @@ __global__ void gpuArraySum(float* a, float* b, float* c, int n) {
     //check for overflow
     if (tid < n) {
         c[tid] = 0;
-        alpha = a[tid];
-        beta = b[tid];
+        double alpha = a[tid];
+        double beta = b[tid];
         for (int p = 0; p < 500; p++) {
             c[tid] += exp(alpha)*p + exp(beta); //per complicare le cose al compilatore inseriamo una p
         }
