@@ -41,16 +41,16 @@ namespace rnd
     };
 
 
-    class MyRandomImplementation : public MyRandom
-    {
-      public:
-        double genUniform(const double min = 0, const double max = 1);
-        double genGaussian(const double mean = 0, const double dev_std = 1);
-    
-      protected:
-        bool    _storedValue = false;
-        double  _value;
-    };
+  class MyRandomImplementation : public MyRandom
+  {
+    public:
+      double genUniform(const double min = 0, const double max = 1);
+      double genGaussian(const double mean = 0, const double dev_std = 1);
+  
+    protected:
+      bool    _storedValue = false;
+      double  _value;
+  };
       
 
   class GenLinCongruential : public MyRandomImplementation
@@ -71,10 +71,11 @@ namespace rnd
        */
       GenLinCongruential(uint seed, uint a = DEFAULT_A, uint b = DEFAULT_B , uint m = UINT_MAX);
       ~GenLinCongruential(){};
-      int genUniformInt();
     private:
       uint _a, _b, _m; 
       uint _current;
+      friend class GenCombined; //to get access to genUnifomInt
+      int genUniformInt();
   };
 
   
@@ -86,15 +87,16 @@ namespace rnd
       GenTausworth(){};
       GenTausworth(uint seed, uint type, uint m = UINT_MAX);
       ~GenTausworth(){};
-      int  genUniformInt();
       bool getStatus() const;
     private: 
       uint _k1,_k2,_k3,_m;
       uint _current;
       bool _status = true;
+      friend class GenCombined; // to get access to genUnifomInt
+      int  genUniformInt();
   };
 
-  class GenCombined : MyRandomImplementation
+  class GenCombined : public MyRandomImplementation
   {
     protected:
       int genUniformInt();

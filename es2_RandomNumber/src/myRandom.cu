@@ -10,13 +10,17 @@ namespace rnd
     double MyRandomImplementation::genGaussian(const double mean, const double dev_std)
     {
         if(_storedValue)
+        {
+            _storedValue = false;
             return _value;
+        }
         else
         {
             //insert second way 
             double u = genUniform(), v = genUniform();
             double num = (sqrt(-2 * log( u) ) * cos( v * (2 * M_PI)));
-            _value =  (sqrt(-2 * log( u) ) * cos( v * (2 * M_PI))); //check
+            _value =  (sqrt(-2 * log( u) ) * sin( v * (2 * M_PI))); //check
+            _value = _value*dev_std + mean;
             //normalize the number for the required mean and dev_std 
             return  num * dev_std  + mean;   
         }
