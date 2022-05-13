@@ -21,6 +21,7 @@ namespace rnd
             double num = (sqrt(-2 * log( u) ) * cos( v * (2 * M_PI)));
             _value =  (sqrt(-2 * log( u) ) * sin( v * (2 * M_PI))); //check
             _value = _value*dev_std + mean;
+            _storedValue  = true;
             //normalize the number for the required mean and dev_std 
             return  num * dev_std  + mean;   
         }
