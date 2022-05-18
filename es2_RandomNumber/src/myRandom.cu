@@ -1,7 +1,17 @@
 #include "myRandom.h"
-// #define DEBUG
+#define DEBUG
 namespace rnd
 {
+    MyRandomImplementation::MyRandomImplementation(uint m)
+    :_m(m)
+    {
+    }
+
+    void MyRandomImplementation::setGaussImpl(const uint type)
+    {
+        _type = type;
+    }
+
     double MyRandomImplementation::genUniform(const double min, const double max)
     {  
         uint n = genUniformInt();
@@ -29,22 +39,42 @@ namespace rnd
         }
         else
         {
-            //insert second way
-            double u = genUniform(), v = genUniform();
-            double num = (sqrt(-2 * log( u) ) * cos( v * (2 * M_PI)));
-            _value =  (sqrt(-2 * log( u) ) * sin( v * (2 * M_PI))); //check
-            _value = _value*dev_std + mean;
+            double num = 0,r = 0,u,v;
+            switch (_type)
+            {
+            case GAUSSIAN_1:
+                u = genUniform(); v = genUniform(); //input numbers
+                num    = (sqrt(-2 * log( u) ) * cos( v * (2 * M_PI)));
+                _value = (sqrt(-2 * log( u) ) * sin( v * (2 * M_PI)));
+                break;
+            
+            case GAUSSIAN_2:
+                while(r == 0 or r >= 1)
+                {
+                   u = genUniform(-1,1); v = genUniform(-1,1);
+                   r = u*u + v*v; 
+                }
+                num    = u * sqrt(-2. * log(r) / r);
+                _value = v * sqrt(-2. * log(r) / r);
+                break;
+            default:
+                std::cerr << "ERROR: in __function__\n"
+                      << "           wrong input available on Gaussian_(1-2)\n";
+                break;
+            }         
+            
             _storedValue  = true;
             //normalize the number for the required mean and dev_std
+            _value = _value*dev_std + mean;
             return  num * dev_std  + mean;
         }
     }
 
 
     GenLinCongruential::GenLinCongruential(uint seed, uint a, uint b, uint m )
-        :_current(seed),_a(a),_b(b),_m(m)
+        :_current(seed),_a(a),_b(b),_m(m),MyRandomImplementation(m)
     {
-        MyRandomImplementation::setM(_m);
+        // MyRandomImplementation::setM(_m);
     }
 
     uint GenLinCongruential::genUniformInt()
@@ -53,9 +83,9 @@ namespace rnd
     }
 
     GenTausworth::GenTausworth(uint seed, uint type, uint m)
-        :_current(seed), _m(m)
+        :_current(seed), _m(m), MyRandomImplementation(m)
     {
-        MyRandomImplementation::setM(_m);
+        // MyRandomImplementation::setM(_m);
         if(seed < 128)
         {
             std::cerr<< "ERROR: in __FUNCTION__             \n"
@@ -104,9 +134,9 @@ namespace rnd
     // ---------------------------------------------------------------------------------------------
 
     GenCombined::GenCombined(uint seed1, uint seed2, uint seed3, uint seed4, uint m)
-        :_seed1(seed1), _seed2(seed2), _seed3(seed3), _seed4(seed4), _m(m)
+        :_seed1(seed1), _seed2(seed2), _seed3(seed3), _seed4(seed4), _m(m),
+        MyRandomImplementation(m)
     {
-        MyRandomImplementation::setM(_m);
         genT1 = GenTausworth(_seed1, TAUSWORTH_1, _m);
         genT2 = GenTausworth(_seed2, TAUSWORTH_2, _m);
         genT3 = GenTausworth(_seed3, TAUSWORTH_3, _m);
