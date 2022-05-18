@@ -1,0 +1,4 @@
+#ignore precompiled files
+*.o
+#ignore executable
+*.x
