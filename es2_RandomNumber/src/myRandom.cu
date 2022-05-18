@@ -29,14 +29,14 @@ namespace rnd
         }
         else
         {
-            //insert second way 
+            //insert second way
             double u = genUniform(), v = genUniform();
             double num = (sqrt(-2 * log( u) ) * cos( v * (2 * M_PI)));
             _value =  (sqrt(-2 * log( u) ) * sin( v * (2 * M_PI))); //check
             _value = _value*dev_std + mean;
             _storedValue  = true;
-            //normalize the number for the required mean and dev_std 
-            return  num * dev_std  + mean;   
+            //normalize the number for the required mean and dev_std
+            return  num * dev_std  + mean;
         }
     }
 
@@ -80,7 +80,8 @@ namespace rnd
         case TAUSWORTH_3:
             _k1 = TAUS_3_K1;
             _k2 = TAUS_3_K2;
-            _k3 = TAUS_3_K3;       
+            _k3 = TAUS_3_K3;
+            break;
         default:
             std::cerr << "ERROR: wrong tausworth input please use one of\n"
                       << "       the avaible macro TAUSWORTH_(0-2)      \n";
@@ -115,7 +116,7 @@ namespace rnd
         if(!genT1.getStatus() and genT2.getStatus() and genT3.getStatus())
         {
             std::cerr << "ERROR: in __FUNCTION__";
-            _status = false; 
+            _status = false;
         }
     }
 
@@ -125,11 +126,6 @@ namespace rnd
         return genT1.genUniformInt()^genT2.genUniformInt()^
                genT3.genUniformInt()^genL1.genUniformInt();
     }
-
-
-
-
-
 
 
 }

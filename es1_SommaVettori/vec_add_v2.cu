@@ -23,12 +23,13 @@ __global__ void gpuArraySum(float* a, float* b, float* c, int n) {
     int tid = blockIdx.x * blockDim.x + threadIdx.x;
     //check for overflow
     if (tid < n) {
-        c[tid] = 0;
-        alpha = a[tid];
-        beta = b[tid];
+        double alpha = a[tid];
+        double beta = b[tid];
+        double gamma = 0;
         for (int p = 0; p < 500; p++) {
-            c[tid] += exp(alpha)*p + exp(beta); //per complicare le cose al compilatore inseriamo una p
+            gamma += exp(alpha)*p + exp(beta); //per complicare le cose al compilatore inseriamo una p
         }
+        c[tid] = gamma;
     }
 }
 
@@ -39,12 +40,13 @@ __global__ void gpuArraySum(float* a, float* b, float* c, int n) {
    int tid = blockIdx.x * blockDim.x + threadIdx.x;
     //check for overflow
     while (tid < n) {
-       c[tid] = 0;
-       alpha = a[tid];
-        beta = b[tid];
+       double alpha = a[tid];
+       double beta = b[tid];
+       double gamma = 0;
        for (int p = 0; p < 750; p++) {
-            c[tid] += exp(alpha)*p + exp(beta);  //per complicare le cose al compilatore inseriamo una p
+            gamma += exp(alpha)*p + exp(beta);  //per complicare le cose al compilatore inseriamo una p
         }
+       c[tid] = gamma;
         tid += blockDim.x*gridDim.x;
     }
 }*/
@@ -89,7 +91,7 @@ int main(int argc, char** argv)
         filename = getCmdOption(argv, argv + argc, "-f");
     else
         filename = "timeseries.txt";
-    
+
 
 
     std::fstream ofs(filename, std::fstream::out);
@@ -141,7 +143,7 @@ int main(int argc, char** argv)
             fillArray(B, N, eng);
 
 
-            //start time    
+            //start time
             Timer myTimer;
 
             if (dev.GPU) {
