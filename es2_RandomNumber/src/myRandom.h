@@ -37,19 +37,28 @@ namespace rnd
         
         virtual double genGaussian(const double mean = 0, const double dev_std = 1) = 0;
       protected:
-        virtual int genUniformInt() = 0;
+        virtual uint genUniformInt() = 0;
     };
 
 
   class MyRandomImplementation : public MyRandom
   {
     public:
-      double genUniform(const double min = 0, const double max = 1);
-      double genGaussian(const double mean = 0, const double dev_std = 1);
+      double genUniform(const double min = 0., const double max = 1.);
+      double genGaussian(const double mean = 0., const double dev_std = 1.);
   
-    protected:
+    protected: // accessible by all subclasses
+      MyRandomImplementation(uint m=UINT_MAX):_m(m){
+        std::cerr << "constructor called m: " << _m << "\n";
+      };
+      void setM(uint m)
+      {
+        _m = m;
+      }
+    private:
       bool    _storedValue = false;
       double  _value;
+      uint    _m;
   };
       
 
@@ -75,7 +84,7 @@ namespace rnd
       uint _a, _b, _m; 
       uint _current;
       friend class GenCombined; //to get access to genUnifomInt
-      int genUniformInt();
+      uint genUniformInt();
   };
 
   
@@ -93,13 +102,13 @@ namespace rnd
       uint _current;
       bool _status = true;
       friend class GenCombined; // to get access to genUnifomInt
-      int  genUniformInt();
+      uint  genUniformInt();
   };
 
   class GenCombined : public MyRandomImplementation
   {
     protected:
-      int genUniformInt();
+      uint genUniformInt();
     public:
       GenCombined(uint seed1, uint seed2, uint seed3, uint seed4, uint m = UINT_MAX);
       ~GenCombined(){};
