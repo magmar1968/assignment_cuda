@@ -7,6 +7,9 @@
 
 namespace rnd
 {
+    #define GAUSSIAN_1 0
+    #define GAUSSIAN_2 1
+
     #define TAUSWORTH_1 0
     #define TAUSWORTH_2 1
     #define TAUSWORTH_3 2
@@ -46,19 +49,14 @@ namespace rnd
     public:
       double genUniform(const double min = 0., const double max = 1.);
       double genGaussian(const double mean = 0., const double dev_std = 1.);
+      void setGaussImpl(const uint type);
   
     protected: // accessible by all subclasses
-      MyRandomImplementation(uint m=UINT_MAX):_m(m){
-        std::cerr << "constructor called m: " << _m << "\n";
-      };
-      void setM(uint m)
-      {
-        _m = m;
-      }
+      MyRandomImplementation(uint m=UINT_MAX);
     private:
       bool    _storedValue = false;
       double  _value;
-      uint    _m;
+      uint    _m, _type = GAUSSIAN_1;
   };
       
 
