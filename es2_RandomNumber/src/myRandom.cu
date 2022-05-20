@@ -1,5 +1,4 @@
 #include "myRandom.h"
-#define DEBUG
 namespace rnd
 {
     MyRandomImplementation::MyRandomImplementation(uint m)
@@ -14,20 +13,7 @@ namespace rnd
 
     double MyRandomImplementation::genUniform(const double min, const double max)
     {  
-        uint n = genUniformInt();
-        #ifdef DEBUG
-        double m = n/(double)_m;
-        double p = m* (max - min);
-        std::cerr << "max - min      "  << (max - min) << std::endl;
-        std::cerr << "rand int       "  << n << std::endl;
-        std::cerr << "n/UINT_MAX     "  << m << std::endl;
-        std::cerr << "UINT_MAX and m "  << UINT_MAX << "  " << _m << std::endl;
-        std::cerr << "m* (max - min) "  << p << std::endl;
-        std::cerr << "p + min        "  << p + min << std::endl;
-        std::cerr << "check          "  << n/(double)_m * (max - min) + min << "\n\n";
-        #endif
-        
-        return n/(double)_m * (max - min) + min;
+        return genUniformInt()/(double)_m * (max - min) + min;
     }
 
     double MyRandomImplementation::genGaussian(const double mean, const double dev_std)
@@ -64,17 +50,22 @@ namespace rnd
             }         
             
             _storedValue  = true;
+            _value = _value*dev_std + mean;
             //normalize the number for the required mean and dev_std
             _value = _value*dev_std + mean;
             return  num * dev_std  + mean;
         }
     }
 
+    //------------------------------------------------------------------------------------
 
     GenLinCongruential::GenLinCongruential(uint seed, uint a, uint b, uint m )
         :_current(seed),_a(a),_b(b),_m(m),MyRandomImplementation(m)
     {
+<<<<<<< HEAD
         // MyRandomImplementation::setM(_m);
+=======
+>>>>>>> gaussian_double
     }
 
     uint GenLinCongruential::genUniformInt()
@@ -82,10 +73,15 @@ namespace rnd
         return _current = ( _a * _current + _b) % _m;
     }
 
+    //--------------------------------------------------------------------------------------
+
     GenTausworth::GenTausworth(uint seed, uint type, uint m)
         :_current(seed), _m(m), MyRandomImplementation(m)
     {
+<<<<<<< HEAD
         // MyRandomImplementation::setM(_m);
+=======
+>>>>>>> gaussian_double
         if(seed < 128)
         {
             std::cerr<< "ERROR: in __FUNCTION__             \n"
@@ -122,8 +118,8 @@ namespace rnd
 
     uint GenTausworth::genUniformInt()
     {
-        uint b    = (((_current << _k1) ^ _current ) >> _k2);
-        return _current  = (((_current & _m ) << _k3) ^ b);
+        uint b    = ((_current << _k1) ^ _current ) >> _k2;
+        return _current  = ((_current & _m ) << _k3) ^ b;
     }
 
     bool GenTausworth::getStatus() const
