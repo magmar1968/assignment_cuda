@@ -5,11 +5,11 @@
 
 int main()
 {
-    rnd::GenTausworth gnr(200,TAUSWORTH_2);
+    rnd::GenTausworth gnr(200,TAUSWORTH_3);
 
     gnr.setGaussImpl(GAUSSIAN_2);
 
-    std::ofstream ofs("../data/data_unif_taus2.dat", std::ofstream::out);
+    std::ofstream ofs("../data/data_unif_taus3.dat", std::ofstream::out);
     for(int i = 0; i < 50000000; ++i)
     {
         ofs << gnr.genUniform() << "\n";

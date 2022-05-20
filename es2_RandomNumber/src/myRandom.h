@@ -17,14 +17,17 @@ namespace rnd
     #define TAUS_1_K1 13
     #define TAUS_1_K2 19
     #define TAUS_1_K3 12
+    #define TAUS_1_M  4294967294UL
 
     #define TAUS_2_K1 2
     #define TAUS_2_K2 25
     #define TAUS_2_K3 4
+    #define TAUS_2_M  4294967288UL
 
     #define TAUS_3_K1 3
     #define TAUS_3_K2 11
     #define TAUS_3_K3 17
+    #define TAUS_3_M  4294967280UL
     // typedef unsigned int uint; for windows
     
     //---------------------------------------------------------------------------------------- 
@@ -49,10 +52,11 @@ namespace rnd
     public:
       double genUniform(const double min = 0., const double max = 1.);
       double genGaussian(const double mean = 0., const double dev_std = 1.);
-      void setGaussImpl(const uint type);
+      void   setGaussImpl(const uint type);
   
     protected: // accessible by all subclasses
       MyRandomImplementation(uint m=UINT_MAX);
+      void setM(uint m);
     private:
       bool    _storedValue = false;
       double  _value;
@@ -92,7 +96,7 @@ namespace rnd
     protected:
     public:
       GenTausworth(){};
-      GenTausworth(uint seed, uint type, uint m = UINT_MAX);
+      GenTausworth(uint seed, uint type);
       ~GenTausworth(){};
       bool getStatus() const;
     private: 

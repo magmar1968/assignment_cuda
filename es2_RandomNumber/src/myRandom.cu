@@ -11,6 +11,11 @@ namespace rnd
         _type = type;
     }
 
+    void MyRandomImplementation::setM(const uint m)
+    {
+        _m = m;
+    }
+
     double MyRandomImplementation::genUniform(const double min, const double max)
     {  
         return genUniformInt()/(double)_m * (max - min) + min;
@@ -62,10 +67,6 @@ namespace rnd
     GenLinCongruential::GenLinCongruential(uint seed, uint a, uint b, uint m )
         :_current(seed),_a(a),_b(b),_m(m),MyRandomImplementation(m)
     {
-<<<<<<< HEAD
-        // MyRandomImplementation::setM(_m);
-=======
->>>>>>> gaussian_double
     }
 
     uint GenLinCongruential::genUniformInt()
@@ -75,13 +76,9 @@ namespace rnd
 
     //--------------------------------------------------------------------------------------
 
-    GenTausworth::GenTausworth(uint seed, uint type, uint m)
-        :_current(seed), _m(m), MyRandomImplementation(m)
+    GenTausworth::GenTausworth(uint seed, uint type)
+        :_current(seed)
     {
-<<<<<<< HEAD
-        // MyRandomImplementation::setM(_m);
-=======
->>>>>>> gaussian_double
         if(seed < 128)
         {
             std::cerr<< "ERROR: in __FUNCTION__             \n"
@@ -97,22 +94,27 @@ namespace rnd
             _k1 = TAUS_1_K1;
             _k2 = TAUS_1_K2;
             _k3 = TAUS_1_K3;
+            _m  = TAUS_1_M;
             break;
         case TAUSWORTH_2:
             _k1 = TAUS_2_K1;
             _k2 = TAUS_2_K2;
             _k3 = TAUS_2_K3;
+            _m  = TAUS_2_M;
             break;
         case TAUSWORTH_3:
             _k1 = TAUS_3_K1;
             _k2 = TAUS_3_K2;
             _k3 = TAUS_3_K3;
+            _m  = TAUS_3_M;
             break;
         default:
             std::cerr << "ERROR: wrong tausworth input please use one of\n"
                       << "       the avaible macro TAUSWORTH_(0-2)      \n";
             break;
         }
+
+        setM(_m);
 
     }
 
@@ -133,9 +135,9 @@ namespace rnd
         :_seed1(seed1), _seed2(seed2), _seed3(seed3), _seed4(seed4), _m(m),
         MyRandomImplementation(m)
     {
-        genT1 = GenTausworth(_seed1, TAUSWORTH_1, _m);
-        genT2 = GenTausworth(_seed2, TAUSWORTH_2, _m);
-        genT3 = GenTausworth(_seed3, TAUSWORTH_3, _m);
+        genT1 = GenTausworth(_seed1, TAUSWORTH_1);
+        genT2 = GenTausworth(_seed2, TAUSWORTH_2);
+        genT3 = GenTausworth(_seed3, TAUSWORTH_3);
 
         genL1 = GenLinCongruential(_seed4);
 
