@@ -1,27 +1,27 @@
-#include "myRandom.h"
+#include "myRandom.hpp"
 namespace rnd
 {
-    MyRandomImplementation::MyRandomImplementation(uint m)
+    HOST_DEVICE MyRandomImplementation::MyRandomImplementation(uint m)
     :_m(m)
     {
     }
 
-    void MyRandomImplementation::setGaussImpl(const uint type)
+    HOST_DEVICE void MyRandomImplementation::setGaussImpl(const uint type)
     {
         _type = type;
     }
 
-    void MyRandomImplementation::setM(const uint m)
+    HOST_DEVICE void MyRandomImplementation::setM(const uint m)
     {
         _m = m;
     }
 
-    double MyRandomImplementation::genUniform(const double min, const double max)
+    HOST_DEVICE double MyRandomImplementation::genUniform(const double min, const double max)
     {  
         return genUniformInt()/(double)_m * (max - min) + min;
     }
 
-    double MyRandomImplementation::genGaussian(const double mean, const double dev_std)
+    HOST_DEVICE double MyRandomImplementation::genGaussian(const double mean, const double dev_std)
     {
         if(_storedValue)
         {
@@ -49,11 +49,10 @@ namespace rnd
                 _value = v * sqrt(-2. * log(r) / r);
                 break;
             default:
-                std::cerr << "ERROR: in __function__\n"
-                      << "           wrong input available on Gaussian_(1-2)\n";
+                // std::cerr << "ERROR: in __function__\n"
+                //       << "           wrong input available on Gaussian_(1-2)\n";
                 break;
             }         
-            
             _storedValue  = true;
             _value = _value*dev_std + mean;
             //normalize the number for the required mean and dev_std
@@ -64,25 +63,25 @@ namespace rnd
 
     //------------------------------------------------------------------------------------
 
-    GenLinCongruential::GenLinCongruential(uint seed, uint a, uint b, uint m )
+    HOST_DEVICE GenLinCongruential::GenLinCongruential(uint seed, uint a, uint b, uint m )
         :_current(seed),_a(a),_b(b),_m(m),MyRandomImplementation(m)
     {
     }
 
-    uint GenLinCongruential::genUniformInt()
+    HOST_DEVICE uint GenLinCongruential::genUniformInt()
     {
         return _current = ( _a * _current + _b) % _m;
     }
 
     //--------------------------------------------------------------------------------------
 
-    GenTausworth::GenTausworth(uint seed, uint type)
+    HOST_DEVICE GenTausworth::GenTausworth(uint seed, uint type)
         :_current(seed)
     {
         if(seed < 128)
         {
-            std::cerr<< "ERROR: in __FUNCTION__             \n"
-                       << "       seed must be grater than 128\n";
+            // std::cerr<< "ERROR: in __FUNCTION__             \n"
+            //            << "       seed must be grater than 128\n";
             _status = false;
         }
 
@@ -109,8 +108,8 @@ namespace rnd
             _m  = TAUS_3_M;
             break;
         default:
-            std::cerr << "ERROR: wrong tausworth input please use one of\n"
-                      << "       the avaible macro TAUSWORTH_(0-2)      \n";
+            // std::cerr << "ERROR: wrong tausworth input please use one of\n"
+            //           << "       the avaible macro TAUSWORTH_(0-2)      \n";
             break;
         }
 
@@ -118,20 +117,20 @@ namespace rnd
 
     }
 
-    uint GenTausworth::genUniformInt()
+    HOST_DEVICE uint GenTausworth::genUniformInt()
     {
         uint b    = ((_current << _k1) ^ _current ) >> _k2;
         return _current  = ((_current & _m ) << _k3) ^ b;
     }
 
-    bool GenTausworth::getStatus() const
+    HOST_DEVICE bool GenTausworth::getStatus() const
     {
         return _status;
     }
 
     // ---------------------------------------------------------------------------------------------
 
-    GenCombined::GenCombined(uint seed1, uint seed2, uint seed3, uint seed4, uint m)
+    HOST_DEVICE GenCombined::GenCombined(uint seed1, uint seed2, uint seed3, uint seed4, uint m)
         :_seed1(seed1), _seed2(seed2), _seed3(seed3), _seed4(seed4), _m(m),
         MyRandomImplementation(m)
     {
@@ -143,13 +142,13 @@ namespace rnd
 
         if(!genT1.getStatus() and genT2.getStatus() and genT3.getStatus())
         {
-            std::cerr << "ERROR: in __FUNCTION__";
+            // std::cerr << "ERROR: in __FUNCTION__";
             _status = false;
         }
     }
 
 
-    uint GenCombined::genUniformInt()
+    HOST_DEVICE uint GenCombined::genUniformInt()
     {
         return genT1.genUniformInt()^genT2.genUniformInt()^
                genT3.genUniformInt()^genL1.genUniformInt();

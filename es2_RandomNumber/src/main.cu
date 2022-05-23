@@ -1,4 +1,4 @@
-#include "myRandom.h"
+#include "myRandom.hpp"
 #include <random>
 #include <iostream>
 #include <fstream>
