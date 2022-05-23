@@ -1,27 +1,27 @@
 #include "myRandom.hpp"
 namespace rnd
 {
-    HOST_DEVICE MyRandomImplementation::MyRandomImplementation(uint m)
+    HD MyRandomImplementation::MyRandomImplementation(uint m)
     :_m(m)
     {
     }
 
-    HOST_DEVICE void MyRandomImplementation::setGaussImpl(const uint type)
+    HD void MyRandomImplementation::setGaussImpl(const uint type)
     {
         _type = type;
     }
 
-    HOST_DEVICE void MyRandomImplementation::setM(const uint m)
+    HD void MyRandomImplementation::setM(const uint m)
     {
         _m = m;
     }
 
-    HOST_DEVICE double MyRandomImplementation::genUniform(const double min, const double max)
+    HD double MyRandomImplementation::genUniform(const double min, const double max)
     {  
         return genUniformInt()/(double)_m * (max - min) + min;
     }
 
-    HOST_DEVICE double MyRandomImplementation::genGaussian(const double mean, const double dev_std)
+    HD double MyRandomImplementation::genGaussian(const double mean, const double dev_std)
     {
         if(_storedValue)
         {
@@ -63,19 +63,19 @@ namespace rnd
 
     //------------------------------------------------------------------------------------
 
-    HOST_DEVICE GenLinCongruential::GenLinCongruential(uint seed, uint a, uint b, uint m )
+    HD GenLinCongruential::GenLinCongruential(uint seed, uint a, uint b, uint m )
         :_current(seed),_a(a),_b(b),_m(m),MyRandomImplementation(m)
     {
     }
 
-    HOST_DEVICE uint GenLinCongruential::genUniformInt()
+    HD uint GenLinCongruential::genUniformInt()
     {
         return _current = ( _a * _current + _b) % _m;
     }
 
     //--------------------------------------------------------------------------------------
 
-    HOST_DEVICE GenTausworth::GenTausworth(uint seed, uint type)
+    HD GenTausworth::GenTausworth(uint seed, uint type)
         :_current(seed)
     {
         if(seed < 128)
@@ -117,20 +117,20 @@ namespace rnd
 
     }
 
-    HOST_DEVICE uint GenTausworth::genUniformInt()
+    HD uint GenTausworth::genUniformInt()
     {
         uint b    = ((_current << _k1) ^ _current ) >> _k2;
         return _current  = ((_current & _m ) << _k3) ^ b;
     }
 
-    HOST_DEVICE bool GenTausworth::getStatus() const
+    HD bool GenTausworth::getStatus() const
     {
         return _status;
     }
 
     // ---------------------------------------------------------------------------------------------
 
-    HOST_DEVICE GenCombined::GenCombined(uint seed1, uint seed2, uint seed3, uint seed4, uint m)
+    HD GenCombined::GenCombined(uint seed1, uint seed2, uint seed3, uint seed4, uint m)
         :_seed1(seed1), _seed2(seed2), _seed3(seed3), _seed4(seed4), _m(m),
         MyRandomImplementation(m)
     {
@@ -147,12 +147,9 @@ namespace rnd
         }
     }
 
-
-    HOST_DEVICE uint GenCombined::genUniformInt()
+    HD uint GenCombined::genUniformInt()
     {
         return genT1.genUniformInt()^genT2.genUniformInt()^
                genT3.genUniformInt()^genL1.genUniformInt();
     }
-
-
 }
