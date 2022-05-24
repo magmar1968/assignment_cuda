@@ -1,6 +1,6 @@
 SRC= myRandom.cu main.cu  #source files
 OBJECTS=$(SRC:.cu=.o)     #file compilati da linkare
-FLAG=                     #eventuali flag
+FLAG= -std=c++03          #eventuali flag
 TARGET=../main.x          #nome del file da compilare
 CC=nvcc                   #compilatore
 
@@ -17,6 +17,10 @@ all: $(TARGET)
 # 	tab o ; cosa devo fare
 $(TARGET): $(OBJECTS) 
 	$(CC) -g $(FLAG) $(OBJECTS) -o $@
+
+#decommenta se vuoi che make compili ed esegua tutto assieme
+# $(TARGET): $(OBJECTS) 
+# 	$(CC) -run -g $(FLAG) $(OBJECTS) -o $@
 
 %.o: %.cu 
 	$(CC) -c $< -o $@
