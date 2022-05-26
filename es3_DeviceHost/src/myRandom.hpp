@@ -1,44 +1,44 @@
+/**
+ * @file myRandom.hpp
+ * @author Lorenzo Magnoni/Andrea Ripamonti/Matteo Martelli (you@domain.com)
+ * @brief  This class implement three different methods for the generation of random numbers. The class is
+ *         structured to be usable also by the GPU. 
+ *    
+ * @version 1.0
+ * @date 2022-05-25
+ * 
+ * @copyright Copyright (c) 2022
+ * 
+ */
+
 #ifndef __MYRANDOM__
 #define __MYRANDOM__
 
 
-#include <iostream> // cout
+#include <iostream> // cout, endl
 #include <math.h>   // sin, cos
 #include <climits>  //INT_MAX
 
 
 
-
 namespace rnd
 {
+    // cuda macro
     #define H __host__
     #define D __device__
     #define HD __host__ __device__ 
+    //gaussian method macros type
+    #define GAUSSIAN_1 1
+    #define GAUSSIAN_2 2
+    //tausworth method macros type
+    #define TAUSWORTH_1 1
+    #define TAUSWORTH_2 2
+    #define TAUSWORTH_3 3
 
-    #define GAUSSIAN_1 0
-    #define GAUSSIAN_2 1
 
-    #define TAUSWORTH_1 0
-    #define TAUSWORTH_2 1
-    #define TAUSWORTH_3 2
-
-    #define TAUS_1_K1 13
-    #define TAUS_1_K2 19
-    #define TAUS_1_K3 12
-    #define TAUS_1_M  4294967294UL
-
-    #define TAUS_2_K1 2
-    #define TAUS_2_K2 25
-    #define TAUS_2_K3 4
-    #define TAUS_2_M  4294967288UL
-
-    #define TAUS_3_K1 3
-    #define TAUS_3_K2 11
-    #define TAUS_3_K3 17
-    #define TAUS_3_M  4294967280UL
-    // typedef unsigned int uint; for windows
+    typedef unsigned int uint; //for windows
     
-    //---------------------------------------------------------------------------------------- 
+    //############################################################################################ 
     
     //      abstract class 
     class MyRandom
@@ -46,32 +46,51 @@ namespace rnd
       public:
         HD MyRandom(){};
         HD ~MyRandom(){};
-      
+
         HD virtual double genUniform(const double min = 0, const double max = 1) = 0;
-        
         HD virtual double genGaussian(const double mean = 0, const double dev_std = 1) = 0;
+
       protected:
         HD virtual uint genUniformInt() = 0;
     };
 
-
+  /**
+   * @brief implement the genGaussian and gen Uniform method. Also introduce the status class flag to
+   *        check if the generator is usable. Constructor is not accesible by the user.
+   */
   class MyRandomImplementation : public MyRandom
   {
     public:
+      /**
+       * @brief generate numbers according to the uniform destribution. 
+       * @param min 
+       * @param max 
+       * @return double 
+       */
       HD double genUniform(const double min = 0., const double max = 1.);
+      /**
+       * @brief generate gaussian numbers from a uniform distribution. Use both the possible 
+       *        box-muller formulas. Default is the trigonometric one.
+       * @param mean 
+       * @param dev_std 
+       * @return double 
+       */
       HD double genGaussian(const double mean = 0., const double dev_std = 1.);
+
       HD void   setGaussImpl(const uint type);
+      HD bool   getStatus() const;
   
     protected: // accessible by all subclasses
-      HD MyRandomImplementation(uint m=UINT_MAX);
+      HD MyRandomImplementation(uint m=UINT_MAX); 
       HD void setM(uint m);
+      bool    _status = true;
+    
     private:
       bool    _storedValue = false;
       double  _value;
       uint    _m, _type = GAUSSIAN_1;
   };
       
-
   class GenLinCongruential : public MyRandomImplementation
   {
     protected:
@@ -80,7 +99,7 @@ namespace rnd
       static const uint DEFAULT_B = 1013904223;
       HD GenLinCongruential(){};
       /**
-       * @brief Construct a new Linnear Generator Congruential object that generate random
+       * @brief Linnear Generator Congruential object that generate random
        *        number following the rule: S_{i+1} = (a* S_i + b) mod m
        * 
        * @param seed 
@@ -90,11 +109,10 @@ namespace rnd
        */
       HD GenLinCongruential(uint seed, uint a = DEFAULT_A, uint b = DEFAULT_B , uint m = UINT_MAX);
       HD ~GenLinCongruential(){};
+      HD uint genUniformInt();
     private:
       uint _a, _b, _m; 
       uint _current;
-      friend class GenCombined; //to get access to genUnifomInt
-      HD uint genUniformInt();
   };
 
   
@@ -104,23 +122,52 @@ namespace rnd
     protected:
     public:
       HD GenTausworth(){};
-      HD GenTausworth(uint seed, uint type);
-      HD ~GenTausworth(){};
-      HD bool getStatus() const;
-    private: 
-      uint _k1,_k2,_k3,_m;
-      uint _current;
-      bool _status = true;
-      friend class GenCombined; // to get access to genUnifomInt
+      /**
+       * @brief Tausoworth method for random numbers generation. Three different parametres
+       *        set are available.
+       * 
+       * @param seed 
+       * @param type TAUSWORTH_[1-2]
+       */
+      HD GenTausworth(const uint seed,const uint type = TAUSWORTH_1);
       HD uint  genUniformInt();
+      HD ~GenTausworth(){};
+    private: 
+      uint _type,_k1,_k2,_k3,_m;
+      uint _current;
+      //tausworth parametres
+      static const uint TAUS_1_K1 = 13U;
+      static const uint TAUS_1_K2 = 19U;
+      static const uint TAUS_1_K3 = 12U;
+      static const uint TAUS_1_M  = 4294967294UL;
+
+      static const uint TAUS_2_K1 = 2U;
+      static const uint TAUS_2_K2 = 25U;
+      static const uint TAUS_2_K3 = 4U;
+      static const uint TAUS_2_M  = 4294967288UL;
+
+      static const uint TAUS_3_K1 = 3U;
+      static const uint TAUS_3_K2 = 11U;
+      static const uint TAUS_3_K3 = 17U;
+      static const uint TAUS_3_M  = 4294967280UL;
   };
 
   class GenCombined : public MyRandomImplementation
   {
     public:
+      HD GenCombined();
+      /**
+       * @brief combined three tausworth generator and one linear congruential to get a longer period. Needs a seed
+       *        for each of the four generators.
+       * @param seed1  (tausworth)
+       * @param seed2  (tausworth)
+       * @param seed3  (tausworth)
+       * @param seed4  (lin congruential)
+       * @param m 
+       */
       HD GenCombined(uint seed1, uint seed2, uint seed3, uint seed4, uint m = UINT_MAX);
       HD ~GenCombined(){};
-      HD bool getStatus() const;
+      HD uint genUniformInt();
 
     private:
       uint _seed1, _seed2, _seed3, _seed4, _m;
@@ -128,9 +175,13 @@ namespace rnd
 
       GenTausworth genT1, genT2, genT3;
       GenLinCongruential genL1;
-      bool _status = true;
-      HD uint genUniformInt();
+
+      HD void genSeeds();
+      HD void genSeeds(const uint seed);
   };
+
+  //seeds generetor functions
+  H uint genSeed(bool tausworth = false); // tausworth seed must be > 128
 }
 
 

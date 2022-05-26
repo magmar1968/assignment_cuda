@@ -49,8 +49,7 @@ namespace rnd
                 _value = v * sqrt(-2. * log(r) / r);
                 break;
             default:
-                // std::cerr << "ERROR: in __function__\n"
-                //       << "           wrong input available on Gaussian_(1-2)\n";
+                _status = false;
                 break;
             }         
             _storedValue  = true;
@@ -59,6 +58,12 @@ namespace rnd
             _value = _value*dev_std + mean;
             return  num * dev_std  + mean;
         }
+    }
+
+
+    HD bool MyRandomImplementation::getStatus() const
+    {
+        return _status;
     }
 
     //------------------------------------------------------------------------------------
@@ -75,19 +80,16 @@ namespace rnd
 
     //--------------------------------------------------------------------------------------
 
-    HD GenTausworth::GenTausworth(uint seed, uint type)
-        :_current(seed)
+    HD GenTausworth::GenTausworth(const uint seed, const uint type)
+        :_current(seed),_type(type)
     {
         if(seed < 128)
         {
-            // std::cerr<< "ERROR: in __FUNCTION__             \n"
-            //            << "       seed must be grater than 128\n";
             _status = false;
         }
 
         // parameter settings
-
-        switch (type)
+        switch (_type)
         {
         case TAUSWORTH_1:
             _k1 = TAUS_1_K1;
@@ -108,24 +110,16 @@ namespace rnd
             _m  = TAUS_3_M;
             break;
         default:
-            // std::cerr << "ERROR: wrong tausworth input please use one of\n"
-            //           << "       the avaible macro TAUSWORTH_(0-2)      \n";
+            _status = false;
             break;
         }
-
         setM(_m);
-
     }
 
     HD uint GenTausworth::genUniformInt()
     {
         uint b    = ((_current << _k1) ^ _current ) >> _k2;
         return _current  = ((_current & _m ) << _k3) ^ b;
-    }
-
-    HD bool GenTausworth::getStatus() const
-    {
-        return _status;
     }
 
     // ---------------------------------------------------------------------------------------------
@@ -151,5 +145,17 @@ namespace rnd
     {
         return genT1.genUniformInt()^genT2.genUniformInt()^
                genT3.genUniformInt()^genL1.genUniformInt();
+    }
+
+
+
+    H uint genSeed(bool tausworth )
+    {
+        uint seed = rand();
+        while(seed < 128 and tausworth)
+        {
+            seed = rand();
+        }
+        return seed;
     }
 }
