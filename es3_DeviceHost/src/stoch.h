@@ -13,7 +13,6 @@ class StochProcess
     private:
     double _mu;
     double _sigma;
-
 };
 
 
