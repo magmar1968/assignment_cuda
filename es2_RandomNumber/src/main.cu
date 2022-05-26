@@ -5,15 +5,28 @@
 
 int main()
 {
-    rnd::GenTausworth gnr(200,TAUSWORTH_3);
+    srand(time(NULL));
+    uint seed1 = rnd::genSeed(true);
+    uint seed2 = rnd::genSeed(true);
+    uint seed3 = rnd::genSeed(true);
+    uint seed4 = rnd::genSeed();
 
-    gnr.setGaussImpl(GAUSSIAN_2);
+    std::cout << "seed1: " << seed1 << std::endl
+              << "seed2: " << seed2 << std::endl
+              << "seed3: " << seed3 << std::endl
+              << "seed4: " << seed4 << std::endl;
+    rnd::GenCombined gnr(seed1,seed2,seed3,seed4);
 
-    std::ofstream ofs("../data/data_unif_taus3.dat", std::ofstream::out);
+    if(! gnr.getStatus())
+        return -1;
+    std::ofstream ofs("../data/data_gauss_comb.dat", std::ofstream::out);
     for(int i = 0; i < 50000000; ++i)
     {
-        ofs << gnr.genUniform() << "\n";
+        ofs << gnr.genGaussian() << "\n";
     }
+
+
+    
 
 }
 

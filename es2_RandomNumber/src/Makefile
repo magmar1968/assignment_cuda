@@ -1,5 +1,7 @@
 SRC= myRandom.cu main.cu  #source files
 OBJECTS=$(SRC:.cu=.o)     #file compilati da linkare
+HEADER=$(SRC:.cu=.h)
+HEADER-=main.cu
 FLAG= -std=c++03          #eventuali flag
 TARGET=../main.x          #nome del file da compilare
 CC=nvcc                   #compilatore
