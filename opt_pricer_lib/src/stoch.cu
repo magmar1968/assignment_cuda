@@ -1,4 +1,4 @@
-#include "../include/stoch.h"  //cambiare in hpp
+#include "../include/stoch.hpp"  //cambiare in hpp
 
 namespace pricer
 {
@@ -11,13 +11,13 @@ namespace pricer
 
     HD double ExactSolution::get_step(const double w)
     {
-       return _S = _S * exp((_mu - (_sigma*_sigma) / 2.)*dt + _sigma*sqrt(_dt)*w);
+       return _S = _S * exp((_mu - (_sigma*_sigma) / 2.)*_dt + _sigma*sqrt(_dt)*w);
     }
 
 
     HD double EulerSolution::get_step(const double w)
     {
-        return _S = _S * (_mu * dt + _sigma * sqrt(dt) * w *);
+        return _S = _S * (_mu * _dt + _sigma * sqrt(_dt) * w );
     }
 
 

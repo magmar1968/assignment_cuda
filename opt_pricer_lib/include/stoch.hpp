@@ -6,7 +6,7 @@ namespace pricer
 {
     #define H __host__
     #define D __device__
-    #define HD __host__ __device__  
+    #define HD __host__ __device__   
 
     class StochProcess
     {
@@ -29,14 +29,14 @@ namespace pricer
 
 
 
-    class ExactSolution : public StochProcess
+    class ExactSolution : public StochProcessImp
     {
         HD double get_step(const double w);
         //HD double get_step(double mu, double sigma);            //se mu e sigma variano
     };
 
 
-    class EulerSolution : public StochProcess
+    class EulerSolution : public StochProcessImp
     {
         HD double get_step(const double w);
         //HD double get_step(double mu, double sigma);            //se mu e sigma variano
