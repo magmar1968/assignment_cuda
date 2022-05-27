@@ -1,13 +1,25 @@
-#include "stoch.h"
+#include "../include/stoch.h"  //cambiare in hpp
 
-StochProcess::StochProcess(double mu, double sigma)
+namespace pricer
 {
-    _mu = mu;
-    _sigma = sigma;
-}
+    HD StochProcessImp::StochProcessImp(double mu_0, double sigma_0, double S_0, double dt)
+        : _mu(mu_0), _sigma(sigma_0), _S(S_0), _dt(dt)
+    {
+    }
 
-double StochProcess::EulerDoStep(double p, double dt, double random)
-{
-    return p * (_mu * dt + _sigma * random * sqrt(dt));
-    
+
+
+    HD double ExactSolution::get_step(const double w)
+    {
+       return _S = _S * exp((_mu - (_sigma*_sigma) / 2.)*dt + _sigma*sqrt(_dt)*w);
+    }
+
+
+    HD double EulerSolution::get_step(const double w)
+    {
+        return _S = _S * (_mu * dt + _sigma * sqrt(dt) * w *);
+    }
+
+
+
 }
