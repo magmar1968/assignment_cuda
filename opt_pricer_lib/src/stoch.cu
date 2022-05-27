@@ -7,7 +7,10 @@ namespace pricer
     {
     }
 
-
+    HD double StochProcessImp::getS() const
+    {
+         return _S;
+    }
 
     HD double ExactSolution::get_step(const double w)
     {
