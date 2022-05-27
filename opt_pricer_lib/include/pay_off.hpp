@@ -74,6 +74,19 @@ namespace pricer
         double _avg;
     };
 
+    class PayOff_barrier : public PayOff_esotic
+    {
+    public:
+        HD PayOff_barrier(const std::vector<double> & path, double E, double barrier);
+        HD PayOff_barrier(const std::vector<double> & path,
+                          double E,
+                          double upper_barrier,
+                          double lower_barrier);
+        // virtual HD
+
+    protected:
+        double _upper_barrier, _lower_barrier; 
+    };
     
 }
 

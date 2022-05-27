@@ -18,6 +18,7 @@
 #include <iostream> // cout, endl
 #include <math.h>   // sin, cos
 #include <climits>  //INT_MAX
+#include <vector>
 
 
 
@@ -34,6 +35,8 @@ namespace rnd
     #define TAUSWORTH_1 1
     #define TAUSWORTH_2 2
     #define TAUSWORTH_3 3
+
+    using std::vector;
 
 
     typedef unsigned int uint; //for windows
@@ -68,6 +71,10 @@ namespace rnd
        * @return double 
        */
       HD double genUniform(const double min = 0., const double max = 1.);
+      HD double* genUniformVector(
+                                   size_t dim,
+                                  const double min = 0.,
+                                  const double max = 1.);
       /**
        * @brief generate gaussian numbers from a uniform distribution. Use both the possible 
        *        box-muller formulas. Default is the trigonometric one.
@@ -76,6 +83,10 @@ namespace rnd
        * @return double 
        */
       HD double genGaussian(const double mean = 0., const double dev_std = 1.);
+      HD double* genGaussianVector(
+                                const size_t dim,
+                                const double mean = 0.,
+                                const double dev_std = 1.);
 
       HD void   setGaussImpl(const uint type);
       HD bool   getStatus() const;

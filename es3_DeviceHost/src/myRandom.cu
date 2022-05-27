@@ -21,6 +21,17 @@ namespace rnd
         return genUniformInt()/(double)_m * (max - min) + min;
     }
 
+
+    HD double* MyRandomImplementation::genUniformVector( size_t dim,const double min,const double max) 
+    {
+        double * vec = new double[dim];
+        for(size_t it = 0; it < dim; ++it)
+        {
+            vec[it] = genUniform(min,max);
+        }
+        return vec;
+    }    
+
     HD double MyRandomImplementation::genGaussian(const double mean, const double dev_std)
     {
         if(_storedValue)
@@ -59,6 +70,17 @@ namespace rnd
             return  num * dev_std  + mean;
         }
     }
+
+    HD double* MyRandomImplementation::genGaussianVector(const size_t dim, const double mean, const double dev_std)
+    {
+        double *  vec = new double[dim];
+        for(size_t it = 0; it < dim; ++it)
+        {
+            vec[it] = genGaussian(mean,dev_std);  
+        }
+        return vec;
+    }
+
 
 
     HD bool MyRandomImplementation::getStatus() const

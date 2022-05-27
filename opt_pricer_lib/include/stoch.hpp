@@ -1,13 +1,12 @@
 #ifndef __STOCH__
 #define __STOCH__
-
-#include <cmath>
+#include <math.h>
 
 namespace pricer
 {
-#define __host__ H;
-#define __device__ D;
-#define __host__ __device__ HD;
+    #define H __host__
+    #define D __device__
+    #define HD __host__ __device__  
 
     class StochProcess
     {
