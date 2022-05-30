@@ -12,9 +12,9 @@ namespace pricer
     #define HD __host__ __device__ 
     
     
-    HD double average(const std::vector<double> & array);
+    HD double average(const double * array, const size_t dim);
 
 }
 
 
-#endif __LIB__
+#endif 

@@ -1,4 +1,4 @@
-#include "prices_schedule.hpp"
+#include "../include/prices_schedule.hpp"
 namespace pricer
 {
     /*#define H __host__
@@ -39,6 +39,7 @@ namespace pricer
                 if((i>=0)&&(i<dim))
                 {
                     prices[i] = price_init;
+                    return 0;// boh ma un setter può avere un return??
                 }
                 else
                 {

@@ -1,4 +1,4 @@
-#include "myRandom.hpp"
+#include "../include/myRandom.hpp"
 namespace rnd
 {
     HD MyRandomImplementation::MyRandomImplementation(uint m)
