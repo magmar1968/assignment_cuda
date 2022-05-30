@@ -3,10 +3,10 @@ SRC_DIR      = ./src
 INCLUDE_DIR  = ./include
 OBJ_DIR      = ./obj
 TEST_DIR     = ./tests
-FILTRED      = ./src/pathGenerator.cu ./src/pay_off.cu ./src/prices_schedule.cu ./src/stoch.cu
+FILTRED      = ./src/pay_off.cu ./src/prices_schedule.cu
 
 CC    := nvcc #COMPILER
-FLAGS := -std=c++03
+FLAGS :=-dc
 
 SRCFILES      = $(wildcard $(SRC_DIR)/*.cu) #create the source file list
 SRCFILES	 := $(filter-out $(FILTRED), $(SRCFILES))
@@ -31,7 +31,7 @@ $(TARGET): $(OBJECTS);
 		mv -f $(SOURCE_DIR)/*.o $(OBJECT_DIR)
 
 %.o: %.cu 
-	$(CC) -c $< -o $@
+	$(CC) $(FLAGS) -c $< -o $@
 
 clear:
 	rm -f $(OBJECTS) $(OBJ_TEST) $(TARGET) $(TARGET_TEST) 

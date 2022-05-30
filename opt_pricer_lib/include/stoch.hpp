@@ -11,8 +11,9 @@ namespace pricer
     class StochProcess
     {
     public:
-        HD StochProcess();
-        HD virtual double get_step() = 0;  //implementare per sottostanti multiple
+        HD StochProcess(){};
+        HD virtual double get_step(const double ) = 0;  //implementare per sottostanti multiple
+        HD virtual double getS() const = 0;
     };
 
     class StochProcessImp : public StochProcess
@@ -39,6 +40,8 @@ namespace pricer
 
     class EulerSolution : public StochProcessImp
     {
+    public:
+        HD EulerSolution(double mu_0, double sigma_0, double S_0, double dt);
         HD double get_step(const double w);
         //HD double get_step(double mu, double sigma);            //se mu e sigma variano
     };

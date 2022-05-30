@@ -51,8 +51,15 @@ namespace rnd
         HD ~MyRandom(){};
 
         HD virtual double genUniform(const double min = 0, const double max = 1) = 0;
+        HD virtual double*genUniformVector(
+                                  const size_t dim,
+                                  const double min = 0.,
+                                  const double max = 1.);
         HD virtual double genGaussian(const double mean = 0, const double dev_std = 1) = 0;
-
+        HD virtual double* genGaussianVector(
+                                  const size_t dim,
+                                  const double mean = 0.,
+                                  const double dev_std = 1.);
       protected:
         HD virtual uint genUniformInt() = 0;
     };
@@ -72,7 +79,7 @@ namespace rnd
        */
       HD double genUniform(const double min = 0., const double max = 1.);
       HD double* genUniformVector(
-                                   size_t dim,
+                                  const size_t dim,
                                   const double min = 0.,
                                   const double max = 1.);
       /**
