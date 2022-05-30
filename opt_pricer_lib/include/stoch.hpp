@@ -19,6 +19,7 @@ namespace pricer
     {
     public:
         HD StochProcessImp(double mu_0, double sigma_0, double S_0, double dt);
+        HD double getS() const;
 
     protected:
         double _mu;
