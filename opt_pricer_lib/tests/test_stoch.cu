@@ -40,10 +40,10 @@ __host__ void createPath_host(double ** paths,
 
 
 __device__ __host__ void createPath_generic(double ** paths,
-                                       uint *    seeds,
-                                       size_t    index,
-                                       int       dim,
-                                       size_t    path_len )
+                                            uint *    seeds,
+                                            size_t    index,
+                                            int       dim,
+                                            size_t    path_len )
 {
     if(index < dim)
     {
