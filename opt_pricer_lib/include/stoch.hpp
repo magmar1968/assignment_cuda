@@ -33,6 +33,7 @@ namespace pricer
 
     class ExactSolution : public StochProcessImp
     {
+        HD ExactSolution(double mu_0, double sigma_0, double S_0, double dt);
         HD double get_step(const double w);
         //HD double get_step(double mu, double sigma);            //se mu e sigma variano
     };

@@ -18,12 +18,11 @@
 #include <iostream> // cout, endl
 #include <math.h>   // sin, cos
 #include <climits>  //INT_MAX
-#include <vector>  //?
-
-typedef unsigned int uint; //windows
+#define _USE_MATH_DEFINES
 
 namespace rnd
 {
+    typedef unsigned int uint; //windows
     // cuda macro
     #define H __host__
     #define D __device__
@@ -35,9 +34,6 @@ namespace rnd
     #define TAUSWORTH_1 1
     #define TAUSWORTH_2 2
     #define TAUSWORTH_3 3
-
-    using std::vector;
-
 
     typedef unsigned int uint; //for windows
     
