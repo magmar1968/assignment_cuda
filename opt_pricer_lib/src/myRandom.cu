@@ -1,5 +1,7 @@
 #include "../include/myRandom.hpp"
-#include <cmath> //M_PI windows
+#define _USE_MATH_DEFINES
+#include <math.h> //M_PI windows
+
 namespace rnd
 {
     HD MyRandomImplementation::MyRandomImplementation(uint m)
