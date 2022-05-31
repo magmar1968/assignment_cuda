@@ -18,9 +18,9 @@
 #include <iostream> // cout, endl
 #include <math.h>   // sin, cos
 #include <climits>  //INT_MAX
-#include <vector>
+#include <vector>  //?
 
-
+typedef unsigned int uint; //windows
 
 namespace rnd
 {
@@ -51,15 +51,15 @@ namespace rnd
         HD ~MyRandom(){};
 
         HD virtual double genUniform(const double min = 0, const double max = 1) = 0;
-        HD virtual double*genUniformVector(
+        HD virtual double* genUniformVector(
                                   const size_t dim,
                                   const double min = 0.,
-                                  const double max = 1.);
+                                  const double max = 1.)=0;
         HD virtual double genGaussian(const double mean = 0, const double dev_std = 1) = 0;
         HD virtual double* genGaussianVector(
                                   const size_t dim,
                                   const double mean = 0.,
-                                  const double dev_std = 1.);
+                                  const double dev_std = 1.)=0;
       protected:
         HD virtual uint genUniformInt() = 0;
     };
@@ -101,12 +101,12 @@ namespace rnd
     protected: // accessible by all subclasses
       HD MyRandomImplementation(uint m=UINT_MAX); 
       HD void setM(uint m);
-      bool    _status = true;
+      bool    _status;
     
     private:
-      bool    _storedValue = false;
+      bool    _storedValue;
       double  _value;
-      uint    _m, _type = GAUSSIAN_1;
+      uint    _m, _type;
   };
       
   class GenLinCongruential : public MyRandomImplementation

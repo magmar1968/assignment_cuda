@@ -1,9 +1,15 @@
 #include "../include/myRandom.hpp"
+#define _USE_MATH_DEFINES
+#include <math.h> //M_PI windows
+
 namespace rnd
 {
     HD MyRandomImplementation::MyRandomImplementation(uint m)
     :_m(m)
     {
+        _status = true;
+        _storedValue = false;
+        _type = GAUSSIAN_1;
     }
 
     HD void MyRandomImplementation::setGaussImpl(const uint type)
@@ -22,7 +28,7 @@ namespace rnd
     }
 
 
-    HD double* MyRandomImplementation::genUniformVector( size_t dim,const double min,const double max) 
+    HD double* MyRandomImplementation::genUniformVector(size_t dim, const double min, const double max)
     {
         double * vec = new double[dim];
         for(size_t it = 0; it < dim; ++it)
@@ -51,7 +57,7 @@ namespace rnd
                 break;
             
             case GAUSSIAN_2:
-                while(r == 0 or r >= 1)
+                while(r == 0 || r >= 1)
                 {
                    u = genUniform(-1,1); v = genUniform(-1,1);
                    r = u*u + v*v; 
@@ -156,7 +162,7 @@ namespace rnd
 
         genL1 = GenLinCongruential(_seed4);
 
-        if(!genT1.getStatus() and genT2.getStatus() and genT3.getStatus())
+        if(!genT1.getStatus() && genT2.getStatus() && genT3.getStatus())
         {
             // std::cerr << "ERROR: in __FUNCTION__";
             _status = false;
@@ -174,7 +180,7 @@ namespace rnd
     H uint genSeed(bool tausworth )
     {
         uint seed = rand();
-        while(seed < 128 and tausworth)
+        while(seed < 128 && tausworth)
         {
             seed = rand();
         }
