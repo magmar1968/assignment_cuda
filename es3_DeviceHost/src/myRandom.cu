@@ -2,7 +2,7 @@
 namespace rnd
 {
     HD MyRandomImplementation::MyRandomImplementation(uint m)
-    :_m(m)
+    :_m(m),_status(true),_type(GAUSSIAN_1),_storedValue(false)
     {
     }
 

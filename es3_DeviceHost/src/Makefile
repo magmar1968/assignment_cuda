@@ -1,6 +1,7 @@
 SRC= myRandom.cu main.cu  #source files
 OBJECTS=$(SRC:.cu=.o)     #file compilati da linkare
-FLAG=                     #eventuali flag
+CCFLAG= --std=c++03 -dc                 #eventuali flag
+LDFLAG= --std=c++03
 TARGET=../main.x          #nome del file da compilare
 CC=nvcc                   #compilatore
 
@@ -16,12 +17,12 @@ all: $(TARGET)
 # nomecomando: cosa mi serve
 # 	tab o ; cosa devo fare
 $(TARGET): $(OBJECTS)
-	$(CC) -g $(FLAG) $(OBJECTS) -o $@
+	$(CC) -g $(LDFLAG) $(OBJECTS) -o $@
 
 %.o: %.cu 
-	$(CC) -dc -c $< -o $@
+	$(CC) $(CCFLAG) -c $< -o $@
 main.o: main.cu
-	$(CC) -dc -c $< -o $@
+	$(CC) $(CCFLAG) -c $< -o $@
 
 clear:
 	rm *.o $(TARGET)

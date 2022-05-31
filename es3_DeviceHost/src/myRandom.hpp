@@ -94,12 +94,12 @@ namespace rnd
     protected: // accessible by all subclasses
       HD MyRandomImplementation(uint m=UINT_MAX); 
       HD void setM(uint m);
-      bool    _status = true;
+      bool    _status;
     
     private:
-      bool    _storedValue = false;
+      bool    _storedValue;
       double  _value;
-      uint    _m, _type = GAUSSIAN_1;
+      uint    _m, _type;
   };
       
   class GenLinCongruential : public MyRandomImplementation
@@ -126,20 +126,7 @@ namespace rnd
       uint _current;
   };
 
-  #define TAUS_1_K1 13U
-  #define TAUS_1_K2 19U
-  #define TAUS_1_K3 12U
-  #define TAUS_1_M  4294967294UL
-
-  #define TAUS_2_K1 2U
-  #define TAUS_2_K2 25U
-  #define TAUS_2_K3 4U
-  #define TAUS_2_M  4294967288UL
-
-  #define TAUS_3_K1  3U
-  #define TAUS_3_K2  11U
-  #define TAUS_3_K3  17U
-  #define TAUS_3_M   4294967280UL
+  
 
   class GenTausworth : public MyRandomImplementation
   {
@@ -160,6 +147,20 @@ namespace rnd
       uint _type,_k1,_k2,_k3,_m;
       uint _current;
       //tausworth parametres
+      static const uint TAUS_1_K1 = 13U;
+      static const uint TAUS_1_K2 = 19U;
+      static const uint TAUS_1_K3 = 12U;
+      static const uint TAUS_1_M  = 4294967294UL;
+
+      static const uint TAUS_2_K1 = 2U;
+      static const uint TAUS_2_K2 = 25U;
+      static const uint TAUS_2_K3 = 4U;
+      static const uint TAUS_2_M  = 4294967288UL;
+
+      static const uint TAUS_3_K1 = 3U;
+      static const uint TAUS_3_K2 = 11U;
+      static const uint TAUS_3_K3 = 17U;
+      static const uint TAUS_3_M  = 4294967280UL;
   };
 
   class GenCombined : public MyRandomImplementation
