@@ -32,7 +32,7 @@ namespace pricer
 
     HD double EulerSolution::get_step(const double w)
     {
-        return _S = _S * (_mu * _dt + _sigma * sqrt(_dt) * w );
+        return _S = _S * exp(_mu * _dt + _sigma * sqrt(_dt) * w );
     }
 
 
