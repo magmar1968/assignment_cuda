@@ -15,13 +15,13 @@ all: $(TARGET)
 # la struttura di un comando è: 
 # nomecomando: cosa mi serve
 # 	tab o ; cosa devo fare
-$(TARGET): $(OBJECTS) 
+$(TARGET): $(OBJECTS)
 	$(CC) -g $(FLAG) $(OBJECTS) -o $@
 
 %.o: %.cu 
-	$(CC) -c $< -o $@
+	$(CC) -dc -c $< -o $@
 main.o: main.cu
-	$(CC) -c $< -o $@
+	$(CC) -dc -c $< -o $@
 
 clear:
 	rm *.o $(TARGET)

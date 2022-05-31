@@ -1,9 +1,4 @@
-#include "myRandom.hpp"
-#include <iostream>
-
-#define GPU 0
-#define N   1000000
-
+#include "header.h"
 // device call
 __global__ void kernel(  double *C,const uint *seeds, int dim) {
     genAndAdd_device(C, seeds, dim);
@@ -42,10 +37,30 @@ __host__ __device__ void genAndAdd_generic( double *C,const uint * seeds, const 
 int main()
 {
     double * devC;
-    double C[N] = {};
+    uint   * devSeeds;
+    double * C = new double[N];
+    uint * seeds = new uint[N];
+    for(size_t i = 0; i < N; ++i )
+    {
+        seeds[i] = rnd::genSeed(true);
+    } 
+
+
 
     if(GPU == true){
+        uint grid_size = ((N + BLOCK_SIZE)/BLOCK_SIZE);
         cudaMalloc((void**)&devC,N*sizeof(double));
+        cudaMalloc((void**)&devSeeds, N * sizeof(uint));
+
+        cudaMemcpy(devSeeds,seeds,N*sizeof(uint),cudaMemcpyHostToDevice);
+
+        kernel <<< grid_size, BLOCK_SIZE >>> (devC,seeds,N);
+        
+        cudaMemcpy(C,devC,N*sizeof(double),cudaMemcpyDeviceToHost);
+        for(int i = 0; i < N; ++i)
+        {
+            std::cout << C[i] << std::endl;
+        }
     }
     else{
 
