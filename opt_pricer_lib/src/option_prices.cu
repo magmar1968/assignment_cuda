@@ -1,9 +1,7 @@
-#include "../include/prices_schedule.hpp"
+/*Option prices implementation*/
+#include "../include/option_prices.hpp"
 namespace pricer
 {
-    /*#define H __host__
-    #define D __device__
-    #define HD __host__ __device__ */
 
     Option_prices::Option_prices(double time_init, double* prices_init, int dim_init)
     {
@@ -46,50 +44,6 @@ namespace pricer
                     return -1;
                 }
             }
-
-
- /*--------------------------------------------------------------------------------------------------------------------*/
-
-
-
-    Schedule::Schedule(double t_ref, double delta_t, int dim_init)
-    {
-        dim = dim_init;
-        t = new double[dim];
-        for(int i=0;i<dim;i++)
-        {
-            t[i] = t_ref +delta_t * i;
-        }
-        assert(Check_order());
-    }
-    Schedule::Schedule(double *t_init, int dim_init)
-    {
-        dim = dim_init;
-        t = new double[dim];
-        for(int i=0;i<dim;i++)
-        {
-            t[i] = t_init[i];
-        }
-        assert(Check_order());
-    }
-    double Schedule::Get_t(int i)
-    {
-        return t[i];
-    }
-    int Schedule::Get_dim(void)
-    {
-        return dim;
-    }
-    bool Schedule::Check_order()
-        {
-            for(int i=1;i<dim;i++)
-            {
-                if(t[i]<=t[i-1]) {return false;}
-            }
-            return true;
-        }
-}
-
 
 /*int main()   //per fare qualche prova
 {
