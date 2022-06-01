@@ -3,28 +3,28 @@
 #include "../include/myudouble.hpp"
 namespace pricer
 {
-    myudouble::myudouble(double number)
+    HD myudouble::myudouble(double number)
     :_number(number)
     {
 
-        assert(check_sign());
+        assert(check_sign());    //prossimamente: usare exit e ritornare codice
     }
 
 
-    void myudouble::set_number(double number)
+    HD void myudouble::set_number(double number)
     {
         _number = number;
-        assert(check_sign());
+        assert(check_sign());  //prossimamente: usare exit e ritornare codice
     }
 
 
-    double myudouble::get_number()
+    HD double myudouble::get_number()
     {
         return _number;
     }
 
 
-    bool myudouble::check_sign()
+    HD bool myudouble::check_sign()
     {
         return _number>0 ? true : false;
     }

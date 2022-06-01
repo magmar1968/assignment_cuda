@@ -2,17 +2,22 @@
 
 namespace pricer
 {
+
+#define H __host__
+#define D __device__
+#define HD __host__ __device__   
+
+
     class myudouble
     {
     public:
-        myudouble(double number);
+        HD myudouble(double number);
 
-        double get_number();
-        void set_number(double number);
-        bool check_sign();
-
+        HD double get_number();
+        HD void set_number(double number);  //forse è inutile
+        HD bool check_sign();
     private:
-        double _number;
+        double  _number;   //se set è inutile allora è const
     };
 }
 
