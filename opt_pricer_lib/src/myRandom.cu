@@ -1,6 +1,5 @@
 #include "../include/myRandom.hpp"
-#define _USE_MATH_DEFINES
-#include <math.h> //M_PI windows
+
 
 namespace rnd
 {
@@ -28,15 +27,15 @@ namespace rnd
     }
 
 
-    HD double* MyRandomImplementation::genUniformVector(size_t dim, const double min, const double max)
-    {
-        double * vec = new double[dim];
-        for(size_t it = 0; it < dim; ++it)
-        {
-            vec[it] = genUniform(min,max);
-        }
-        return vec;
-    }    
+    // HD double* MyRandomImplementation::genUniformVector(size_t dim, const double min, const double max)
+    // {
+    //     double * vec = new double[dim];
+    //     for(size_t it = 0; it < dim; ++it)
+    //     {
+    //         vec[it] = genUniform(min,max);
+    //     }
+    //     return vec;
+    // }    
 
     HD double MyRandomImplementation::genGaussian(const double mean, const double dev_std)
     {
@@ -77,15 +76,15 @@ namespace rnd
         }
     }
 
-    HD double* MyRandomImplementation::genGaussianVector(const size_t dim, const double mean, const double dev_std)
-    {
-        double *  vec = new double[dim];
-        for(size_t it = 0; it < dim; ++it)
-        {
-            vec[it] = genGaussian(mean,dev_std);  
-        }
-        return vec;
-    }
+    // HD double* MyRandomImplementation::genGaussianVector(const size_t dim, const double mean, const double dev_std)
+    // {
+    //     double *  vec = new double[dim];
+    //     for(size_t it = 0; it < dim; ++it)
+    //     {
+    //         vec[it] = genGaussian(mean,dev_std);  
+    //     }
+    //     return vec;
+    // }
 
 
 

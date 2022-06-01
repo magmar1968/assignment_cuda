@@ -47,15 +47,15 @@ namespace rnd
         HD ~MyRandom(){};
 
         HD virtual double genUniform(const double min = 0, const double max = 1) = 0;
-        HD virtual double* genUniformVector(
-                                  const size_t dim,
-                                  const double min = 0.,
-                                  const double max = 1.)=0;
+        // HD virtual double* genUniformVector(
+        //                           const size_t dim,
+        //                           const double min = 0.,
+        //                           const double max = 1.)=0;
         HD virtual double genGaussian(const double mean = 0, const double dev_std = 1) = 0;
-        HD virtual double* genGaussianVector(
-                                  const size_t dim,
-                                  const double mean = 0.,
-                                  const double dev_std = 1.)=0;
+        // HD virtual double* genGaussianVector(
+        //                           const size_t dim,
+        //                           const double mean = 0.,
+        //                           const double dev_std = 1.)=0;
       protected:
         HD virtual uint genUniformInt() = 0;
     };
@@ -74,10 +74,10 @@ namespace rnd
        * @return double 
        */
       HD double genUniform(const double min = 0., const double max = 1.);
-      HD double* genUniformVector(
-                                  const size_t dim,
-                                  const double min = 0.,
-                                  const double max = 1.);
+      // HD double* genUniformVector(
+      //                             const size_t dim,
+      //                             const double min = 0.,
+      //                             const double max = 1.);
       /**
        * @brief generate gaussian numbers from a uniform distribution. Use both the possible 
        *        box-muller formulas. Default is the trigonometric one.
@@ -86,10 +86,10 @@ namespace rnd
        * @return double 
        */
       HD double genGaussian(const double mean = 0., const double dev_std = 1.);
-      HD double* genGaussianVector(
-                                const size_t dim,
-                                const double mean = 0.,
-                                const double dev_std = 1.);
+      // HD double* genGaussianVector(
+      //                           const size_t dim,
+      //                           const double mean = 0.,
+      //                           const double dev_std = 1.);
 
       HD void   setGaussImpl(const uint type);
       HD bool   getStatus() const;

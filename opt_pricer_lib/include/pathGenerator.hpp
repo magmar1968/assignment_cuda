@@ -14,13 +14,16 @@ namespace pricer
 	class Path
 	{
 	public:
-		HD Path(){};
-		HD virtual double* getPath();
-		HD virtual size_t getN_Steps();
+		HD Path(rnd::MyRandom* gnr, StochProcess* stc, size_t steps);
+		HD double* getPath()    const;
+		HD size_t  getN_Steps() const;
 
 
 	protected:
-	
+		double* _path; // implementare container adeguato
+		size_t _steps;
+		StochProcess* _stc;
+		rnd::MyRandom* _gnr;
 	};
 	
 
@@ -28,15 +31,9 @@ namespace pricer
 	{
 	public:
 		HD PathImp(rnd::MyRandom* gnr, StochProcess* stc, size_t steps);
-		HD double* getPath();
-		HD size_t getN_Steps();
 
 	private:
 		HD void genPath();
-		double* _path;
-		size_t _steps;
-		rnd::MyRandom* _gnr;
-		StochProcess* _stc;
 	};
 }
 

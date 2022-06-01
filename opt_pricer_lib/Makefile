@@ -6,8 +6,8 @@ TEST_DIR     = ./tests
 FILTRED      = ./src/pay_off.cu ./src/prices_schedule.cu
 
 CC    := nvcc #COMPILER
-FLAGS := -std=c++11
-
+LDFLAGS = 
+CCFLAGS = -rdc=true 
 SRCFILES      = $(wildcard $(SRC_DIR)/*.cu) #create the source file list
 SRCFILES	 := $(filter-out $(FILTRED), $(SRCFILES))
 OBJECTS      := $(SRCFILES:.cu=.o)
@@ -22,16 +22,15 @@ test: $(TARGET_TEST);
 
 
 $(TARGET_TEST): $(OBJECTS) $(OBJ_TEST); 
-	\$(CC) $(FLAGS) $(OBJECTS) $(subst .x,.o,$@) -o $@ && ./$@
+	\$(CC) $(LDFLAGS) $(OBJECTS) $(subst .x,.o,$@) -o $@ && ./$@
 	
 
 
 $(TARGET): $(OBJECTS);
-		$(CC) -g $(FLAGS) $(OBJECTS) -o $(TARGET) \
-		mv -f $(SOURCE_DIR)/*.o $(OBJECT_DIR)
+		$(CC) $(LDFLAGS) $(OBJECTS) -o $(TARGET) \
 
 %.o: %.cu 
-	$(CC) $(FLAGS) -c -dc $< -o $@
+	$(CC) $(CCFLAGS) -c $< -o $@
 
 clear:
 	rm -f $(OBJECTS) $(OBJ_TEST) $(TARGET) $(TARGET_TEST) 

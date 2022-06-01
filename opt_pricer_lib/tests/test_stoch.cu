@@ -59,6 +59,7 @@ __device__ __host__ void createPath_generic(double ** paths,
 
 #define NPATH 1024
 #define STEPS 1000
+
 int main()
 {
 
@@ -80,9 +81,11 @@ int main()
     {
         paths[i] = new double[STEPS];
     }
+    
+    
     cudaSetDevice(0);
     cudaStatus = cudaMalloc((void**)&dev_seeds,NPATH*sizeof(int));
-    if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMalloc failed!"); }
+    if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMalloc failed!\n"); }
     
     cudaMalloc((void**)&dev_paths,NPATH*STEPS*sizeof(double));
     cudaMemcpy(dev_seeds,seeds,NPATH,cudaMemcpyHostToDevice);
