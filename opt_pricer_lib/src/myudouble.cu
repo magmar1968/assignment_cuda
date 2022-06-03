@@ -11,30 +11,23 @@ namespace pricer
     }
 
 
-    HD void myudouble::set_number(double number)
+    /*HD void myudouble::set_number(double number)
     {
         _number = number;
-        assert(check_sign());  //prossimamente: usare exit e ritornare codice
-    }
+        assert(check_sign());  //prossimamente: usare exit e ritornare codice      //utile?
+    }*/
 
 
-    HD double myudouble::get_number()
+    HD double myudouble::get_number() const
     {
         return _number;
     }
 
 
-    HD bool myudouble::check_sign()
+    HD bool myudouble::check_sign() const
     {
         return _number>0 ? true : false;
     }
 }
 
 
-//Per qualche prova
-/*#include <iostream>
-int main()
-{
-    pricer::myudouble num(0.0004);
-    std::cout<<num.get_number()<<std::endl;
-}*/
