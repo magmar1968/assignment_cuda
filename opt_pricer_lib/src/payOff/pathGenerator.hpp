@@ -3,12 +3,13 @@
 
 #include "myRandom.hpp"
 #include "stoch.hpp"
+#include "schedule.hpp"
 
 namespace pricer
 {
-	#define H __host__
-	#define D __device__
-	#define HD __host__ __device__   
+#define H __host__
+#define D __device__
+#define HD __host__ __device__   
 
 
 	class Path
@@ -24,8 +25,9 @@ namespace pricer
 		size_t _steps;
 		StochProcess* _stc;
 		rnd::MyRandom* _gnr;
+		pricer::Schedule* _cal;
 	};
-	
+
 
 	class PathImp : public Path
 	{

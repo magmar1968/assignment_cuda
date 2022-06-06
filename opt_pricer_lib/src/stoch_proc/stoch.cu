@@ -12,4 +12,8 @@ namespace pricer
          return _S;
     }    
 
+    HD double StochProcessImp::get_dt() const
+    {
+        return _dt;
+    }
 }
