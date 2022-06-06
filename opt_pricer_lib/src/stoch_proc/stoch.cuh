@@ -14,6 +14,7 @@ namespace pricer
         HD StochProcess(){};
         HD virtual double get_step(const double ) = 0;  //implementare per sottostanti multiple
         HD virtual double getS() const = 0;
+        HD virtual double get_dt() const = 0;
     };
 
     class StochProcessImp : public StochProcess
@@ -21,6 +22,7 @@ namespace pricer
     public:
         HD StochProcessImp(double mu_0, double sigma_0, double S_0, double dt);
         HD double getS() const;
+        HD double get_dt() const;
 
     protected:
         double _mu;

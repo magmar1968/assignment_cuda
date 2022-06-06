@@ -16,9 +16,10 @@
 
 
 #include <iostream> // cout, endl
+#define _USE_MATH_DEFINES
 #include <math.h>   // sin, cos
 #include <climits>  //INT_MAX
-#define _USE_MATH_DEFINES
+
 
 namespace rnd
 {

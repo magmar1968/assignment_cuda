@@ -1,4 +1,4 @@
-/*Schedule implementation*/
+* Schedule implementation* /
 #include "../include/schedule.hpp"
 
 namespace pricer
@@ -9,18 +9,18 @@ namespace pricer
         :_dim(dim)
     {
         _t = new double[_dim];
-        for(int i=0;i<_dim;i++)
+        for (int i = 0; i < _dim; i++)
         {
-            _t[i] = t_ref +delta_t * i;
+            _t[i] = t_ref + delta_t * i;
         }
         assert(Check_order());
     }
-    HD Schedule::Schedule(double *t_init, int dim)
+    HD Schedule::Schedule(double* t_init, int dim)
         :_dim(dim)
     {
 
         _t = new double[dim];
-        for(int i=0;i<_dim;i++)
+        for (int i = 0; i < _dim; i++)
         {
             _t[i] = t_init[i];
         }
@@ -35,12 +35,12 @@ namespace pricer
         return _dim;
     }
     HD bool Schedule::Check_order()
+    {
+        for (int i = 1; i < _dim; i++)
         {
-            for(int i=1;i<_dim;i++)
-            {
-                if(_t[i]<=_t[i-1]) {return false;}
-            }
-            return true;
+            if (_t[i] <= _t[i - 1]) { return false; }
         }
+        return true;
+    }
 }
 
