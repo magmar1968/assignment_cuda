@@ -1,4 +1,4 @@
-#include "../include/pathGenerator.hpp"
+#include "pathGenerator.cuh"
 
 namespace pricer
 {
@@ -34,7 +34,7 @@ namespace pricer
 		_path[0] = _stc->getS();
 		/*for (int it = 1; it < _steps; ++it)
 		{
-			_path[it] = _stc->get_step(_gnr->genGaussian());      //questa serve se non c'è schedule
+			_path[it] = _stc->get_step(_gnr->genGaussian());      //questa serve se non c'ï¿½ schedule
 		}*/
 
 		double t_init = _cal->Get_t(0);
