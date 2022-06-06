@@ -1,3 +1,7 @@
+#ifndef __SCHEDULE__
+#define __SCHEDULE__
+
+
 /*Definizione delle classe schedule*/
 #include <iostream>
 #include <cassert>
@@ -27,6 +31,7 @@ namespace pricer
         HD Schedule(double* t_init, int dim);               //costruttore con il vettore dei tempi in input
         HD double Get_t(int i);                                 //recupera l'istante di tempo i-esimo in years fractions
         HD int Get_dim(void);
-
+        
     };
 }
+#endif 

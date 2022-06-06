@@ -28,7 +28,7 @@ namespace pricer
     }
     HD double Schedule::Get_t(int i)
     {
-        return _t[i];
+        return  i<_dim? _t[i] : -1;
     }
     HD int Schedule::Get_dim(void)
     {
@@ -43,4 +43,3 @@ namespace pricer
         return true;
     }
 }
-
