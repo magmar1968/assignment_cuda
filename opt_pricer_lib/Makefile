@@ -1,9 +1,11 @@
+FILTER_OUT = $(foreach v,$(2),$(if $(findstring $(1),$(v)),,$(v)))
+FILTER_IN  = $(foreach v,$(2),$(if $(findstring $(1),$(v)),$(v),))
 #Compiler and Linker
 CC          := nvcc
 
 #The Target Binary Program
 TARGET      := #pricer
-TEST        := $(notdir $(wildcard ./src/tests/*.cu)) 
+TEST        := $(basename $(notdir $(wildcard ./src/tests/*.cu)))
 #The Directories, Source, Includes, Objects, Binary and Resources
 SRCDIR      := src
 INCDIR      := inc
@@ -14,7 +16,7 @@ DEPEXT      := d
 OBJEXT      := o
 
 #Flags, Libraries and Includes
-LDFLAGS  = 
+LDFLAGS  = --gpu-architecture=sm_50
 CCFLAGS := -rdc=true --gpu-architecture=sm_50
 # INC         := -I$(INCDIR) -I/usr/local/include
 # INCDEP      := -I$(INCDIR)
@@ -24,6 +26,7 @@ CCFLAGS := -rdc=true --gpu-architecture=sm_50
 #---------------------------------------------------------------------------------
 SOURCES     := $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
 OBJECTS     := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.$(OBJEXT)))
+FILTER_OBJ  := $(call FILTER_OUT,test, $(OBJECTS))
 
 #Defauilt Make
 all: resources $(TEST) #$(TARGET)
@@ -53,10 +56,12 @@ cleaner: clean
 
 #Link
 $(TARGET): $(OBJECTS)
-	$(CC) $(LDFLAGS) -o $(TARGETDIR)/$(TARGET) $^ $(LIB)
+	$(CC) $(LDFLAGS) -o $(TARGETDIR)/$@ $^ $(LIB)
 
 $(TEST): $(OBJECTS)
-	$(CC) $(LDFLAGS) -o $(TARGETDIR)/$@ $^ 
+	@printf "\n"
+	$(CC) $(LDFLAGS) -o $(TARGETDIR)/$@ $(FILTER_OBJ) $(call FILTER_IN,$(basename $@),$(OBJECTS))\
+	&& ./$(TARGETDIR)/$@
 
 #Compile
 $(BUILDDIR)/%.$(OBJEXT): $(SRCDIR)/%.$(SRCEXT)
