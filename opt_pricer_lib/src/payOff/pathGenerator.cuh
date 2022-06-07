@@ -3,7 +3,7 @@
 
 #include "../myRandom/myRandom.cuh"
 #include "../stoch_proc/stoch.cuh"
-#include "./schedule/schedule.cuh"
+#include "schedule/schedule.cuh"
 
 namespace pricer
 {
@@ -15,7 +15,7 @@ namespace pricer
 	class Path
 	{
 	public:
-		HD Path(rnd::MyRandom* gnr, StochProcess* stc, size_t steps);
+		HD Path(rnd::MyRandom* gnr, StochProcess* stc, Schedule* cal, size_t steps);
 		HD double* getPath()    const;
 		HD size_t  getN_Steps() const;
 
@@ -25,14 +25,14 @@ namespace pricer
 		size_t _steps;
 		StochProcess* _stc;
 		rnd::MyRandom* _gnr;
-		pricer::Schedule* _cal;
+		Schedule* _cal;
 	};
 
 
 	class PathImp : public Path
 	{
 	public:
-		HD PathImp(rnd::MyRandom* gnr, StochProcess* stc, size_t steps);
+		HD PathImp(rnd::MyRandom* gnr, StochProcess* stc, Schedule* cal, size_t steps);
 
 	private:
 		HD void genPath();

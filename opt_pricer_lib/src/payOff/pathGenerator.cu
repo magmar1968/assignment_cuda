@@ -1,9 +1,9 @@
 #include "pathGenerator.cuh"
-
+#include "cmath"
 namespace pricer
 {
-	HD Path::Path(rnd::MyRandom* gnr, StochProcess* stc, size_t steps)
-		:_gnr(gnr), _stc(stc), _steps(steps)
+	HD Path::Path(rnd::MyRandom* gnr, StochProcess* stc, Schedule* cal, size_t steps)
+		:_gnr(gnr), _stc(stc), _cal(cal), _steps(steps)
 	{
 		_path = new double[_steps];
 	}
@@ -18,8 +18,8 @@ namespace pricer
 		return _steps;
 	}
 
-	HD PathImp::PathImp(rnd::MyRandom* gnr, StochProcess* stc, size_t steps)
-		:Path(gnr, stc, steps)
+	HD PathImp::PathImp(rnd::MyRandom* gnr, StochProcess* stc, Schedule* cal, size_t steps)
+		:Path(gnr, stc, cal, steps)
 	{
 		genPath();
 	}
@@ -27,36 +27,34 @@ namespace pricer
 
 	HD void PathImp::genPath()
 	{
-		//double rnd_array[_steps];
 		/*double* rnd_array = new double[_steps];
-		for (int i = 0; i < _steps; ++i)                      //questa parte non serve forse
+		for (int i = 0; i < _steps; ++i)                  //questa parte non serve se non ci interessa memorizzare i numeri estratti
 			rnd_array[i] = _gnr->genGaussian();*/
+
+
 		_path[0] = _stc->getS();
 		/*for (int it = 1; it < _steps; ++it)
 		{
-			_path[it] = _stc->get_step(_gnr->genGaussian());      //questa serve se non c'� schedule
+			_path[it] = _stc->get_step(_gnr->genGaussian());      //questa non serve se c'� schedule
 		}*/
 
-		double t_init = _cal->Get_t(0);
-		double t_final = _cal->Get_t(_steps - 1);
+
 		double dt = _stc->get_dt();    //adesso prende dt dal procstoc
 		int prox = 1;
-
-		for (double tm = t_init; tm <= t_final; tm += dt)
+		double temp;
+		double *date =  new double [_steps];  //prende le date dalla schedule
+		_cal->Get_t(date);
+		for (double tme = date[0];
+			tme < date[_steps-1] || abs(tme-date[_steps-1])<0.001;      //controlla di essere entro la data finale della schedule
+			tme += dt)
 		{
-
-			if (tm == (_cal->Get_t(prox) - dt))
+			temp = _stc->get_step(_gnr->genGaussian());
+			if(abs(date[prox]-tme)<0.0005)                   //controlla se il tempo corrisponde a uno dei time nella schedule
 			{
-				_path[prox] = _stc->get_step(_gnr->genGaussian());
+				_path[prox] = temp;
 				prox++;
 			}
-			else
-			{
-				_stc->get_step(_gnr->genGaussian());
-			}
-
 		}
-
 	}
 
 }

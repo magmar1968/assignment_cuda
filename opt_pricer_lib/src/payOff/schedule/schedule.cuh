@@ -29,7 +29,7 @@ namespace pricer
 
         HD Schedule(double t_ref, double delta_t, int dim); //costruisce un vettore i cui elementi sono equidistanti
         HD Schedule(double* t_init, int dim);               //costruttore con il vettore dei tempi in input
-        HD double Get_t(int i);                                 //recupera l'istante di tempo i-esimo in years fractions
+        HD void Get_t(double* ptr);                                 //recupera l'istante di tempo i-esimo in years fractions
         HD int Get_dim(void);
         
     };

@@ -26,9 +26,12 @@ namespace pricer
         }
         assert(Check_order());
     }
-    HD double Schedule::Get_t(int i)
+    HD void Schedule::Get_t(double *ptr)
     {
-        return  i<_dim? _t[i] : -1;
+        for (int i = 0; i < _dim; i++)
+        {
+            ptr[i] = _t[i];
+        }
     }
     HD int Schedule::Get_dim(void)
     {
