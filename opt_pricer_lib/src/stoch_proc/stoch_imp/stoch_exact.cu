@@ -7,7 +7,7 @@ namespace pricer
     HD StocProcess_ExactSolution::StocProcess_ExactSolution(double mu_0, double sigma_0, double S_0, double dt)
         : StochProcessImp(mu_0,sigma_0,S_0,dt)
     {
-        
+        _exact = true;
     }
     
     HD double StocProcess_ExactSolution::get_step(const double w)

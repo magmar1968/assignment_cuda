@@ -1,5 +1,5 @@
 #ifndef __TAUSWORTH__
-#define __TAUSWPRTH__
+#define __TAUSWORTH__
 
 #include "../myRandom.cuh"
 

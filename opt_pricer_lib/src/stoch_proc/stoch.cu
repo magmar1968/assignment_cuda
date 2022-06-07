@@ -16,4 +16,9 @@ namespace pricer
     {
         return _dt;
     }
+
+    HD double StochProcessImp::get_exact() const
+    {
+        return _exact;
+    }
 }

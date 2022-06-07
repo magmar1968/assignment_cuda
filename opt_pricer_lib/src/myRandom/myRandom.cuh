@@ -23,7 +23,6 @@
 
 namespace rnd
 {
-    typedef unsigned int uint; //windows
     // cuda macro
     #define H __host__
     #define D __device__

@@ -1,22 +1,22 @@
 #include <iostream>
-#include "../../src/myRandom/myRandom.cuh"
-#include "../../src/myRandom/myRandom_gnr/tausworth.cuh"
-#include "../../src/stoch_proc/stoch_imp/stoch_euler.cuh"
-#include "../../src/stoch_proc/stoch.cuh"
-#include "../../src/payOff/pathGenerator.cuh"
-#include "../../src/payOff/schedule/schedule.cuh"
+#include "/../src/myRandom/myRandom.cuh"
+#include "/../src/myRandom/myRandom_gnr/tausworth.cuh"
+#include "/../src/stoch_proc/stoch_imp/stoch_euler.cuh"
+#include "/../src/stoch_proc/stoch.cuh"
+#include "/../src/payOff/pathGenerator.cuh"
+#include "/../src/payOff/schedule/schedule.cuh"
 
 typedef unsigned int uint;
 
-//__global__ void kernel(double**, uint*, pricer::Schedule*, int, size_t);
-//__device__ void createPath_device(double**, uint*, pricer::Schedule*, int, size_t);
+__global__ void kernel(double**, uint*, pricer::Schedule*, int, size_t);
+__device__ void createPath_device(double**, uint*, pricer::Schedule*, int, size_t);
 __host__   void createPath_host(double**, uint*, pricer::Schedule*, int, size_t);
 __host__ __device__ void createPath_generic(double**, uint*, size_t, pricer::Schedule*, int, size_t);
 
 
 
 
-/*__global__ void kernel(double** paths,
+__global__ void kernel(double** paths,
     uint* seeds,
     pricer::Schedule* cal,
     int       dim,
@@ -33,7 +33,7 @@ __device__ void createPath_device(double** paths,
 {
     size_t index = blockIdx.x * blockDim.x + threadIdx.x;
     createPath_generic(paths, seeds, index, cal, dim, path_len);
-}*/
+}
 
 __host__ void createPath_host(double** paths,
     uint* seeds,
@@ -48,7 +48,7 @@ __host__ void createPath_host(double** paths,
 }
 
 
-/*__device__*/ __host__ void createPath_generic(double** paths,
+__device__ __host__ void createPath_generic(double** paths,
     uint* seeds,
     size_t    index,
     pricer::Schedule* cal,

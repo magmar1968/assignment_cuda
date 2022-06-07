@@ -44,15 +44,22 @@ namespace pricer
 		double temp;
 		double *date =  new double [_steps];  //prende le date dalla schedule
 		_cal->Get_t(date);
-		for (double tme = date[0];
-			tme < date[_steps-1] || abs(tme-date[_steps-1])<0.001;      //controlla di essere entro la data finale della schedule
-			tme += dt)
+		if (_stc->get_exact())
 		{
-			temp = _stc->get_step(_gnr->genGaussian());
-			if(abs(date[prox]-tme)<0.0005)                   //controlla se il tempo corrisponde a uno dei time nella schedule
+			//bisogna settare dt del processo stocastico, dipenderà da come è fatta la schedule. friend class per cambiare dt a procstoc?
+		}
+		else
+		{
+			for (double tme = date[0];
+				tme < date[_steps - 1] || abs(tme - date[_steps - 1]) < 0.001;      //controlla di essere entro la data finale della schedule
+				tme += dt)
 			{
-				_path[prox] = temp;
-				prox++;
+				temp = _stc->get_step(_gnr->genGaussian());
+				if (abs(date[prox] - tme) < 0.0005)                   //controlla se il tempo corrisponde a uno dei time nella schedule
+				{
+					_path[prox] = temp;
+					prox++;
+				}
 			}
 		}
 	}
