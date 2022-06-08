@@ -21,13 +21,50 @@ namespace pricer
         //HD void set_number(double number); //utile?
         HD bool check_sign() const;
 
+        //operators overloading
+        myudouble& operator+=(const myudouble& rhs);
+        
+        myudouble& operator-=(const myudouble& rhs);
+
+        double* operator*(const myudouble& rhs)
+        {
+            return &_number;
+        }
+
+
     private:
         double  _number;
        
     };
+    typedef pricer::myudouble udb;
+
+    inline myudouble operator+(myudouble& lhs, const myudouble& rhs)
+    {
+        lhs += rhs;
+        return lhs;
+    }
+    inline myudouble operator+(myudouble& lhs, const myudouble& rhs)
+    {
+        lhs += myudouble(rhs);
+        return lhs;
+    }
+
+    inline bool operator==(const myudouble& lhs, const myudouble& rhs)
+    { 
+        return lhs.get_number() == rhs.get_number() ? true : false;
+    }
+    inline bool operator!=(const myudouble& lhs, const myudouble& rhs){return !operator==(lhs,rhs);}
+    inline bool operator< (const myudouble& lhs, const myudouble& rhs)
+    {
+        return lhs.get_number() < rhs.get_number() ? true : false;     
+    }
+    inline bool operator> (const myudouble& lhs, const myudouble& rhs){return  operator< (rhs,lhs);}
+    inline bool operator<=(const myudouble& lhs, const myudouble& rhs){return !operator> (lhs,rhs);}
+    inline bool operator>=(const myudouble& lhs, const myudouble& rhs){return !operator< (lhs,rhs);}
+
+
 
 }
 
-typedef pricer::myudouble udb;
 
 #endif

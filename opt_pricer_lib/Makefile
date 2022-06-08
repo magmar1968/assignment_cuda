@@ -29,7 +29,7 @@ OBJECTS     := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.$(OBJE
 FILTER_OBJ  := $(call FILTER_OUT,test, $(OBJECTS))
 
 #Defauilt Make
-all: resources $(TEST) #$(TARGET)
+all: resources $(TEST) #$(TARGET) #compile all
 
 #Remake
 remake: cleaner all
