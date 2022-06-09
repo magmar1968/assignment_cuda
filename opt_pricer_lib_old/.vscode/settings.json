@@ -1,7 +1,0 @@
-{
-    "makefile.extensionOutputFolder": "./.vscode",
-    "files.associations": {
-        "cmath": "cpp",
-        "fstream": "cpp"
-    }
-}
