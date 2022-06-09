@@ -1,0 +1,127 @@
+make --dry-run --always-make --keep-going --print-directory
+make: Entering directory '/home/magmar68/Documents/Unimi/Metodi_comp/assignment_cuda/opt_pricer_lib'
+ 
+mkdir -p bin
+mkdir -p obj
+ 
+mkdir -p obj/tests/
+nvcc -rdc=true --gpu-architecture=sm_50 -c -o obj/tests/test_makefile.o src/tests/test_makefile.cu
+nvcc -rdc=true --gpu-architecture=sm_50 -MM src/tests/test_makefile.cu > obj/tests/test_makefile.d
+cp -f obj/tests/test_makefile.d obj/tests/test_makefile.d.tmp
+sed -e 's|.*:|obj/tests/test_makefile.o:|' < obj/tests/test_makefile.d.tmp > obj/tests/test_makefile.d
+sed -e 's/.*://' -e 's/\\$//' < obj/tests/test_makefile.d.tmp | fmt -1 | sed -e 's/^ *//' -e 's/$/:/' >> obj/tests/test_makefile.d
+rm -f obj/tests/test_makefile.d.tmp
+ 
+mkdir -p obj/tests/
+nvcc -rdc=true --gpu-architecture=sm_50 -c -o obj/tests/test_stoch.o src/tests/test_stoch.cu
+nvcc -rdc=true --gpu-architecture=sm_50 -MM src/tests/test_stoch.cu > obj/tests/test_stoch.d
+cp -f obj/tests/test_stoch.d obj/tests/test_stoch.d.tmp
+sed -e 's|.*:|obj/tests/test_stoch.o:|' < obj/tests/test_stoch.d.tmp > obj/tests/test_stoch.d
+sed -e 's/.*://' -e 's/\\$//' < obj/tests/test_stoch.d.tmp | fmt -1 | sed -e 's/^ *//' -e 's/$/:/' >> obj/tests/test_stoch.d
+rm -f obj/tests/test_stoch.d.tmp
+ 
+mkdir -p obj/tests/
+nvcc -rdc=true --gpu-architecture=sm_50 -c -o obj/tests/test_myRandom.o src/tests/test_myRandom.cu
+nvcc -rdc=true --gpu-architecture=sm_50 -MM src/tests/test_myRandom.cu > obj/tests/test_myRandom.d
+cp -f obj/tests/test_myRandom.d obj/tests/test_myRandom.d.tmp
+sed -e 's|.*:|obj/tests/test_myRandom.o:|' < obj/tests/test_myRandom.d.tmp > obj/tests/test_myRandom.d
+sed -e 's/.*://' -e 's/\\$//' < obj/tests/test_myRandom.d.tmp | fmt -1 | sed -e 's/^ *//' -e 's/$/:/' >> obj/tests/test_myRandom.d
+rm -f obj/tests/test_myRandom.d.tmp
+mkdir -p obj/payOff/
+nvcc -rdc=true --gpu-architecture=sm_50 -c -o obj/payOff/pathGenerator.o src/payOff/pathGenerator.cu
+nvcc -rdc=true --gpu-architecture=sm_50 -MM src/payOff/pathGenerator.cu > obj/payOff/pathGenerator.d
+cp -f obj/payOff/pathGenerator.d obj/payOff/pathGenerator.d.tmp
+sed -e 's|.*:|obj/payOff/pathGenerator.o:|' < obj/payOff/pathGenerator.d.tmp > obj/payOff/pathGenerator.d
+sed -e 's/.*://' -e 's/\\$//' < obj/payOff/pathGenerator.d.tmp | fmt -1 | sed -e 's/^ *//' -e 's/$/:/' >> obj/payOff/pathGenerator.d
+rm -f obj/payOff/pathGenerator.d.tmp
+ 
+mkdir -p obj/payOff/
+nvcc -rdc=true --gpu-architecture=sm_50 -c -o obj/payOff/option_prices.o src/payOff/option_prices.cu
+nvcc -rdc=true --gpu-architecture=sm_50 -MM src/payOff/option_prices.cu > obj/payOff/option_prices.d
+cp -f obj/payOff/option_prices.d obj/payOff/option_prices.d.tmp
+sed -e 's|.*:|obj/payOff/option_prices.o:|' < obj/payOff/option_prices.d.tmp > obj/payOff/option_prices.d
+sed -e 's/.*://' -e 's/\\$//' < obj/payOff/option_prices.d.tmp | fmt -1 | sed -e 's/^ *//' -e 's/$/:/' >> obj/payOff/option_prices.d
+rm -f obj/payOff/option_prices.d.tmp
+mkdir -p obj/payOff/schedule/
+nvcc -rdc=true --gpu-architecture=sm_50 -c -o obj/payOff/schedule/schedule.o src/payOff/schedule/schedule.cu
+nvcc -rdc=true --gpu-architecture=sm_50 -MM src/payOff/schedule/schedule.cu > obj/payOff/schedule/schedule.d
+cp -f obj/payOff/schedule/schedule.d obj/payOff/schedule/schedule.d.tmp
+sed -e 's|.*:|obj/payOff/schedule/schedule.o:|' < obj/payOff/schedule/schedule.d.tmp > obj/payOff/schedule/schedule.d
+sed -e 's/.*://' -e 's/\\$//' < obj/payOff/schedule/schedule.d.tmp | fmt -1 | sed -e 's/^ *//' -e 's/$/:/' >> obj/payOff/schedule/schedule.d
+rm -f obj/payOff/schedule/schedule.d.tmp
+ 
+mkdir -p obj/myRandom/
+nvcc -rdc=true --gpu-architecture=sm_50 -c -o obj/myRandom/myRandom.o src/myRandom/myRandom.cu
+nvcc -rdc=true --gpu-architecture=sm_50 -MM src/myRandom/myRandom.cu > obj/myRandom/myRandom.d
+cp -f obj/myRandom/myRandom.d obj/myRandom/myRandom.d.tmp
+sed -e 's|.*:|obj/myRandom/myRandom.o:|' < obj/myRandom/myRandom.d.tmp > obj/myRandom/myRandom.d
+sed -e 's/.*://' -e 's/\\$//' < obj/myRandom/myRandom.d.tmp | fmt -1 | sed -e 's/^ *//' -e 's/$/:/' >> obj/myRandom/myRandom.d
+rm -f obj/myRandom/myRandom.d.tmp
+mkdir -p obj/myRandom/myRandom_gnr/
+nvcc -rdc=true --gpu-architecture=sm_50 -c -o obj/myRandom/myRandom_gnr/combined.o src/myRandom/myRandom_gnr/combined.cu
+nvcc -rdc=true --gpu-architecture=sm_50 -MM src/myRandom/myRandom_gnr/combined.cu > obj/myRandom/myRandom_gnr/combined.d
+cp -f obj/myRandom/myRandom_gnr/combined.d obj/myRandom/myRandom_gnr/combined.d.tmp
+sed -e 's|.*:|obj/myRandom/myRandom_gnr/combined.o:|' < obj/myRandom/myRandom_gnr/combined.d.tmp > obj/myRandom/myRandom_gnr/combined.d
+sed -e 's/.*://' -e 's/\\$//' < obj/myRandom/myRandom_gnr/combined.d.tmp | fmt -1 | sed -e 's/^ *//' -e 's/$/:/' >> obj/myRandom/myRandom_gnr/combined.d
+rm -f obj/myRandom/myRandom_gnr/combined.d.tmp
+ 
+mkdir -p obj/myRandom/myRandom_gnr/
+nvcc -rdc=true --gpu-architecture=sm_50 -c -o obj/myRandom/myRandom_gnr/linCongruential.o src/myRandom/myRandom_gnr/linCongruential.cu
+nvcc -rdc=true --gpu-architecture=sm_50 -MM src/myRandom/myRandom_gnr/linCongruential.cu > obj/myRandom/myRandom_gnr/linCongruential.d
+cp -f obj/myRandom/myRandom_gnr/linCongruential.d obj/myRandom/myRandom_gnr/linCongruential.d.tmp
+sed -e 's|.*:|obj/myRandom/myRandom_gnr/linCongruential.o:|' < obj/myRandom/myRandom_gnr/linCongruential.d.tmp > obj/myRandom/myRandom_gnr/linCongruential.d
+sed -e 's/.*://' -e 's/\\$//' < obj/myRandom/myRandom_gnr/linCongruential.d.tmp | fmt -1 | sed -e 's/^ *//' -e 's/$/:/' >> obj/myRandom/myRandom_gnr/linCongruential.d
+rm -f obj/myRandom/myRandom_gnr/linCongruential.d.tmp
+mkdir -p obj/myRandom/myRandom_gnr/
+nvcc -rdc=true --gpu-architecture=sm_50 -c -o obj/myRandom/myRandom_gnr/tausworth.o src/myRandom/myRandom_gnr/tausworth.cu
+nvcc -rdc=true --gpu-architecture=sm_50 -MM src/myRandom/myRandom_gnr/tausworth.cu > obj/myRandom/myRandom_gnr/tausworth.d
+cp -f obj/myRandom/myRandom_gnr/tausworth.d obj/myRandom/myRandom_gnr/tausworth.d.tmp
+sed -e 's|.*:|obj/myRandom/myRandom_gnr/tausworth.o:|' < obj/myRandom/myRandom_gnr/tausworth.d.tmp > obj/myRandom/myRandom_gnr/tausworth.d
+sed -e 's/.*://' -e 's/\\$//' < obj/myRandom/myRandom_gnr/tausworth.d.tmp | fmt -1 | sed -e 's/^ *//' -e 's/$/:/' >> obj/myRandom/myRandom_gnr/tausworth.d
+rm -f obj/myRandom/myRandom_gnr/tausworth.d.tmp
+mkdir -p obj/stoch_proc/stoch_imp/
+nvcc -rdc=true --gpu-architecture=sm_50 -c -o obj/stoch_proc/stoch_imp/stoch_euler.o src/stoch_proc/stoch_imp/stoch_euler.cu
+nvcc -rdc=true --gpu-architecture=sm_50 -MM src/stoch_proc/stoch_imp/stoch_euler.cu > obj/stoch_proc/stoch_imp/stoch_euler.d
+cp -f obj/stoch_proc/stoch_imp/stoch_euler.d obj/stoch_proc/stoch_imp/stoch_euler.d.tmp
+sed -e 's|.*:|obj/stoch_proc/stoch_imp/stoch_euler.o:|' < obj/stoch_proc/stoch_imp/stoch_euler.d.tmp > obj/stoch_proc/stoch_imp/stoch_euler.d
+sed -e 's/.*://' -e 's/\\$//' < obj/stoch_proc/stoch_imp/stoch_euler.d.tmp | fmt -1 | sed -e 's/^ *//' -e 's/$/:/' >> obj/stoch_proc/stoch_imp/stoch_euler.d
+rm -f obj/stoch_proc/stoch_imp/stoch_euler.d.tmp
+mkdir -p obj/stoch_proc/stoch_imp/
+nvcc -rdc=true --gpu-architecture=sm_50 -c -o obj/stoch_proc/stoch_imp/stoch_exact.o src/stoch_proc/stoch_imp/stoch_exact.cu
+nvcc -rdc=true --gpu-architecture=sm_50 -MM src/stoch_proc/stoch_imp/stoch_exact.cu > obj/stoch_proc/stoch_imp/stoch_exact.d
+cp -f obj/stoch_proc/stoch_imp/stoch_exact.d obj/stoch_proc/stoch_imp/stoch_exact.d.tmp
+sed -e 's|.*:|obj/stoch_proc/stoch_imp/stoch_exact.o:|' < obj/stoch_proc/stoch_imp/stoch_exact.d.tmp > obj/stoch_proc/stoch_imp/stoch_exact.d
+sed -e 's/.*://' -e 's/\\$//' < obj/stoch_proc/stoch_imp/stoch_exact.d.tmp | fmt -1 | sed -e 's/^ *//' -e 's/$/:/' >> obj/stoch_proc/stoch_imp/stoch_exact.d
+rm -f obj/stoch_proc/stoch_imp/stoch_exact.d.tmp
+mkdir -p obj/stoch_proc/
+nvcc -rdc=true --gpu-architecture=sm_50 -c -o obj/stoch_proc/stoch.o src/stoch_proc/stoch.cu
+nvcc -rdc=true --gpu-architecture=sm_50 -MM src/stoch_proc/stoch.cu > obj/stoch_proc/stoch.d
+cp -f obj/stoch_proc/stoch.d obj/stoch_proc/stoch.d.tmp
+sed -e 's|.*:|obj/stoch_proc/stoch.o:|' < obj/stoch_proc/stoch.d.tmp > obj/stoch_proc/stoch.d
+sed -e 's/.*://' -e 's/\\$//' < obj/stoch_proc/stoch.d.tmp | fmt -1 | sed -e 's/^ *//' -e 's/$/:/' >> obj/stoch_proc/stoch.d
+rm -f obj/stoch_proc/stoch.d.tmp
+mkdir -p obj/support_lib/
+nvcc -rdc=true --gpu-architecture=sm_50 -c -o obj/support_lib/myudouble.o src/support_lib/myudouble.cu
+nvcc -rdc=true --gpu-architecture=sm_50 -MM src/support_lib/myudouble.cu > obj/support_lib/myudouble.d
+cp -f obj/support_lib/myudouble.d obj/support_lib/myudouble.d.tmp
+sed -e 's|.*:|obj/support_lib/myudouble.o:|' < obj/support_lib/myudouble.d.tmp > obj/support_lib/myudouble.d
+sed -e 's/.*://' -e 's/\\$//' < obj/support_lib/myudouble.d.tmp | fmt -1 | sed -e 's/^ *//' -e 's/$/:/' >> obj/support_lib/myudouble.d
+rm -f obj/support_lib/myudouble.d.tmp
+mkdir -p obj/support_lib/
+nvcc -rdc=true --gpu-architecture=sm_50 -c -o obj/support_lib/lib.o src/support_lib/lib.cu
+nvcc -rdc=true --gpu-architecture=sm_50 -MM src/support_lib/lib.cu > obj/support_lib/lib.d
+cp -f obj/support_lib/lib.d obj/support_lib/lib.d.tmp
+sed -e 's|.*:|obj/support_lib/lib.o:|' < obj/support_lib/lib.d.tmp > obj/support_lib/lib.d
+sed -e 's/.*://' -e 's/\\$//' < obj/support_lib/lib.d.tmp | fmt -1 | sed -e 's/^ *//' -e 's/$/:/' >> obj/support_lib/lib.d
+rm -f obj/support_lib/lib.d.tmp
+printf "\n"
+nvcc --gpu-architecture=sm_50 -o bin/test_stoch    obj/payOff/pathGenerator.o obj/payOff/option_prices.o obj/payOff/schedule/schedule.o obj/myRandom/myRandom.o obj/myRandom/myRandom_gnr/combined.o obj/myRandom/myRandom_gnr/linCongruential.o obj/myRandom/myRandom_gnr/tausworth.o obj/stoch_proc/stoch_imp/stoch_euler.o obj/stoch_proc/stoch_imp/stoch_exact.o obj/stoch_proc/stoch.o obj/support_lib/myudouble.o obj/support_lib/lib.o  obj/tests/test_stoch.o             \
+&& ./bin/test_stoch
+printf "\n"
+nvcc --gpu-architecture=sm_50 -o bin/test_makefile    obj/payOff/pathGenerator.o obj/payOff/option_prices.o obj/payOff/schedule/schedule.o obj/myRandom/myRandom.o obj/myRandom/myRandom_gnr/combined.o obj/myRandom/myRandom_gnr/linCongruential.o obj/myRandom/myRandom_gnr/tausworth.o obj/stoch_proc/stoch_imp/stoch_euler.o obj/stoch_proc/stoch_imp/stoch_exact.o obj/stoch_proc/stoch.o obj/support_lib/myudouble.o obj/support_lib/lib.o obj/tests/test_makefile.o              \
+&& ./bin/test_makefile
+printf "\n"
+nvcc --gpu-architecture=sm_50 -o bin/test_myRandom    obj/payOff/pathGenerator.o obj/payOff/option_prices.o obj/payOff/schedule/schedule.o obj/myRandom/myRandom.o obj/myRandom/myRandom_gnr/combined.o obj/myRandom/myRandom_gnr/linCongruential.o obj/myRandom/myRandom_gnr/tausworth.o obj/stoch_proc/stoch_imp/stoch_euler.o obj/stoch_proc/stoch_imp/stoch_exact.o obj/stoch_proc/stoch.o obj/support_lib/myudouble.o obj/support_lib/lib.o   obj/tests/test_myRandom.o            \
+&& ./bin/test_myRandom
+make: Leaving directory '/home/magmar68/Documents/Unimi/Metodi_comp/assignment_cuda/opt_pricer_lib'
+ 
