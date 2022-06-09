@@ -6,4 +6,5 @@
 *.dat
 #ignore jupyter notebook
 *.ipynb
-
+#ignore vscode
+*.vscode
