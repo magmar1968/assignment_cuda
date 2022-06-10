@@ -8,3 +8,311 @@
 *.ipynb
 #ignore vscode
 *.vscode
+opt_pricer_lib/.vs/launch.vs.json
+opt_pricer_lib/.vs/opt_pricer_lib/v16/.suo
+opt_pricer_lib/.vs/opt_pricer_lib/v16/Browse.VC.db
+opt_pricer_lib/.vs/opt_pricer_lib/v16/ipch/AutoPCH/1e245f745ddf213d/SCHEDULE.ipch
+opt_pricer_lib/.vs/opt_pricer_lib/v16/ipch/AutoPCH/1e8569352c6628b/MYUDOUBLE.ipch
+opt_pricer_lib/.vs/opt_pricer_lib/v16/ipch/AutoPCH/29a97a5d5bbb5b46/SCHEDULE.ipch
+opt_pricer_lib/.vs/opt_pricer_lib/v16/ipch/AutoPCH/3bccc942b22a738b/LIB.ipch
+opt_pricer_lib/.vs/opt_pricer_lib/v16/ipch/AutoPCH/3dc07ae9082b5f91/SCHEDULE.ipch
+opt_pricer_lib/.vs/opt_pricer_lib/v16/ipch/AutoPCH/77988a60519f494c/PATHGENERATOR.ipch
+opt_pricer_lib/.vs/opt_pricer_lib/v16/ipch/AutoPCH/7e5700ad2e4c7dea/STOCH_EXACT.ipch
+opt_pricer_lib/.vs/opt_pricer_lib/v16/ipch/AutoPCH/873885a981a29f8a/PATHGENERATOR.ipch
+opt_pricer_lib/.vs/opt_pricer_lib/v16/ipch/AutoPCH/8d4d03ae281fd4a8/KERNEL.ipch
+opt_pricer_lib/.vs/opt_pricer_lib/v16/ipch/AutoPCH/983b573c824c75a4/TEST_MYRANDOM.ipch
+opt_pricer_lib/.vs/opt_pricer_lib/v16/ipch/AutoPCH/98473f77ae6898ea/SCHEDULE.ipch
+opt_pricer_lib/.vs/opt_pricer_lib/v16/ipch/AutoPCH/9c554a2b4da39cad/MYRANDOM.ipch
+opt_pricer_lib/.vs/opt_pricer_lib/v16/ipch/AutoPCH/9e733469cb553c19/KERNEL.ipch
+opt_pricer_lib/.vs/opt_pricer_lib/v16/ipch/AutoPCH/a1d320343fbfe1ad/STOCH.ipch
+opt_pricer_lib/.vs/opt_pricer_lib/v16/ipch/AutoPCH/b0f5fc02ffb13031/SCHEDULE.ipch
+opt_pricer_lib/.vs/opt_pricer_lib/v16/ipch/AutoPCH/ba3f06642b46a7f/STOCH.ipch
+opt_pricer_lib/.vs/opt_pricer_lib/v16/ipch/AutoPCH/c0a4e142179b789c/TAUSWORTH.ipch
+opt_pricer_lib/.vs/opt_pricer_lib/v16/ipch/AutoPCH/ce090284ac134014/STOCH.ipch
+opt_pricer_lib/.vs/opt_pricer_lib/v16/ipch/AutoPCH/d8a05f3801bb7588/COMBINED.ipch
+opt_pricer_lib/.vs/opt_pricer_lib/v16/ipch/AutoPCH/dad6d089bd300a04/STOCH_EULER.ipch
+opt_pricer_lib/.vs/opt_pricer_lib/v16/ipch/AutoPCH/e6843f81b1cc4e42/MYRANDOM.ipch
+opt_pricer_lib/.vs/opt_pricer_lib/v16/ipch/AutoPCH/f9d2bedec5e8e4f9/PRICES_SCHEDULE.ipch
+opt_pricer_lib/.vs/ProjectSettings.json
+opt_pricer_lib/.vs/slnx.sqlite
+opt_pricer_lib/.vs/tasks.vs.json
+opt_pricer_lib/.vs/VSWorkspaceState.json
+opt_pricer_lib/CppProperties.json
+opt_pricer_lib/provamydouble/.vs/provamydouble/v16/.suo
+opt_pricer_lib/provamydouble/.vs/provamydouble/v16/Browse.VC.db
+opt_pricer_lib/provamydouble/.vs/provamydouble/v16/ipch/AutoPCH/7e7233093a8fc5e8/KERNEL.ipch
+opt_pricer_lib/provamydouble/provamydouble.sln
+opt_pricer_lib/provamydouble/provamydouble/kernel.cu
+opt_pricer_lib/provamydouble/provamydouble/provamydouble.vcxproj
+opt_pricer_lib/provamydouble/provamydouble/provamydouble.vcxproj.user
+opt_pricer_lib/provamydouble/provamydouble/x64/Debug/kernel.cu.cache
+opt_pricer_lib/provamydouble/provamydouble/x64/Debug/kernel.cu.obj
+opt_pricer_lib/provamydouble/provamydouble/x64/Debug/kernel.cu1259924862.deps
+opt_pricer_lib/provamydouble/provamydouble/x64/Debug/provamydouble.Build.CppClean.log
+opt_pricer_lib/provamydouble/provamydouble/x64/Debug/provamydouble.exe.recipe
+opt_pricer_lib/provamydouble/provamydouble/x64/Debug/provamydouble.ilk
+opt_pricer_lib/provamydouble/provamydouble/x64/Debug/provamydouble.log
+opt_pricer_lib/provamydouble/provamydouble/x64/Debug/provamydouble.tlog/CudaCompile.read.1u.tlog
+opt_pricer_lib/provamydouble/provamydouble/x64/Debug/provamydouble.tlog/CudaCompile.write.1u.tlog
+opt_pricer_lib/provamydouble/provamydouble/x64/Debug/provamydouble.tlog/link.command.1.tlog
+opt_pricer_lib/provamydouble/provamydouble/x64/Debug/provamydouble.tlog/link.read.1.tlog
+opt_pricer_lib/provamydouble/provamydouble/x64/Debug/provamydouble.tlog/link.write.1.tlog
+opt_pricer_lib/provamydouble/provamydouble/x64/Debug/provamydouble.tlog/provamydouble.lastbuildstate
+opt_pricer_lib/provamydouble/provamydouble/x64/Debug/provamydouble.tlog/provamydouble.write.1u.tlog
+opt_pricer_lib/provamydouble/provamydouble/x64/Debug/provamydouble.tlog/unsuccessfulbuild
+opt_pricer_lib/provamydouble/provamydouble/x64/Debug/provamydouble.vcxproj.FileListAbsolute.txt
+opt_pricer_lib/provamydouble/provamydouble/x64/Debug/vc142.pdb
+opt_pricer_lib/provamydouble/x64/Debug/provamydouble.exe
+opt_pricer_lib/provamydouble/x64/Debug/provamydouble.exp
+opt_pricer_lib/provamydouble/x64/Debug/provamydouble.lib
+opt_pricer_lib/provamydouble/x64/Debug/provamydouble.pdb
+opt_pricer_lib/provapath/.editorconfig
+opt_pricer_lib/provapath/.vs/provapath/v16/.suo
+opt_pricer_lib/provapath/.vs/provapath/v16/Browse.VC.db
+opt_pricer_lib/provapath/provapath.sln
+opt_pricer_lib/provapath/provapath/kernel.cu
+opt_pricer_lib/provapath/provapath/provapath.vcxproj
+opt_pricer_lib/provapath/provapath/provapath.vcxproj.user
+opt_pricer_lib/provapath/provapath/x64/Debug/kernel.cu.cache
+opt_pricer_lib/provapath/provapath/x64/Debug/kernel.cu.obj
+opt_pricer_lib/provapath/provapath/x64/Debug/kernel.cu665162675.deps
+opt_pricer_lib/provapath/provapath/x64/Debug/provapath.Build.CppClean.log
+opt_pricer_lib/provapath/provapath/x64/Debug/provapath.exe.recipe
+opt_pricer_lib/provapath/provapath/x64/Debug/provapath.ilk
+opt_pricer_lib/provapath/provapath/x64/Debug/provapath.tlog/CudaCompile.read.1u.tlog
+opt_pricer_lib/provapath/provapath/x64/Debug/provapath.tlog/CudaCompile.write.1u.tlog
+opt_pricer_lib/provapath/provapath/x64/Debug/provapath.tlog/link.command.1.tlog
+opt_pricer_lib/provapath/provapath/x64/Debug/provapath.tlog/link.read.1.tlog
+opt_pricer_lib/provapath/provapath/x64/Debug/provapath.tlog/link.write.1.tlog
+opt_pricer_lib/provapath/provapath/x64/Debug/provapath.tlog/provapath.lastbuildstate
+opt_pricer_lib/provapath/provapath/x64/Debug/provapath.tlog/provapath.write.1u.tlog
+opt_pricer_lib/provapath/provapath/x64/Debug/provapath.vcxproj.FileListAbsolute.txt
+opt_pricer_lib/provapath/provapath/x64/Debug/vc142.pdb
+opt_pricer_lib/provapath/x64/Debug/provapath.exe
+opt_pricer_lib/provapath/x64/Debug/provapath.exp
+opt_pricer_lib/provapath/x64/Debug/provapath.lib
+opt_pricer_lib/provapath/x64/Debug/provapath.pdb
+opt_pricer_lib/provarandom/.vs/provarandom/v16/.suo
+opt_pricer_lib/provarandom/.vs/provarandom/v16/Browse.VC.db
+opt_pricer_lib/provarandom/.vs/provarandom/v16/ipch/AutoPCH/7e4a2734f33035b4/KERNEL.ipch
+opt_pricer_lib/provarandom/provarandom.sln
+opt_pricer_lib/provarandom/provarandom/kernel.cu
+opt_pricer_lib/provarandom/provarandom/provarandom.vcxproj
+opt_pricer_lib/provarandom/provarandom/provarandom.vcxproj.user
+opt_pricer_lib/provarandom/provarandom/x64/Debug/kernel.cu.cache
+opt_pricer_lib/provarandom/provarandom/x64/Debug/kernel.cu.obj
+opt_pricer_lib/provarandom/provarandom/x64/Debug/kernel.cu802571956.deps
+opt_pricer_lib/provarandom/provarandom/x64/Debug/provarandom.exe.recipe
+opt_pricer_lib/provarandom/provarandom/x64/Debug/provarandom.ilk
+opt_pricer_lib/provarandom/provarandom/x64/Debug/provarandom.tlog/CudaCompile.read.1u.tlog
+opt_pricer_lib/provarandom/provarandom/x64/Debug/provarandom.tlog/CudaCompile.write.1u.tlog
+opt_pricer_lib/provarandom/provarandom/x64/Debug/provarandom.tlog/link.command.1.tlog
+opt_pricer_lib/provarandom/provarandom/x64/Debug/provarandom.tlog/link.read.1.tlog
+opt_pricer_lib/provarandom/provarandom/x64/Debug/provarandom.tlog/link.write.1.tlog
+opt_pricer_lib/provarandom/provarandom/x64/Debug/provarandom.tlog/provarandom.lastbuildstate
+opt_pricer_lib/provarandom/provarandom/x64/Debug/provarandom.tlog/provarandom.write.1u.tlog
+opt_pricer_lib/provarandom/provarandom/x64/Debug/vc142.pdb
+opt_pricer_lib/provarandom/x64/Debug/provarandom.exe
+opt_pricer_lib/provarandom/x64/Debug/provarandom.exp
+opt_pricer_lib/provarandom/x64/Debug/provarandom.lib
+opt_pricer_lib/provarandom/x64/Debug/provarandom.pdb
+opt_pricer_lib/provaschedule/.vs/provaschedule/v16/.suo
+opt_pricer_lib/provaschedule/.vs/provaschedule/v16/Browse.VC.db
+opt_pricer_lib/provaschedule/.vs/provaschedule/v16/ipch/AutoPCH/85cfd6c6ce8ef1a2/KERNEL.ipch
+opt_pricer_lib/provaschedule/provaschedule.sln
+opt_pricer_lib/provaschedule/provaschedule/kernel.cu
+opt_pricer_lib/provaschedule/provaschedule/provaschedule.vcxproj
+opt_pricer_lib/provaschedule/provaschedule/provaschedule.vcxproj.user
+opt_pricer_lib/provaschedule/provaschedule/x64/Debug/kernel.cu.cache
+opt_pricer_lib/provaschedule/provaschedule/x64/Debug/kernel.cu.obj
+opt_pricer_lib/provaschedule/provaschedule/x64/Debug/kernel.cu982209801.deps
+opt_pricer_lib/provaschedule/provaschedule/x64/Debug/provaschedule.Build.CppClean.log
+opt_pricer_lib/provaschedule/provaschedule/x64/Debug/provaschedule.exe.recipe
+opt_pricer_lib/provaschedule/provaschedule/x64/Debug/provaschedule.ilk
+opt_pricer_lib/provaschedule/provaschedule/x64/Debug/provaschedule.log
+opt_pricer_lib/provaschedule/provaschedule/x64/Debug/provaschedule.tlog/CudaCompile.read.1u.tlog
+opt_pricer_lib/provaschedule/provaschedule/x64/Debug/provaschedule.tlog/CudaCompile.write.1u.tlog
+opt_pricer_lib/provaschedule/provaschedule/x64/Debug/provaschedule.tlog/link.command.1.tlog
+opt_pricer_lib/provaschedule/provaschedule/x64/Debug/provaschedule.tlog/link.read.1.tlog
+opt_pricer_lib/provaschedule/provaschedule/x64/Debug/provaschedule.tlog/link.write.1.tlog
+opt_pricer_lib/provaschedule/provaschedule/x64/Debug/provaschedule.tlog/provaschedule.lastbuildstate
+opt_pricer_lib/provaschedule/provaschedule/x64/Debug/provaschedule.tlog/provaschedule.write.1u.tlog
+opt_pricer_lib/provaschedule/provaschedule/x64/Debug/provaschedule.vcxproj.FileListAbsolute.txt
+opt_pricer_lib/provaschedule/provaschedule/x64/Debug/vc142.pdb
+opt_pricer_lib/provaschedule/x64/Debug/provaschedule.exe
+opt_pricer_lib/provaschedule/x64/Debug/provaschedule.exp
+opt_pricer_lib/provaschedule/x64/Debug/provaschedule.lib
+opt_pricer_lib/provaschedule/x64/Debug/provaschedule.pdb
+opt_pricer_lib/provastoch/.vs/CUDA 10.1 Runtime1/v16/.suo
+opt_pricer_lib/provastoch/.vs/CUDA 10.1 Runtime1/v16/Browse.VC.db
+opt_pricer_lib/provastoch/.vs/ProjectSettings.json
+opt_pricer_lib/provastoch/.vs/provastoch/v16/.suo
+opt_pricer_lib/provastoch/.vs/provastoch/v16/Browse.VC.db
+opt_pricer_lib/provastoch/.vs/slnx.sqlite
+opt_pricer_lib/provastoch/.vs/VSWorkspaceState.json
+opt_pricer_lib/provastoch/CUDA 10.1 Runtime1.sln
+opt_pricer_lib/provastoch/CUDA 10.1 Runtime1/CUDA 10.1 Runtime1.vcxproj
+opt_pricer_lib/provastoch/CUDA 10.1 Runtime1/CUDA 10.1 Runtime1.vcxproj.user
+opt_pricer_lib/provastoch/CUDA 10.1 Runtime1/kernel.cu
+opt_pricer_lib/provastoch/CUDA 10.1 Runtime1/x64/Debug/CUDA 10..2FA563C1.tlog/CUDA 10.1 Runtime1.lastbuildstate
+opt_pricer_lib/provastoch/CUDA 10.1 Runtime1/x64/Debug/CUDA 10..2FA563C1.tlog/CUDA 10.1 Runtime1.write.1u.tlog
+opt_pricer_lib/provastoch/CUDA 10.1 Runtime1/x64/Debug/CUDA 10..2FA563C1.tlog/CudaCompile.read.1u.tlog
+opt_pricer_lib/provastoch/CUDA 10.1 Runtime1/x64/Debug/CUDA 10..2FA563C1.tlog/CudaCompile.write.1u.tlog
+opt_pricer_lib/provastoch/CUDA 10.1 Runtime1/x64/Debug/CUDA 10..2FA563C1.tlog/link.command.1.tlog
+opt_pricer_lib/provastoch/CUDA 10.1 Runtime1/x64/Debug/CUDA 10..2FA563C1.tlog/link.read.1.tlog
+opt_pricer_lib/provastoch/CUDA 10.1 Runtime1/x64/Debug/CUDA 10..2FA563C1.tlog/link.write.1.tlog
+opt_pricer_lib/provastoch/CUDA 10.1 Runtime1/x64/Debug/CUDA 10..2FA563C1.tlog/unsuccessfulbuild
+opt_pricer_lib/provastoch/CUDA 10.1 Runtime1/x64/Debug/CUDA 10.1 Runtime1.exe.recipe
+opt_pricer_lib/provastoch/CUDA 10.1 Runtime1/x64/Debug/CUDA 10.1 Runtime1.ilk
+opt_pricer_lib/provastoch/CUDA 10.1 Runtime1/x64/Debug/CUDA 10.1 Runtime1.log
+opt_pricer_lib/provastoch/CUDA 10.1 Runtime1/x64/Debug/kernel.cu-336747615.deps
+opt_pricer_lib/provastoch/CUDA 10.1 Runtime1/x64/Debug/kernel.cu.cache
+opt_pricer_lib/provastoch/CUDA 10.1 Runtime1/x64/Debug/kernel.cu.obj
+opt_pricer_lib/provastoch/CUDA 10.1 Runtime1/x64/Debug/kernel.cu323416837.deps
+opt_pricer_lib/provastoch/CUDA 10.1 Runtime1/x64/Debug/vc142.pdb
+opt_pricer_lib/provastoch/x64/Debug/CUDA 10.1 Runtime1.exe
+opt_pricer_lib/provastoch/x64/Debug/CUDA 10.1 Runtime1.exp
+opt_pricer_lib/provastoch/x64/Debug/CUDA 10.1 Runtime1.lib
+opt_pricer_lib/provastoch/x64/Debug/CUDA 10.1 Runtime1.pdb
+opt_pricer_lib_old/obj/payOff/option_prices.d
+opt_pricer_lib_old/obj/payOff/pathGenerator.d
+opt_pricer_lib_old/obj/payOff/schedule/schedule.d
+opt_pricer_lib_old/obj/stoch_proc/stoch.d
+opt_pricer_lib_old/obj/stoch_proc/stoch_imp/stoch_euler.d
+opt_pricer_lib_old/obj/stoch_proc/stoch_imp/stoch_exact.d
+opt_pricer_lib_old/provamydouble/.vs/provamydouble/v16/.suo
+opt_pricer_lib_old/provamydouble/.vs/provamydouble/v16/Browse.VC.db
+opt_pricer_lib_old/provamydouble/.vs/provamydouble/v16/ipch/AutoPCH/7e7233093a8fc5e8/KERNEL.ipch
+opt_pricer_lib_old/provamydouble/provamydouble.sln
+opt_pricer_lib_old/provamydouble/provamydouble/kernel.cu
+opt_pricer_lib_old/provamydouble/provamydouble/provamydouble.vcxproj
+opt_pricer_lib_old/provamydouble/provamydouble/provamydouble.vcxproj.user
+opt_pricer_lib_old/provamydouble/provamydouble/x64/Debug/kernel.cu.cache
+opt_pricer_lib_old/provamydouble/provamydouble/x64/Debug/kernel.cu.obj
+opt_pricer_lib_old/provamydouble/provamydouble/x64/Debug/kernel.cu1259924862.deps
+opt_pricer_lib_old/provamydouble/provamydouble/x64/Debug/provamydouble.Build.CppClean.log
+opt_pricer_lib_old/provamydouble/provamydouble/x64/Debug/provamydouble.exe.recipe
+opt_pricer_lib_old/provamydouble/provamydouble/x64/Debug/provamydouble.ilk
+opt_pricer_lib_old/provamydouble/provamydouble/x64/Debug/provamydouble.log
+opt_pricer_lib_old/provamydouble/provamydouble/x64/Debug/provamydouble.tlog/CudaCompile.read.1u.tlog
+opt_pricer_lib_old/provamydouble/provamydouble/x64/Debug/provamydouble.tlog/CudaCompile.write.1u.tlog
+opt_pricer_lib_old/provamydouble/provamydouble/x64/Debug/provamydouble.tlog/link.command.1.tlog
+opt_pricer_lib_old/provamydouble/provamydouble/x64/Debug/provamydouble.tlog/link.read.1.tlog
+opt_pricer_lib_old/provamydouble/provamydouble/x64/Debug/provamydouble.tlog/link.write.1.tlog
+opt_pricer_lib_old/provamydouble/provamydouble/x64/Debug/provamydouble.tlog/provamydouble.lastbuildstate
+opt_pricer_lib_old/provamydouble/provamydouble/x64/Debug/provamydouble.tlog/provamydouble.write.1u.tlog
+opt_pricer_lib_old/provamydouble/provamydouble/x64/Debug/provamydouble.tlog/unsuccessfulbuild
+opt_pricer_lib_old/provamydouble/provamydouble/x64/Debug/provamydouble.vcxproj.FileListAbsolute.txt
+opt_pricer_lib_old/provamydouble/provamydouble/x64/Debug/vc142.pdb
+opt_pricer_lib_old/provamydouble/x64/Debug/provamydouble.exe
+opt_pricer_lib_old/provamydouble/x64/Debug/provamydouble.exp
+opt_pricer_lib_old/provamydouble/x64/Debug/provamydouble.lib
+opt_pricer_lib_old/provamydouble/x64/Debug/provamydouble.pdb
+opt_pricer_lib_old/provapath/.editorconfig
+opt_pricer_lib_old/provapath/.vs/provapath/v16/.suo
+opt_pricer_lib_old/provapath/.vs/provapath/v16/Browse.VC.db
+opt_pricer_lib_old/provapath/provapath.sln
+opt_pricer_lib_old/provapath/provapath/kernel.cu
+opt_pricer_lib_old/provapath/provapath/provapath.vcxproj
+opt_pricer_lib_old/provapath/provapath/provapath.vcxproj.user
+opt_pricer_lib_old/provapath/provapath/x64/Debug/kernel.cu.cache
+opt_pricer_lib_old/provapath/provapath/x64/Debug/kernel.cu.obj
+opt_pricer_lib_old/provapath/provapath/x64/Debug/kernel.cu665162675.deps
+opt_pricer_lib_old/provapath/provapath/x64/Debug/provapath.Build.CppClean.log
+opt_pricer_lib_old/provapath/provapath/x64/Debug/provapath.exe.recipe
+opt_pricer_lib_old/provapath/provapath/x64/Debug/provapath.ilk
+opt_pricer_lib_old/provapath/provapath/x64/Debug/provapath.tlog/CudaCompile.read.1u.tlog
+opt_pricer_lib_old/provapath/provapath/x64/Debug/provapath.tlog/CudaCompile.write.1u.tlog
+opt_pricer_lib_old/provapath/provapath/x64/Debug/provapath.tlog/link.command.1.tlog
+opt_pricer_lib_old/provapath/provapath/x64/Debug/provapath.tlog/link.read.1.tlog
+opt_pricer_lib_old/provapath/provapath/x64/Debug/provapath.tlog/link.write.1.tlog
+opt_pricer_lib_old/provapath/provapath/x64/Debug/provapath.tlog/provapath.lastbuildstate
+opt_pricer_lib_old/provapath/provapath/x64/Debug/provapath.tlog/provapath.write.1u.tlog
+opt_pricer_lib_old/provapath/provapath/x64/Debug/provapath.vcxproj.FileListAbsolute.txt
+opt_pricer_lib_old/provapath/provapath/x64/Debug/vc142.pdb
+opt_pricer_lib_old/provapath/x64/Debug/provapath.exe
+opt_pricer_lib_old/provapath/x64/Debug/provapath.exp
+opt_pricer_lib_old/provapath/x64/Debug/provapath.lib
+opt_pricer_lib_old/provapath/x64/Debug/provapath.pdb
+opt_pricer_lib_old/provarandom/.vs/provarandom/v16/.suo
+opt_pricer_lib_old/provarandom/.vs/provarandom/v16/Browse.VC.db
+opt_pricer_lib_old/provarandom/.vs/provarandom/v16/ipch/AutoPCH/7e4a2734f33035b4/KERNEL.ipch
+opt_pricer_lib_old/provarandom/provarandom.sln
+opt_pricer_lib_old/provarandom/provarandom/kernel.cu
+opt_pricer_lib_old/provarandom/provarandom/provarandom.vcxproj
+opt_pricer_lib_old/provarandom/provarandom/provarandom.vcxproj.user
+opt_pricer_lib_old/provarandom/provarandom/x64/Debug/kernel.cu.cache
+opt_pricer_lib_old/provarandom/provarandom/x64/Debug/kernel.cu.obj
+opt_pricer_lib_old/provarandom/provarandom/x64/Debug/kernel.cu802571956.deps
+opt_pricer_lib_old/provarandom/provarandom/x64/Debug/provarandom.exe.recipe
+opt_pricer_lib_old/provarandom/provarandom/x64/Debug/provarandom.ilk
+opt_pricer_lib_old/provarandom/provarandom/x64/Debug/provarandom.tlog/CudaCompile.read.1u.tlog
+opt_pricer_lib_old/provarandom/provarandom/x64/Debug/provarandom.tlog/CudaCompile.write.1u.tlog
+opt_pricer_lib_old/provarandom/provarandom/x64/Debug/provarandom.tlog/link.command.1.tlog
+opt_pricer_lib_old/provarandom/provarandom/x64/Debug/provarandom.tlog/link.read.1.tlog
+opt_pricer_lib_old/provarandom/provarandom/x64/Debug/provarandom.tlog/link.write.1.tlog
+opt_pricer_lib_old/provarandom/provarandom/x64/Debug/provarandom.tlog/provarandom.lastbuildstate
+opt_pricer_lib_old/provarandom/provarandom/x64/Debug/provarandom.tlog/provarandom.write.1u.tlog
+opt_pricer_lib_old/provarandom/provarandom/x64/Debug/vc142.pdb
+opt_pricer_lib_old/provarandom/x64/Debug/provarandom.exe
+opt_pricer_lib_old/provarandom/x64/Debug/provarandom.exp
+opt_pricer_lib_old/provarandom/x64/Debug/provarandom.lib
+opt_pricer_lib_old/provarandom/x64/Debug/provarandom.pdb
+opt_pricer_lib_old/provaschedule/.vs/provaschedule/v16/.suo
+opt_pricer_lib_old/provaschedule/.vs/provaschedule/v16/Browse.VC.db
+opt_pricer_lib_old/provaschedule/.vs/provaschedule/v16/ipch/AutoPCH/85cfd6c6ce8ef1a2/KERNEL.ipch
+opt_pricer_lib_old/provaschedule/provaschedule.sln
+opt_pricer_lib_old/provaschedule/provaschedule/kernel.cu
+opt_pricer_lib_old/provaschedule/provaschedule/provaschedule.vcxproj
+opt_pricer_lib_old/provaschedule/provaschedule/provaschedule.vcxproj.user
+opt_pricer_lib_old/provaschedule/provaschedule/x64/Debug/kernel.cu.cache
+opt_pricer_lib_old/provaschedule/provaschedule/x64/Debug/kernel.cu.obj
+opt_pricer_lib_old/provaschedule/provaschedule/x64/Debug/kernel.cu982209801.deps
+opt_pricer_lib_old/provaschedule/provaschedule/x64/Debug/provaschedule.Build.CppClean.log
+opt_pricer_lib_old/provaschedule/provaschedule/x64/Debug/provaschedule.exe.recipe
+opt_pricer_lib_old/provaschedule/provaschedule/x64/Debug/provaschedule.ilk
+opt_pricer_lib_old/provaschedule/provaschedule/x64/Debug/provaschedule.log
+opt_pricer_lib_old/provaschedule/provaschedule/x64/Debug/provaschedule.tlog/CudaCompile.read.1u.tlog
+opt_pricer_lib_old/provaschedule/provaschedule/x64/Debug/provaschedule.tlog/CudaCompile.write.1u.tlog
+opt_pricer_lib_old/provaschedule/provaschedule/x64/Debug/provaschedule.tlog/link.command.1.tlog
+opt_pricer_lib_old/provaschedule/provaschedule/x64/Debug/provaschedule.tlog/link.read.1.tlog
+opt_pricer_lib_old/provaschedule/provaschedule/x64/Debug/provaschedule.tlog/link.write.1.tlog
+opt_pricer_lib_old/provaschedule/provaschedule/x64/Debug/provaschedule.tlog/provaschedule.lastbuildstate
+opt_pricer_lib_old/provaschedule/provaschedule/x64/Debug/provaschedule.tlog/provaschedule.write.1u.tlog
+opt_pricer_lib_old/provaschedule/provaschedule/x64/Debug/provaschedule.vcxproj.FileListAbsolute.txt
+opt_pricer_lib_old/provaschedule/provaschedule/x64/Debug/vc142.pdb
+opt_pricer_lib_old/provaschedule/x64/Debug/provaschedule.exe
+opt_pricer_lib_old/provaschedule/x64/Debug/provaschedule.exp
+opt_pricer_lib_old/provaschedule/x64/Debug/provaschedule.lib
+opt_pricer_lib_old/provaschedule/x64/Debug/provaschedule.pdb
+opt_pricer_lib_old/provastoch/.vs/CUDA 10.1 Runtime1/v16/.suo
+opt_pricer_lib_old/provastoch/.vs/CUDA 10.1 Runtime1/v16/Browse.VC.db
+opt_pricer_lib_old/provastoch/.vs/ProjectSettings.json
+opt_pricer_lib_old/provastoch/.vs/provastoch/v16/.suo
+opt_pricer_lib_old/provastoch/.vs/provastoch/v16/Browse.VC.db
+opt_pricer_lib_old/provastoch/.vs/slnx.sqlite
+opt_pricer_lib_old/provastoch/.vs/VSWorkspaceState.json
+opt_pricer_lib_old/provastoch/CUDA 10.1 Runtime1.sln
+opt_pricer_lib_old/provastoch/CUDA 10.1 Runtime1/CUDA 10.1 Runtime1.vcxproj
+opt_pricer_lib_old/provastoch/CUDA 10.1 Runtime1/CUDA 10.1 Runtime1.vcxproj.user
+opt_pricer_lib_old/provastoch/CUDA 10.1 Runtime1/kernel.cu
+opt_pricer_lib_old/provastoch/CUDA 10.1 Runtime1/x64/Debug/CUDA 10..2FA563C1.tlog/CUDA 10.1 Runtime1.lastbuildstate
+opt_pricer_lib_old/provastoch/CUDA 10.1 Runtime1/x64/Debug/CUDA 10..2FA563C1.tlog/CUDA 10.1 Runtime1.write.1u.tlog
+opt_pricer_lib_old/provastoch/CUDA 10.1 Runtime1/x64/Debug/CUDA 10..2FA563C1.tlog/CudaCompile.read.1u.tlog
+opt_pricer_lib_old/provastoch/CUDA 10.1 Runtime1/x64/Debug/CUDA 10..2FA563C1.tlog/CudaCompile.write.1u.tlog
+opt_pricer_lib_old/provastoch/CUDA 10.1 Runtime1/x64/Debug/CUDA 10..2FA563C1.tlog/link.command.1.tlog
+opt_pricer_lib_old/provastoch/CUDA 10.1 Runtime1/x64/Debug/CUDA 10..2FA563C1.tlog/link.read.1.tlog
+opt_pricer_lib_old/provastoch/CUDA 10.1 Runtime1/x64/Debug/CUDA 10..2FA563C1.tlog/link.write.1.tlog
+opt_pricer_lib_old/provastoch/CUDA 10.1 Runtime1/x64/Debug/CUDA 10..2FA563C1.tlog/unsuccessfulbuild
+opt_pricer_lib_old/provastoch/CUDA 10.1 Runtime1/x64/Debug/CUDA 10.1 Runtime1.exe.recipe
+opt_pricer_lib_old/provastoch/CUDA 10.1 Runtime1/x64/Debug/CUDA 10.1 Runtime1.ilk
+opt_pricer_lib_old/provastoch/CUDA 10.1 Runtime1/x64/Debug/CUDA 10.1 Runtime1.log
+opt_pricer_lib_old/provastoch/CUDA 10.1 Runtime1/x64/Debug/kernel.cu-336747615.deps
+opt_pricer_lib_old/provastoch/CUDA 10.1 Runtime1/x64/Debug/kernel.cu.cache
+opt_pricer_lib_old/provastoch/CUDA 10.1 Runtime1/x64/Debug/kernel.cu.obj
+opt_pricer_lib_old/provastoch/CUDA 10.1 Runtime1/x64/Debug/kernel.cu323416837.deps
+opt_pricer_lib_old/provastoch/CUDA 10.1 Runtime1/x64/Debug/vc142.pdb
+opt_pricer_lib_old/provastoch/x64/Debug/CUDA 10.1 Runtime1.exe
+opt_pricer_lib_old/provastoch/x64/Debug/CUDA 10.1 Runtime1.exp
+opt_pricer_lib_old/provastoch/x64/Debug/CUDA 10.1 Runtime1.lib
+opt_pricer_lib_old/provastoch/x64/Debug/CUDA 10.1 Runtime1.pdb
