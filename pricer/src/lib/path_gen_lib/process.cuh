@@ -13,6 +13,7 @@ class Process
     Process(rnd::MyRandom * gnr)
         :_gnr(gnr)
     {}
+    virtual ~Process(){}
     //functions
     double Get_random_uniform()
     {

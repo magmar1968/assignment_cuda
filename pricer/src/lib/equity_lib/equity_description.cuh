@@ -30,7 +30,7 @@ class Equity_description
     char * Get_isin_code()const {return _isin_code; }
     char * Get_name()     const {return _name;}
     char * Get_currency() const {return _currency;}
-    double Get_dividend_yirld() const {return _dividend_yield;}
+    double Get_dividend_yield() const {return _dividend_yield;}
     Yield_curve * Get_yc()const {return _yc;}   
     Volatility_surface * Get_vol_surface()const{return _vol_surf;}   
 
