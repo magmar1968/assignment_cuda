@@ -7,8 +7,8 @@ HD Path(Equity_prices* starting_point,
 {
 	// definire dei membri della classe di tipo dato per memorizzare schedule e process_eq dal costruttore?
 
-	_dim = starting_point.Get_dim();   //numero delle diverse azioni che consideriamo nella simulazione
-	size_t path_len = schedule.Get_dim();    //number of steps
+	_dim = starting_point->Get_dim();   //numero delle diverse azioni che consideriamo nella simulazione
+	size_t path_len = schedule->Get_dim();    //number of steps
 	for (size_t i = 0; i < _dim; i++)
 	{
 		_starting_point[i] = starting_point[i];   
@@ -25,11 +25,11 @@ HD Path(Equity_prices* starting_point,
 	}   //ora k è l'index dello starting point in schedule
 
 
-	double delta_t = schedule->_t[k] - starting_time;                            //first step, from starting_point
-	_random_numbers_scenario[0] = process_eq.Get_random_structure(); //crea colonna di rnd_numbers, lunghezza = 1 se process non è multivariate
-	_equity_prices_scenario[i] = process_eq.Get_new_prices(starting_point, rnd_num[k], delta_t);  
+	double delta_t = schedule->_t[k+1] - starting_time;                            //first step, from starting_point
+	_random_numbers_scenario[k+1] = process_eq.Get_random_structure(); //crea colonna di rnd_numbers, lunghezza = 1 se process non è multivariate
+	_equity_prices_scenario[k+1] = process_eq.Get_new_prices(starting_point, rnd_num[k+1], delta_t);  
 
-	for (size_t j = k; j < path_len; j++)              //makes steps--->creates scenario
+	for (size_t j = k+1; j < path_len; j++)              //makes steps--->creates scenario
 	{
 		 delta_t = schedule->_t[j + 1] - schedule->_t[j];
 		 _random_numbers_scenario[j] = process_eq.Get_random_structure(); //crea numeri random e li memorizza

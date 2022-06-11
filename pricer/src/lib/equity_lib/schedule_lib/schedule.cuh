@@ -19,8 +19,11 @@ class Schedule {
 		HD Schedule(double* t_init, int dim);
 		HD virtual ~Schedule(void);
 
-		HD double* Get_t(int i);
-		HD int Get_dim(void);
+		HD bool Check_order() const;
+		HD bool Get_order() const;
+		HD double Get_t(int i) const;
+		HD void Get_t_vector(double* ptr) const;  //aggiuntiva per avere subito il vettore dei tempi
+		HD int Get_dim(void) const;
 };
 
 #endif // !__SCHEDULE__
