@@ -15,22 +15,26 @@
 
 class Path {
 private:
-	Equity_prices* _starting_point;
-	Equity_prices** _eq_prices_scenario;
+	Equity_prices *  _starting_point;
+	Equity_prices ** _eq_prices_scenario;
 	Random_numbers** _random_numbers_scenario;
-	size_t _dim;
+	size_t           _dim; 
+	size_t           _start_ind;
+
+	HD void gen_path(Schedule * schedule,
+	                 Process_eq * rocess_eq);
 public:
-	HD Path(void);
+	HD Path(void){};
 	HD Path(Equity_prices* starting_point,
-			Schedule* schedule,
-			Process_eq* process_eq);
+			Schedule     * schedule,
+			Process_eq   * process_eq);
 	HD Path(Path* path);
 	HD virtual ~Path(void);
 
-	HD Equity_prices* Get_starting_point(void) const;
-	HD Equity_prices* Get_equity_prices(int i) const;
-	HD Random_numbers* Get_random_numbers(int i) const;
+	HD Equity_prices  * Get_starting_point(void) const;
+	HD Equity_prices  * Get_equity_prices(int i) const;
+	HD Random_numbers * Get_random_numbers(int i) const;
 	HD size_t Get_dim(void) const;
 };
 
-#endif // !__PATH__
+#endif 

@@ -51,7 +51,7 @@ HD Schedule::Schedule(double* t_init, int dim)
     }
 }
 
-HD double Schedule::Get_t(int i)
+HD double Schedule::Get_t(int i) const
 {
     if (i < _dim) { return _t[i]; }
     else { return 0; }
@@ -80,7 +80,7 @@ HD bool Schedule::Check_order() const
     return true;
 }
 
-HD bool Get_order() const
+HD bool Schedule::Get_order() const
 {
     return _ascending;
 }
