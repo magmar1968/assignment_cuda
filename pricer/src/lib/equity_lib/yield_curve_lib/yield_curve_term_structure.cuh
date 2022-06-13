@@ -4,6 +4,10 @@
 
 #include "yield_curve.cuh"
 
+#define H  __host__
+#define D  __device__
+#define HD __host__ __device__
+
 class Yield_curve_term_structure : public Yield_curve
 {
   private:
@@ -12,9 +16,9 @@ class Yield_curve_term_structure : public Yield_curve
   
   public:
     //constructor & destructors
-    Yield_curve_term_structure(){}
+    HD Yield_curve_term_structure(){}
 
-    Yield_curve_term_structure(char   * currency_init,
+    HD Yield_curve_term_structure(char   * currency_init,
                                double * rate_deposit,
                                double * t_deposit,
                                int      num_deposit,
@@ -25,7 +29,7 @@ class Yield_curve_term_structure : public Yield_curve
         // to implement
     }
 
-    Yield_curve_term_structure(char   * currency,
+    HD Yield_curve_term_structure(char   * currency,
                                double * rates, 
                                double * times,
                                int      dim)
@@ -33,11 +37,11 @@ class Yield_curve_term_structure : public Yield_curve
          _times(times),_dim(dim)
     { }
 
-    ~Yield_curve_term_structure(){}
+    HD ~Yield_curve_term_structure(){}
 
     //functions
 
-    double Get_spot_rate(double t)
+    HD double Get_spot_rate(double t)
     {
         for(size_t i = 1; i < _dim; ++i)
         {
@@ -54,7 +58,7 @@ class Yield_curve_term_structure : public Yield_curve
         }
     }
 
-    double Get_forward_rate(double t_start, double t_end)
+    HD double Get_forward_rate(double t_start, double t_end)
     {
         return Get_spot_rate(t_end - t_start); //corretto?? not sure
     } 

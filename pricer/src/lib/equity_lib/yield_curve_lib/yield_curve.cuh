@@ -1,5 +1,21 @@
+/**
+ * @file yield_curve.cuh
+ * @author Lorenzo Magnoni - Andrea Ripamonti
+ * @brief  Classe template per la gestione e descrizione dei tassi di interesse.
+ *         La classe gira sia su host che device
+ * 
+ */
+
 #ifndef __YIELD_CURVE__
 #define __YIELD_CURVE__
+
+
+namespace
+{
+
+#define H  __host__
+#define D  __device__
+#define HD __host__ __device__
 
 class Yield_curve
 {
@@ -31,5 +47,6 @@ class Yield_curve
     }
 
 };
+}
 
 #endif

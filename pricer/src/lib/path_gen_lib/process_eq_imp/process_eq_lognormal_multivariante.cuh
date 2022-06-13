@@ -3,6 +3,10 @@
 
 #include "process_eq_lognormal.cuh"
 
+#define H  __host__
+#define D  __device__
+#define HD __host__ __device__
+
 class Process_eq_lognormal_multivariante : public Process_eq_lognormal
 {
   private:
@@ -10,11 +14,11 @@ class Process_eq_lognormal_multivariante : public Process_eq_lognormal
     double **correlation_matrix;
     Random_numbers * w_correlated;
   public:
-    Process_eq_lognormal_multivariante(){}
-    Process_eq_lognormal_multivariante(rnd::MyRandom * gnr,size_t dim);
+    HD Process_eq_lognormal_multivariante(){}
+    HD Process_eq_lognormal_multivariante(rnd::MyRandom * gnr,size_t dim);
 
-    Random_numbers * Get_random_structure();
-    Equity_prices  * Get_new_prices(Equity_prices * in,
+    HD Random_numbers * Get_random_structure();
+    HD Equity_prices  * Get_new_prices(Equity_prices * in,
                                     Random_numbers * w,
                                     double delta_t);
 

@@ -14,14 +14,17 @@
 #include "yield_curve_lib/yield_curve.cuh"
 #include "volatility_lib/volatility_surface.cuh"
 
+#define H __host__
+#define D __device__
+#define HD __host__ __device__
 
 class Equity_description
 {
   public:
     //constructors
-    Equity_description(){}
+    HD Equity_description(){}
 
-    Equity_description( char *  isin_code,
+    HD Equity_description( char *  isin_code,
                         char *  name,
                         char *  currency,
                         double  dividend_yield,
@@ -33,23 +36,23 @@ class Equity_description
     {
 
     }
-    virtual ~Equity_description(){}
+    HD virtual ~Equity_description(){}
 
     //getters
-    char * Get_isin_code()const {return _isin_code; }
-    char * Get_name()     const {return _name;}
-    char * Get_currency() const {return _currency;}
-    double Get_dividend_yield() const {return _dividend_yield;}
-    Yield_curve * Get_yc()const {return _yc;}   
-    Volatility_surface * Get_vol_surface()const{return _vol_surf;}   
+    HD char * Get_isin_code()const {return _isin_code; }
+    HD char * Get_name()     const {return _name;}
+    HD char * Get_currency() const {return _currency;}
+    HD double Get_dividend_yield() const {return _dividend_yield;}
+    HD Yield_curve * Get_yc()const {return _yc;}   
+    HD Volatility_surface * Get_vol_surface()const{return _vol_surf;}   
 
     //setters
-    void Set_isin_code(char * isin_code){_isin_code = isin_code;}
-    void Set_name(char * name)          {_name = name;}
-    void Set_currency(char * currency)  {_currency = currency;}
-    void Set_dividend_yield(double yield){_dividend_yield = yield;}
-    void Set_yc(Yield_curve * yc){_yc = yc;}
-    void Set_vol_surface(Volatility_surface * vol_surf)
+    HD void Set_isin_code(char * isin_code){_isin_code = isin_code;}
+    HD void Set_name(char * name)          {_name = name;}
+    HD void Set_currency(char * currency)  {_currency = currency;}
+    HD void Set_dividend_yield(double yield){_dividend_yield = yield;}
+    HD void Set_yc(Yield_curve * yc){_yc = yc;}
+    HD void Set_vol_surface(Volatility_surface * vol_surf)
     {_vol_surf = vol_surf;}
 
   private:

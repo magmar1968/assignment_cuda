@@ -3,19 +3,25 @@
 
 #include "../support_lib/myRandom/myRandom.cuh"
 
+#define H  __host__ 
+#define D  __device__
+#define HD __host__ __device__
+
 class Process
 {
+  private:
+    rnd::MyRandom * _gnr; //random number generator
 
   public:
     //default constructor
-    Process(){};
+    HD Process(){};
 
-    Process(rnd::MyRandom * gnr)
+    HD Process(rnd::MyRandom * gnr)
         :_gnr(gnr)
     {}
-    virtual ~Process(){}
+    HD virtual ~Process(){}
     //functions
-    double Get_random_uniform()
+    HD double Get_random_uniform()
     {
         if(_gnr->Get_status())
             return _gnr->genUniform();
@@ -23,15 +29,13 @@ class Process
             exit(2);
     }
 
-    double Get_random_gaussian()
+    HD double Get_random_gaussian()
     {
       if(_gnr -> Get_status())
           return _gnr->genGaussian();
       else 
           exit(2);
     }
-  private:
-    rnd::MyRandom * _gnr; //random number generator
 };
 
 

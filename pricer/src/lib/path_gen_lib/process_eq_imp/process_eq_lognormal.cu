@@ -1,11 +1,13 @@
 #include "process_eq_lognormal.cuh"
 
+__host__ __device__
 Process_eq_lognormal::Process_eq_lognormal(rnd::MyRandom * gnr)
     :Process_eq(gnr)
 {
 }
 
-double Process_eq_lognormal::Get_new_equity_price(
+__host__ __device__ double
+Process_eq_lognormal::Get_new_equity_price(
                     Equity_description * eq_descr,
                     double eq_price,
                     double w,
@@ -24,7 +26,8 @@ double Process_eq_lognormal::Get_new_equity_price(
            delta_t + sigma * sqrt(delta_t) * w ) ;
 }
 
-Random_numbers *Process_eq_lognormal::Get_random_structure()
+__host__ __device__ Random_numbers *
+Process_eq_lognormal::Get_random_structure()
 {
         Random_numbers *w = new Random_numbers(1) ;
         w->Set_element(0, Get_random_gaussian() ) ;
@@ -32,10 +35,11 @@ Random_numbers *Process_eq_lognormal::Get_random_structure()
 }
 
 
-Equity_prices * Process_eq_lognormal::Get_new_prices(
-                                    Equity_prices  * eq_prices_in,
-                                    Random_numbers * w,
-                                    double delta_t)
+__host__ __device__ Equity_prices * 
+Process_eq_lognormal::Get_new_prices(
+                        Equity_prices  * eq_prices_in,
+                        Random_numbers * w,
+                        double delta_t)
 {
     Equity_prices * eq_prices_out = new Equity_prices;
 
