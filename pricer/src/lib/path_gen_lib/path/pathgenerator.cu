@@ -60,8 +60,6 @@ Path::gen_path(Schedule * schedule,
 }
 
 
-	
-
 
 __host__ __device__ Equity_prices* 
 Path::Get_starting_point(void) const
