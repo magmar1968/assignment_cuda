@@ -1,4 +1,4 @@
-#include "pathgenerator.cuh"
+#include "path.cuh"
 
 __host__ __device__
 Path::Path(Equity_prices* starting_point,
@@ -69,14 +69,19 @@ Path::Get_starting_point(void) const
 __host__ __device__ Equity_prices* 
 Path::Get_equity_prices(int i) const
 {
-	return _eq_prices_scenario[i];
+	if(i < _dim)
+		return _eq_prices_scenario[i];
+	else 
+		exit(1);// probably it doesn't work on cuda
 }
 
 __host__ __device__ Random_numbers* 
 Path::Get_random_numbers(int i) const
 {
-
-	return _random_numbers_scenario[i];
+	if(i < _dim)
+		return _random_numbers_scenario[i];
+	else 
+		exit(1);
 }
 
 __host__ __device__ size_t
