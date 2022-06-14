@@ -1,19 +1,23 @@
 #ifndef __RANDOM_NUMBERS__
 #define __RANDOM_NUMBERS__
 
+#define H __host__
+#define D __device__
+#define HD __host__ __device__
+
 class Random_numbers
 {
   private:
     double * _rnd_num;
     size_t   _dim;
   public:
-    Random_numbers(){}
-    Random_numbers(size_t dim)
+    HD Random_numbers(){}
+    HD Random_numbers(size_t dim)
         :_dim(dim)
     {
     }
 
-    void Set_element(size_t i,double num)
+    HD void Set_element(size_t i,double num)
     {
         if(i < _dim)
             _rnd_num[i] = num;
@@ -21,11 +25,11 @@ class Random_numbers
             exit(1);        
     }
 
-    double Get_element(size_t i) const
+    HD double Get_element(size_t i) const
     {
         return _rnd_num[i];
     }
-    double Get_element() const
+    HD double Get_element() const
     {
         return Get_element(0);
     }

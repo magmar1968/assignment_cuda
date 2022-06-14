@@ -4,8 +4,8 @@
 
 #include "yield_curve.cuh"
 
-#define H  __host__
-#define D  __device__
+#define H __host__
+#define D __device__
 #define HD __host__ __device__
 
 class Yield_curve_term_structure : public Yield_curve

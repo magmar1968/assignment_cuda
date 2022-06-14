@@ -3,9 +3,12 @@
 
 #include "../process_eq.cuh"
 
-#define H  __host__
-#define D  __device__
-#define HD __host__ __device__
+
+// cuda macro
+#define H __host__
+#define D __device__
+#define HD __host__ __device__ 
+
 
 class Process_eq_lognormal : public Process_eq
 {
@@ -22,7 +25,7 @@ class Process_eq_lognormal : public Process_eq
               double t_end);
     
     HD Random_numbers * Get_random_structure();
-    HD virtual Equity_prices  * Get_new_prices(
+    HD Equity_prices* Get_new_prices(
               Equity_prices  * eq_prices_in,
               Random_numbers * w,
               double delta_t

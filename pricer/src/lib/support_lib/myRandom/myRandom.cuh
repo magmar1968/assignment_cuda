@@ -20,7 +20,7 @@
 #include <math.h>   // sin, cos
 #include <climits>  //INT_MAX
 
-
+typedef unsigned int uint; //for windows
 namespace rnd
 {
     // cuda macro
@@ -35,7 +35,7 @@ namespace rnd
     #define TAUSWORTH_2 2
     #define TAUSWORTH_3 3
 
-    typedef unsigned int uint; //for windows
+    
     
     //############################################################################################ 
     
@@ -99,6 +99,7 @@ namespace rnd
   
   
   //seeds generetor functions
+  
   H uint genSeed(bool tausworth = false); // tausworth seed must be > 128
 }
 

@@ -9,7 +9,7 @@
 
 
 #ifndef __EQUITY_DESCRIPTION__
-#define __EQUITY_DESCRIPRION__
+#define __EQUITY_DESCRIPTION__
 
 #include "yield_curve_lib/yield_curve.cuh"
 #include "volatility_lib/volatility_surface.cuh"

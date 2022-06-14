@@ -22,14 +22,14 @@ private:
 	size_t           _start_ind;
 
 	HD void gen_path(Schedule * schedule,
-	                 Process_eq * rocess_eq);
+	                 Process_eq * process_eq);
 public:
 	HD Path(void){};
 	HD Path(Equity_prices* starting_point,
 			Schedule     * schedule,
 			Process_eq   * process_eq);
 	HD Path(Path* path);
-	HD virtual ~Path(void);
+	//HD virtual ~Path(void);
 
 	HD Equity_prices  * Get_starting_point(void) const;
 	HD Equity_prices  * Get_equity_prices(int i) const;

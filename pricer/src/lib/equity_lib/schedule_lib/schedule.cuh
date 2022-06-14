@@ -17,7 +17,7 @@ class Schedule {
 		HD Schedule(void);
 		HD Schedule(double t_ref, double delta_t, int dim);
 		HD Schedule(double* t_init, int dim);
-		HD virtual ~Schedule(void);
+		//HD virtual ~Schedule(void);  //? virtual
 
 		HD bool Check_order() const;
 		HD bool Get_order() const;
@@ -26,4 +26,4 @@ class Schedule {
 		HD int Get_dim(void) const;
 };
 
-#endif // !__SCHEDULE__
+#endif

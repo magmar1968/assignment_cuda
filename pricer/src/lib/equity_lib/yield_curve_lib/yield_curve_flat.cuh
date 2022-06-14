@@ -3,6 +3,7 @@
 
 #include "yield_curve.cuh"
 
+//cuda macro
 #define H  __host__
 #define D  __device__
 #define HD __host__ __device__

@@ -44,14 +44,14 @@ Path::gen_path(Schedule * schedule,
 
 	double delta_t = schedule->Get_t(_start_ind + 1) - schedule->Get_t(_start_ind);                            //first step, from starting_point
 	_random_numbers_scenario[_start_ind]=
-	                       process_eq ->Get_random_strucure(); //crea colonna di rnd_numbers, lunghezza = 1 se process non � multivariate
+	                       process_eq ->Get_random_structure(); //crea colonna di rnd_numbers, lunghezza = 1 se process non � multivariate
 	_eq_prices_scenario[_start_ind]=
 	    process_eq -> Get_new_prices(_starting_point, _random_numbers_scenario[_start_ind], delta_t);  
 
 	for (size_t j =  _start_ind + 1; j < _dim; j++)              //makes steps--->creates scenario
 	{
 		 delta_t = schedule->Get_t(j+1) - schedule->Get_t(j);
-		 _random_numbers_scenario[j] = process_eq->Get_random_strucure(); //crea numeri random e li memorizza
+		 _random_numbers_scenario[j] = process_eq->Get_random_structure(); //crea numeri random e li memorizza
 		 _eq_prices_scenario[j] = 
 		       process_eq->Get_new_prices(_eq_prices_scenario[j - 1], _random_numbers_scenario[j],delta_t); 
 	}

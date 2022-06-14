@@ -46,7 +46,7 @@ class Equity_prices
             exit(1); //forse non funzica su cuda
     }
     HD double Get_eq_price() const {return Get_eq_price(0);}
-    HD double Get_dim() const {return _dim;}
+    HD size_t Get_dim() const {return _dim;}
 
     HD Equity_description * Get_eq_description(const size_t i) const
     {
