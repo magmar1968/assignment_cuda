@@ -15,14 +15,16 @@
 
 class Path {
 private:
-	Equity_prices *  _starting_point;
-	Equity_prices ** _eq_prices_scenario;
+	Equity_prices* _starting_point;
+	Equity_prices** _eq_prices_scenario;
 	Random_numbers** _random_numbers_scenario;
-	size_t           _dim; 
+	size_t           _dim;  //number of steps
 	size_t           _start_ind;
+	size_t           _n_eq; //number of equities
 
-	HD void gen_path(Schedule * schedule,
-	                 Process_eq * process_eq);
+
+	HD void gen_path(Schedule* schedule,
+					 Process_eq* process_eq);
 public:
 	//constructors & destructors
 	HD Path(void){};

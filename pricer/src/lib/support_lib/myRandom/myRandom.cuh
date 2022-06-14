@@ -43,7 +43,7 @@ namespace rnd
     class MyRandom
     {
       private:
-        bool _status = -1;
+        bool _status = true;
       protected:
         HD void Set_status(bool status);
         HD virtual uint genUniformInt() = 0;
