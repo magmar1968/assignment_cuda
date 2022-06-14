@@ -4,12 +4,6 @@
 __host__ __device__ double
 Contract_eq_option_vanilla::Pay_off(const Path *path)
 {
-    return Pay_off_vanilla(path);
-}
-
-__host__ __device__ double
-Contract_eq_option_vanilla::Pay_off_vanilla(const Path* path)
-{
     size_t laste_step = path -> Get_dim();
     Equity_prices * final_price = path -> Get_equity_prices(laste_step);
 
@@ -20,6 +14,13 @@ Contract_eq_option_vanilla::Pay_off_vanilla(const Path* path)
     {
         S_f += final_price -> Get_eq_price(i);
     }
+    return Pay_off_vanilla(S_f);
+}
+
+__host__ __device__ double
+Contract_eq_option_vanilla::Pay_off_vanilla(const double S_f)
+{
+    
 
     switch (_contract_type)
     {

@@ -1,18 +1,18 @@
-#ifndef __CONTRACT_EQ_OPTION_VANILLA__
-#define __CONTRACT_EQ_OPTION_VANILLA__
+#ifndef __CONTRACT_EQ_OPTION_ESOTIC__
+#define __CONTRACT_EQ_OPTION_ESOTIC__
 
 #include "../contract_eq_option.cuh"
-
 #define HD __host__ __device__
 
-class Contract_eq_option_vanilla : public Contract_eq_option {
+
+class Contract_eq_option_esotic : public Contract_eq_option {
   private:
     double _strike_price ;
     char   _contract_type ; // C for call P for put
   public:
     // constructors & destructors
-    HD Contract_eq_option_vanilla(void) {};
-    HD Contract_eq_option_vanilla(Equity_prices * eq_prices,
+    HD Contract_eq_option_esotic(void) {};
+    HD Contract_eq_option_esotic(Equity_prices * eq_prices,
                                   Schedule      * schedule,
                                   double strike_price,
                                   char   contract_type)
@@ -20,7 +20,7 @@ class Contract_eq_option_vanilla : public Contract_eq_option {
         _contract_type(contract_type),
         _strike_price(strike_price)
         {}
-    HD virtual ~Contract_eq_option_vanilla(void){}
+    HD virtual ~Contract_eq_option_esotic(void){}
 
     //getters and setters
     HD double Get_strike_price()const{return _strike_price;}
@@ -31,10 +31,7 @@ class Contract_eq_option_vanilla : public Contract_eq_option {
 
     //functions
   public:
-    HD virtual double Pay_off(const Path *path);
-    HD double Pay_off_vanilla(const double S_f);
-  private:
-    HD double Pay_off_vanilla_call(const double S_f);
-    HD double Pay_off_vanilla_put(const double S_f);
+    HD virtual double Pay_off(const Path *path) = 0;
 };
+
 #endif
