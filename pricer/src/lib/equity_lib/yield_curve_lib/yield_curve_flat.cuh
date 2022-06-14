@@ -26,12 +26,12 @@ class Yield_curve_flat : public Yield_curve
 
     HD ~Yield_curve_flat(){}
     //functions 
-    HD double Get_spot_rate(double t)
+    HD double Get_spot_rate(double t) const
     {
         return _rate;
     }
 
-    HD double Get_forward_rate(double t_start, double t_end)
+    HD double Get_forward_rate(double t_start, double t_end) const
     {
         return _rate;
     }

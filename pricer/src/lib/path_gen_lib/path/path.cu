@@ -29,7 +29,7 @@ Path::gen_path(Schedule * schedule,
 	//check for starting point in the schedule
 	for(size_t k = 0; k < _dim; k++)
 	{
-		if(start_t == schedule->Get_t(k))
+		if(start_t <= schedule->Get_t(k))
 		{
 			_start_ind = k;
 			break;
@@ -40,7 +40,6 @@ Path::gen_path(Schedule * schedule,
 			break;
 		}
 	}
-	
 
 	double delta_t = schedule->Get_t(_start_ind + 1) - schedule->Get_t(_start_ind);                            //first step, from starting_point
 	_random_numbers_scenario[_start_ind]=

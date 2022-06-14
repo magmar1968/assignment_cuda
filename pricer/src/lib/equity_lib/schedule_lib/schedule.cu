@@ -36,13 +36,12 @@ HD Schedule::Schedule(double* t_init, int dim)
     {
         _t[i] = t_init[i];
     }
-    if(!Check_order())
+    if(Check_order())
     {
         _ascending = true;
     }
     else
     {
-            
         for (int i = 0; i < _dim; i++)
         {
             _t[i] = 0;
