@@ -20,7 +20,7 @@ class Contract_eq_option : public Contract_option
 
     virtual ~Contract_eq_option(void){}
     
-    virtual double Pay_off(Path *path) = 0 ;
+    virtual double Pay_off(const Path *path) = 0 ;
 } ;
 
 

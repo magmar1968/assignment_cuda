@@ -66,7 +66,7 @@ Path::Get_starting_point(void) const
 }
 
 __host__ __device__ Equity_prices* 
-Path::Get_equity_prices(int i) const
+Path::Get_equity_prices(size_t i) const
 {
 	if(i < _dim)
 		return _eq_prices_scenario[i];
@@ -75,7 +75,7 @@ Path::Get_equity_prices(int i) const
 }
 
 __host__ __device__ Random_numbers* 
-Path::Get_random_numbers(int i) const
+Path::Get_random_numbers(size_t i) const
 {
 	if(i < _dim)
 		return _random_numbers_scenario[i];
@@ -87,4 +87,17 @@ __host__ __device__ size_t
 Path::Get_dim(void) const
 {
 	return _dim;
+}
+
+__host__ __device__ size_t
+Path::Get_start_ind() const
+{
+	return _start_ind;
+}
+
+
+__host__ __device__ Equity_prices * 
+Path::operator[](size_t i)const
+{
+	return Get_equity_prices(i);
 }
