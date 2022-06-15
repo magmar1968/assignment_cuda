@@ -7,7 +7,7 @@ Path::Path(Equity_prices* starting_point,
 	:_starting_point(starting_point)
 {
 
-	_dim = schedule -> Get_dim(); // n schedule steps
+	 _dim = schedule -> Get_dim(); // n schedule steps
 	 _n_eq = _starting_point -> Get_dim(); //n equities   //se serve, da qualche parte, fare check che number of equities sia coerente in tutti gli oggetti 
 	 _random_numbers_scenario = new Random_numbers* [_dim];
 	 _eq_prices_scenario = new Equity_prices * [_dim];
@@ -44,22 +44,22 @@ Path::gen_path(Schedule * schedule,
 		}*/
 	}
 
-	printf("start_index: %d\n", _start_ind);
-
+	printf("start_index: %d\n\n", _start_ind);
 	double delta_t = schedule->Get_t(_start_ind) - start_t;   //first step, from starting_point
-	Random_numbers* temp_random_array = process_eq->Get_random_structure();  //array di random numbers
-	_random_numbers_scenario[_start_ind] = new Random_numbers(_n_eq);      //allocazione per rns
-	for (size_t i = 0; i < _n_eq; i++)
-	{
-		_random_numbers_scenario[_start_ind]->Set_element(i, temp_random_array->Get_element(i)); //usa il vettore temp per inizializzare la prima colonna di rns
-		printf("done\t");
-	}
-	//printf("delta t: %f\n", delta_t);
-	//printf("dim starting point: %d\n", _starting_point->Get_dim());
-	_eq_prices_scenario[_start_ind] = new Equity_prices(); 
-	_eq_prices_scenario[_start_ind]= //usare setters e getters                                                 //bug to be fixed here
-	    process_eq -> Get_new_prices(_starting_point, _random_numbers_scenario[_start_ind], delta_t);  
 
+	printf("neq: %d\n", _n_eq);
+	_random_numbers_scenario[_start_ind] = new Random_numbers(_n_eq);      //allocazione per rns
+	_random_numbers_scenario[_start_ind] = process_eq->Get_random_structure();
+
+
+	//fino a qui tutto bene
+
+
+	//Equity_prices* new_prices = new Equity_prices(_n_eq); 
+	_eq_prices_scenario[_start_ind] = new Equity_prices(_n_eq);
+	printf("Sono in path: abbiamo %f\n", _starting_point->Get_eq_description(0)->Get_dividend_yield()); 
+	_eq_prices_scenario[_start_ind] = process_eq->Get_new_prices(_starting_point, _random_numbers_scenario[_start_ind], delta_t);
+	printf("el 2: %f\n", _eq_prices_scenario[_start_ind]->Get_eq_price(2));
 
 	for (size_t j =  _start_ind + 1; j < _dim; j++)              //makes steps--->creates scenario
 	{
