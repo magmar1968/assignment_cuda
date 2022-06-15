@@ -15,16 +15,15 @@ class Random_numbers
     HD Random_numbers(size_t dim)
         :_dim(dim)
     {
+        _rnd_num = new double[_dim];
     }
-
     HD void Set_element(size_t i,double num)
     {
-        if(i < _dim)
+        if (i < _dim)
             _rnd_num[i] = num;
         else
             exit(1);        
     }
-
     HD double Get_element(size_t i) const
     {
         return _rnd_num[i];
