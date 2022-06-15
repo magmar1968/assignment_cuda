@@ -18,6 +18,8 @@ class Contract_option
         :_schedule(schedule)
         {}
     HD virtual ~Contract_option(void) {}
+
+    HD Schedule * Get_schedule()const{return _schedule;}
 };
 
 
