@@ -24,16 +24,25 @@ class Equity_prices
   
   public:
     //constructors & destructors
-    HD Equity_prices(){}
-    HD Equity_prices(
-                  double time,
+    HD Equity_prices() {};
+    HD Equity_prices(double time,
                   double * prices,
                   size_t   dim,
                   Equity_description ** equity_descriptions)
-        :_time(time),_prices(prices),_dim(dim),
-        _eq_descr(equity_descriptions)
+        :_time(time),_dim(dim)
     {
-        //????
+        _prices = new double[_dim];
+        _prices = prices;
+        _eq_descr = new Equity_description*;
+        _eq_descr[0] = new Equity_description[_dim];
+        _eq_descr = equity_descriptions;
+    };
+    HD Equity_prices(size_t dim)
+        :_dim(dim)
+    {
+        _prices = new double(_dim);
+        _eq_descr = new Equity_description*;
+        _eq_descr[0] = new Equity_description[_dim];
     }
     HD ~Equity_prices(){}
 
@@ -51,7 +60,7 @@ class Equity_prices
 
     HD Equity_description * Get_eq_description(const size_t i) const
     {
-        if(i < _dim)
+        if (i < _dim)
             return _eq_descr[i];
         else
             exit(1); //forse non funzica su cuda
@@ -63,7 +72,7 @@ class Equity_prices
 
     HD void Set_eq_price(size_t i, double price)
     {
-        if ( i < _dim)
+        if (i < _dim)
             _prices[i] = price;
         else
             exit(1); //forse non funzica su cuda
