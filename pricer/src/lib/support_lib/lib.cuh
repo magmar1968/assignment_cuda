@@ -12,7 +12,7 @@ namespace pricer
     #define HD __host__ __device__ 
     
     
-    HD double average(const double * array, const size_t dim);
+   
     H bool cmdOptionExists(char** begin, char** end, const std::string& option);
     H std::string getCmdOption(char ** begin, char ** end, const std::string & option);
 

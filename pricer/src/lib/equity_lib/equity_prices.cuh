@@ -31,17 +31,17 @@ class Equity_prices
                   Equity_description ** equity_descriptions)
         :_time(time),_dim(dim)
     {
-        _prices = new double[_dim];
-        _prices = prices;
-        _eq_descr = new Equity_description*;
+        _prices      = new double[_dim];
+        _prices      = prices;
+        _eq_descr    = new Equity_description*;
         _eq_descr[0] = new Equity_description[_dim];
-        _eq_descr = equity_descriptions;
+        _eq_descr    = equity_descriptions;
     };
     HD Equity_prices(size_t dim)
         :_dim(dim)
     {
-        _prices = new double(_dim);
-        _eq_descr = new Equity_description*;
+        _prices      = new double(_dim);
+        _eq_descr    = new Equity_description*;
         _eq_descr[0] = new Equity_description[_dim];
     }
     HD ~Equity_prices(){}
