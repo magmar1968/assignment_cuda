@@ -29,7 +29,8 @@ class Yield_curve_term_structure : public Yield_curve
         // to implement
     }
 
-    HD Yield_curve_term_structure(char   * currency,
+    HD Yield_curve_term_structure(
+                               char   * currency,
                                double * rates, 
                                double * times,
                                int      dim)

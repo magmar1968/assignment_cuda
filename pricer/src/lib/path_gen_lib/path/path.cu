@@ -7,10 +7,10 @@ Path::Path(Equity_prices* starting_point,
 	:_starting_point(starting_point)
 {
 
-	_dim = schedule -> Get_dim(); // n schedule steps
-	 _n_eq = _starting_point -> Get_dim(); //n equities   //se serve, da qualche parte, fare check che number of equities sia coerente in tutti gli oggetti 
-	 _random_numbers_scenario = new Random_numbers* [_dim];
-	 _eq_prices_scenario = new Equity_prices * [_dim];
+	_dim  = schedule -> Get_dim(); // n schedule steps
+	_n_eq = _starting_point -> Get_dim(); //n equities   //se serve, da qualche parte, fare check che number of equities sia coerente in tutti gli oggetti 
+	_random_numbers_scenario = new Random_numbers* [_dim];
+	_eq_prices_scenario      = new Equity_prices * [_dim];
 	gen_path(schedule, process_eq);
 }
 
@@ -56,9 +56,9 @@ Path::gen_path(Schedule * schedule,
 	}
 	//printf("delta t: %f\n", delta_t);
 	//printf("dim starting point: %d\n", _starting_point->Get_dim());
-	_eq_prices_scenario[_start_ind] = new Equity_prices(); 
+	_eq_prices_scenario[_start_ind] = new Equity_prices(); //?????
 	_eq_prices_scenario[_start_ind]= //usare setters e getters                                                 //bug to be fixed here
-	    process_eq -> Get_new_prices(_starting_point, _random_numbers_scenario[_start_ind], delta_t);  
+	    process_eq->Get_new_prices(_starting_point, _random_numbers_scenario[_start_ind], delta_t);  
 
 
 	for (size_t j =  _start_ind + 1; j < _dim; j++)              //makes steps--->creates scenario

@@ -10,8 +10,7 @@ HD Schedule::Schedule(double t_ref, double delta_t, int dim)
     {
         for(int i = 0; i < _dim; i++)
         {
-            _t[i] = 0;
-            _ascending = false;
+            _t[_dim -i] = t_ref + delta_t * i;
         }
     }
     else
@@ -20,7 +19,6 @@ HD Schedule::Schedule(double t_ref, double delta_t, int dim)
         {
             _t[i] = t_ref + delta_t * i;
         }
-        _ascending = true;
     }
         
         
@@ -46,7 +44,7 @@ HD Schedule::Schedule(double* t_init, int dim)
         {
             _t[i] = 0;
         }
-        _ascending = false;
+        _ascending = false;// non bellissimo
     }
 }
 

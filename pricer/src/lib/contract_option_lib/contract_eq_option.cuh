@@ -15,7 +15,8 @@ class Contract_eq_option : public Contract_option
   public:
     //constructor & destructors
     HD Contract_eq_option(void) {}
-    HD Contract_eq_option(Equity_prices *equity_prices,
+    HD Contract_eq_option(
+                       Equity_prices *equity_prices,
                        Schedule      *schedule)
         :Contract_option(schedule),_eq_prices(equity_prices)
         {}

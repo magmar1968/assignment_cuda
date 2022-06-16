@@ -11,8 +11,6 @@
 
 #include "equity_description.cuh"
 
-#define H  __host__
-#define D  __device__
 #define HD __host__ __device__
 
 
@@ -27,13 +25,16 @@ class Equity_prices
   public:
     //constructors & destructors
     HD Equity_prices(){}
-    HD Equity_prices(double time,
+    HD Equity_prices(
+                  double time,
                   double * prices,
                   size_t   dim,
                   Equity_description ** equity_descriptions)
         :_time(time),_prices(prices),_dim(dim),
         _eq_descr(equity_descriptions)
-    {}
+    {
+        //????
+    }
     HD ~Equity_prices(){}
 
     // getter & setter

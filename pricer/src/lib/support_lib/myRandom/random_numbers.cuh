@@ -1,8 +1,6 @@
 #ifndef __RANDOM_NUMBERS__
 #define __RANDOM_NUMBERS__
 
-#define H __host__
-#define D __device__
 #define HD __host__ __device__
 
 class Random_numbers

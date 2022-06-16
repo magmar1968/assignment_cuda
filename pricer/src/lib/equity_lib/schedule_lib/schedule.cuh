@@ -3,8 +3,6 @@
 
 
 
-#define H __host__
-#define D __device__
 #define HD __host__ __device__
 
 class Schedule {
@@ -14,10 +12,10 @@ class Schedule {
 		int _dim;
 		bool _ascending;
 	public:
-		HD Schedule(void);
+		HD Schedule(void){};
 		HD Schedule(double t_ref, double delta_t, int dim);
-		HD Schedule(double* t_init, int dim);
-		//HD virtual ~Schedule(void);  //? virtual
+		HD Schedule(double* t, int dim);
+		HD ~Schedule(void);  
 
 		HD bool Check_order() const;
 		HD bool Get_order() const;

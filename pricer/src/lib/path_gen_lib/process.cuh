@@ -10,6 +10,16 @@
 
 class Process
 {
+  private:
+    rnd::MyRandom* _gnr; //random number generator
+  protected:
+    HD double Get_random_gaussian()
+    {
+      if(_gnr -> Get_status())
+          return _gnr->genGaussian();
+      else 
+          exit(2);
+    }
 
   public:
     //default constructor
@@ -28,17 +38,7 @@ class Process
             exit(2);
     }
 
-private:
-    rnd::MyRandom* _gnr; //random number generator
 
-protected:
-    HD double Get_random_gaussian()
-    {
-      if(_gnr -> Get_status())
-          return _gnr->genGaussian();
-      else 
-          exit(2);
-    }
 };
 
 

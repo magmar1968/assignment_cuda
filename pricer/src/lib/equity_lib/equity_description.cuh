@@ -15,16 +15,24 @@
 #include "volatility_lib/volatility_surface.cuh"
 
 #define H __host__
-#define D __device__
-#define HD __host__ __device__
+
 
 class Equity_description
 {
+  private:
+    char * _isin_code;
+    char * _name;
+    char * _currency;
+    double _dividend_yield;
+    Yield_curve * _yc;
+    Volatility_surface * _vol_surf;
+
   public:
     //constructors
     HD Equity_description(){}
 
-    HD Equity_description( char *  isin_code,
+    HD Equity_description( 
+                        char *  isin_code,
                         char *  name,
                         char *  currency,
                         double  dividend_yield,
@@ -33,9 +41,7 @@ class Equity_description
       :_isin_code(isin_code), _name(name), _currency(currency),
        _dividend_yield(dividend_yield),_yc(yield_curve),
        _vol_surf(volatility_surface)
-    {
-
-    }
+    {    }
     HD virtual ~Equity_description(){}
 
     //getters
@@ -55,13 +61,6 @@ class Equity_description
     HD void Set_vol_surface(Volatility_surface * vol_surf)
     {_vol_surf = vol_surf;}
 
-  private:
-    char * _isin_code;
-    char * _name;
-    char * _currency;
-    double _dividend_yield;
-    Yield_curve * _yc;
-    Volatility_surface * _vol_surf;
 
 };
 
