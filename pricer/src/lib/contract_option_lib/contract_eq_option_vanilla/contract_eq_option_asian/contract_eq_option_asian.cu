@@ -1,7 +1,7 @@
 #include "contract_eq_option_asian.cuh"
 
 __host__ __device__ double
-Contract_eq_option_asian::Pay_off(Path * path)
+Contract_eq_option_asian::Pay_off(const Path * path)
 {
     double S = 0.;
     double mean_S = 0.;

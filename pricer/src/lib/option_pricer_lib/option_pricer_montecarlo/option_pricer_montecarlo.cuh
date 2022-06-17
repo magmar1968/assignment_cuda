@@ -4,6 +4,7 @@
 #include "../option_pricer.cuh"
 #include "../../path_gen_lib/path/path.cuh" //path
 #include "../../contract_option_lib/contract_eq_option.cuh" //contract_eq_option
+#include "../../support_lib/statistic_lib/statistic_lib.cuh" //average dev_std
 
 #define HD __host__ __device__
 class Option_pricer_montecarlo : public Option_pricer

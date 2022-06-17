@@ -27,11 +27,9 @@ Path::gen_path(Schedule * schedule,
                Process_eq * process_eq)
 {
 	double start_t = _starting_point -> Get_time();	
-	printf("start t: %f\n", start_t);
 	//check for starting point in the schedule
 	for(size_t k = 0; k < _dim; k++)
 	{
-		printf("schedule gett %d: %f\n", k, schedule->Get_t(k));
 		if(start_t <= schedule->Get_t(k))
 		{
 			_start_ind = k;
@@ -44,10 +42,8 @@ Path::gen_path(Schedule * schedule,
 		}*/
 	}
 
-	printf("start_index: %d\n\n", _start_ind);
 	double delta_t = schedule->Get_t(_start_ind) - start_t;   //first step, from starting_point
 
-	printf("neq: %d\n", _n_eq);
 	_random_numbers_scenario[_start_ind] = new Random_numbers(_n_eq);      //allocazione per rns
 	_random_numbers_scenario[_start_ind] = process_eq->Get_random_structure();
 
@@ -56,10 +52,8 @@ Path::gen_path(Schedule * schedule,
 
 
 	//Equity_prices* new_prices = new Equity_prices(_n_eq); 
-	_eq_prices_scenario[_start_ind] = new Equity_prices(_n_eq);
-	printf("Sono in path: abbiamo %f\n", _starting_point->Get_eq_description(0)->Get_dividend_yield()); 
+	_eq_prices_scenario[_start_ind] = new Equity_prices(_n_eq); 
 	_eq_prices_scenario[_start_ind] = process_eq->Get_new_prices(_starting_point, _random_numbers_scenario[_start_ind], delta_t);
-	printf("el 2: %f\n", _eq_prices_scenario[_start_ind]->Get_eq_price(2));
 
 	for (size_t j =  _start_ind + 1; j < _dim; j++)              //makes steps--->creates scenario
 	{
@@ -85,7 +79,7 @@ Path::Get_equity_prices(size_t i) const
 	if(i < _dim)
 		return _eq_prices_scenario[i];
 	else 
-		exit(1);// probably it doesn't work on cuda
+		return NULL; //exit(1);// probably it doesn't work on cuda
 }
 
 __host__ __device__ Random_numbers* 
@@ -94,7 +88,7 @@ Path::Get_random_numbers(size_t i) const
 	if(i < _dim)
 		return _random_numbers_scenario[i];
 	else 
-		exit(1);
+		return NULL; //exit(1);
 }
 
 __host__ __device__ size_t

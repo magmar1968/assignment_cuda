@@ -19,7 +19,7 @@ public:
         {}
     HD ~Contract_eq_option_asian(){};
 
-    HD virtual double Pay_off(Path * path);
+    HD virtual double Pay_off(const Path * path);
 };
 
 

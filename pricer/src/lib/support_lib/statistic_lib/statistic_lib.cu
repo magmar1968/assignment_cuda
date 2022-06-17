@@ -1,7 +1,9 @@
 #include "statistic_lib.cuh"
 
+namespace prcr
+{
 __host__ __device__ double
-average(const double * array, const size_t dim)
+avg(const double * array, const size_t dim)
 {
     double avg = 0.;
     for(int i = 0; i < dim; ++i)
@@ -12,7 +14,7 @@ average(const double * array, const size_t dim)
 __host__ __device__ double
 dev_std(const double * array, const size_t dim)
 {
-    return dev_std(array,average(array,dim),dim);
+    return dev_std(array,avg(array,dim),dim);
 }
 
 __host__ __device__ double
@@ -28,8 +30,9 @@ dev_std(const double * array, const double mean, const size_t dim)
 __host__ __device__ double
 dev_std(const double * array, const double * array2, const size_t dim)
 {
-    double avg = average(array,dim);
-    double avg_2 = average(array2,dim);
+    double avg = prcr::avg(array,dim);
+    double avg_2 = prcr::avg(array2,dim);
 
     return sqrt(avg*avg - avg_2);//?
+}
 }

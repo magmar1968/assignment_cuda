@@ -53,7 +53,7 @@ class Equity_prices
         if(i < _dim)
             return _prices[i];
         else
-            exit(1); //forse non funzica su cuda
+            return -100;// exit(1); //forse non funzica su cuda
     }
     HD double Get_eq_price() const {return Get_eq_price(0);}
     HD size_t Get_dim() const {return _dim;}
@@ -63,7 +63,7 @@ class Equity_prices
         if (i < _dim)
             return _eq_descr[i];
         else
-            exit(1); //forse non funzica su cuda
+            return NULL; //exit(1); //forse non funzica su cuda
     }
     HD Equity_description * Get_eq_description() const {return Get_eq_description(0);}
     
@@ -75,7 +75,7 @@ class Equity_prices
         if (i < _dim)
             _prices[i] = price;
         else
-            exit(1); //forse non funzica su cuda
+           ;// exit(1); //forse non funzica su cuda
     }
     HD void Set_eq_price(double price){ Set_eq_price(0,price);}
 

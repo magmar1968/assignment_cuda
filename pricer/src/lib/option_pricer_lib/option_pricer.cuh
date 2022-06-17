@@ -14,12 +14,12 @@ class Option_pricer
 
   public:
 // Constructors & destructors
-    Option_pricer(void){}
-    Option_pricer(Contract_option *contract_option,
+    HD Option_pricer(void){}
+    HD Option_pricer(Contract_option *contract_option,
                   Process         *process)
         :_contract_option(contract_option),_process(process)
     {}
-    virtual ~Option_pricer(void) {};
+    HD virtual ~Option_pricer(void) {};
 } ;
 
 

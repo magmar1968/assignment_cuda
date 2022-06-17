@@ -17,7 +17,7 @@ Contract_eq_option_barrier::Pay_off(const Path * path)
     case Barrier_type::DOWN_OUT:
         return Pay_off_down_out(path);
     default:
-        exit(3);
+        return -100;// exit(3);
         break;
     }
 }

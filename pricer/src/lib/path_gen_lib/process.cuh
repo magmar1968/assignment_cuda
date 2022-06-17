@@ -18,7 +18,8 @@ class Process
       if(_gnr -> Get_status())
           return _gnr->genGaussian();
       else 
-          exit(2);
+          return -100;
+          // exit(2);
     }
 
   public:

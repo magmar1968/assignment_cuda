@@ -61,7 +61,9 @@ $(TARGET): $(OBJECTS)
 $(TEST): $(OBJECTS)
 	@printf "\n"
 	$(CC) $(LDFLAGS) -o $(TARGETDIR)/$@ $(FILTER_OBJ) $(call FILTER_IN,$(basename $@),$(OBJECTS))\
-	&& ./$(TARGETDIR)/$@ - 
+	&& ./$(TARGETDIR)/$@ -cpu \
+	&& ./$(TARGETDIR)/$@ -gpu
+
 
 
 

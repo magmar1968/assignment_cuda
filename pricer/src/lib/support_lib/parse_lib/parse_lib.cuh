@@ -5,7 +5,7 @@
 #include <string>
 
 
-namespace pricer
+namespace prcr
 {
     #define H __host__
     #define D __device__

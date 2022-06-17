@@ -20,7 +20,7 @@ class Random_numbers
         if (i < _dim)
             _rnd_num[i] = num;
         else
-            exit(1);        
+            ;// exit(1);        
     }
     HD double Get_element(size_t i) const
     {
