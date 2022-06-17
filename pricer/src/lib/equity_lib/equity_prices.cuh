@@ -47,7 +47,6 @@ class Equity_prices
         _eq_descr = new Equity_description*[_dim];
         for (size_t i = 0; i < _dim; i++)
         {
-            printf("i'm in get eq description con dim in\n");
             _eq_descr[i] = new Equity_description;
         }
     }
