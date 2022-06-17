@@ -6,6 +6,10 @@
 *.dat
 #ignore jupyter notebook
 *.ipynb
+#ignore obj
+*obj
+#ignore bin
+*bin
 #ignore vscode
 *.vscode
 opt_pricer_lib/.vs/launch.vs.json
