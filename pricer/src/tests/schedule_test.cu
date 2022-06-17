@@ -32,7 +32,6 @@ int main(int argc, char ** argv)
             std::cout << device_count 
                       << " device avaible\n";
         }
-        // delete device;
     }
 
 

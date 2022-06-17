@@ -16,8 +16,8 @@ DEPEXT      := d
 OBJEXT      := o
 
 #Flags, Libraries and Includes
-LDFLAGS  = --gpu-architecture=sm_50
-CCFLAGS := -rdc=true --gpu-architecture=sm_50
+LDFLAGS  = --gpu-architecture=sm_50 -std=c++11
+CCFLAGS := -rdc=true --gpu-architecture=sm_50 -std=c++11
 # INC         := -I$(INCDIR) -I/usr/local/include
 # INCDEP      := -I$(INCDIR)
 
