@@ -47,24 +47,23 @@ Option_pricer_montecarlo::simulate_option()
     double * pay_off  = new double[_N];
     double * pay_off2 = new double[_N];
 
-    //error dynamic cast is not allowed in device code
 
-    // Contract_eq_option * contract = 
-    //           dynamic_cast<Contract_eq_option*>(_contract_option);
-    // Schedule * schedule = contract -> Get_schedule();
-    // Equity_prices * starting_point = contract->Get_eq_prices();
+    Contract_eq_option &contract = 
+               static_cast<Contract_eq_option&>(*_contract_option);
+    Schedule * schedule = contract.Get_schedule();
+    Equity_prices * starting_point = contract.Get_eq_prices();
 
-    // for(size_t i = 0; i < _N; ++i)
-    // {
+    for(size_t i = 0; i < _N; ++i)
+    {
 
-    //     Path * path = new Path(starting_point,schedule,
-    //               dynamic_cast<Process_eq*>(_process));
-    //     pay_off[i] = contract->Pay_off(path);
-    //     pay_off2[i] = pay_off[i]*pay_off[i];
-    // }    
+        Path * path = new Path(starting_point,schedule,
+                        &static_cast<Process_eq&>(*_process));
+        pay_off[i] = contract.Pay_off(path);
+        pay_off2[i] = pay_off[i]*pay_off[i];
+    }    
 
-    // _price = prcr::avg(pay_off,_N);
-    // _error = prcr::dev_std(pay_off,pay_off2,_N);
+    _price = prcr::avg(pay_off,_N);
+    _error = prcr::dev_std(pay_off,pay_off2,_N);
 
     delete(pay_off);delete(pay_off2);
 }

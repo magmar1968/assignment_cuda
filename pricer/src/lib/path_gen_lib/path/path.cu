@@ -46,12 +46,7 @@ Path::gen_path(Schedule * schedule,
 
 	_random_numbers_scenario[_start_ind] = new Random_numbers(_n_eq);      //allocazione per rns
 	_random_numbers_scenario[_start_ind] = process_eq->Get_random_structure();
-
-
-	//fino a qui tutto bene
-
-
-	//Equity_prices* new_prices = new Equity_prices(_n_eq); 
+ 
 	_eq_prices_scenario[_start_ind] = new Equity_prices(_n_eq); 
 	_eq_prices_scenario[_start_ind] = process_eq->Get_new_prices(_starting_point, _random_numbers_scenario[_start_ind], delta_t);
 
