@@ -26,13 +26,10 @@ Contract_eq_option_vanilla::Pay_off_vanilla(const double S_f)
     {
     case 'C':
         return Pay_off_vanilla_call(S_f);
-        break;
     case 'P':
         return Pay_off_vanilla_put(S_f);
-        break;
     default:
         return -1.;
-        break;
     }
 }
 

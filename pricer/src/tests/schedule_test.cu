@@ -33,8 +33,4 @@ int main(int argc, char ** argv)
                       << " device avaible\n";
         }
     }
-
-
-
-
 }
