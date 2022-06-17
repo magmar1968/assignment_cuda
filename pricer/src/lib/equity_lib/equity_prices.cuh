@@ -53,8 +53,6 @@ class Equity_prices
     }
     HD ~Equity_prices()
     {
-        delete[_dim](_prices);
-
     }
 
     // getter & setter
