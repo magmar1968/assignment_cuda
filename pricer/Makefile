@@ -14,7 +14,6 @@ TARGETDIR   := bin
 SRCEXT      := cu
 DEPEXT      := d
 OBJEXT      := o
-vim
 #Flags, Libraries and Includes
 LDFLAGS  = --gpu-architecture=sm_50 -std=c++11
 CCFLAGS := -rdc=true --gpu-architecture=sm_50 -std=c++11
