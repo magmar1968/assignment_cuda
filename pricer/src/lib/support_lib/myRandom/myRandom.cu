@@ -68,7 +68,6 @@ namespace rnd
                 break;
             }         
             _storedValue  = true;
-            _value = _value*dev_std + mean;
             //normalize the number for the required mean and dev_std
             _value = _value*dev_std + mean;                 //why x2?
             return  num * dev_std  + mean;

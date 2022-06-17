@@ -31,20 +31,31 @@ class Equity_prices
                   Equity_description ** equity_descriptions)
         :_time(time),_dim(dim)
     {
-        _prices      = new double[_dim];
-        _prices      = prices;
-        _eq_descr    = new Equity_description*;
-        _eq_descr[0] = new Equity_description[_dim];
-        _eq_descr    = equity_descriptions;
-    };
+        _prices = new double[_dim];
+        _prices = prices;
+        _eq_descr = new Equity_description * [_dim];
+        for (size_t i = 0; i < _dim; i++)
+        {
+            _eq_descr[i] = new Equity_description;
+        }
+        _eq_descr = equity_descriptions;
+    }
     HD Equity_prices(size_t dim)
         :_dim(dim)
     {
-        _prices      = new double(_dim);
-        _eq_descr    = new Equity_description*;
-        _eq_descr[0] = new Equity_description[_dim];
+        _prices = new double(_dim);
+        _eq_descr = new Equity_description*[_dim];
+        for (size_t i = 0; i < _dim; i++)
+        {
+            printf("i'm in get eq description con dim in\n");
+            _eq_descr[i] = new Equity_description;
+        }
     }
-    HD ~Equity_prices(){}
+    HD ~Equity_prices()
+    {
+        delete[_dim](_prices);
+
+    }
 
     // getter & setter
     HD double Get_time()const{ return _time;}
@@ -81,7 +92,9 @@ class Equity_prices
 
     HD void Set_eq_description(size_t i , Equity_description * eq_description)
     {
+        Equity_description* temp = _eq_descr[i];
         _eq_descr[i] = eq_description; 
+        delete(temp);
     }
     HD void Set_eq_description(Equity_description * eq_description)
     {
