@@ -54,16 +54,12 @@ Path::gen_path(Schedule * schedule,
 	{
 		 delta_t = schedule->Get_t(j+1) - schedule->Get_t(j);
 
-		 printf("Sono rientrato nel for del %d -esimo step\n");
 		 _random_numbers_scenario[j] = new Random_numbers(_n_eq);
 		 _random_numbers_scenario[j] = process_eq->Get_random_structure(); //crea numeri random e li memorizza  //fare come lo step 1 con il setter
-
-		 printf("Con random numbers tutto ok\n");
 
 		 _eq_prices_scenario[j] = new Equity_prices(_n_eq);
 		 _eq_prices_scenario[j] = 
 		       process_eq->Get_new_prices(_eq_prices_scenario[j - 1], _random_numbers_scenario[j],delta_t); 
-		 printf("sono nel for di path, con nep tutto bene\n");
 	}
 	// //per il momento, se processo non esatto ci accontentiamo dell'approssimazione
 }
