@@ -36,18 +36,18 @@ class Equity_prices
         _eq_descr = new Equity_description * [_dim];
         for (size_t i = 0; i < _dim; i++)
         {
-            _eq_descr[i] = new Equity_description;
+            //_eq_descr[i] = new Equity_description;
         }
         _eq_descr = equity_descriptions;
     }
     HD Equity_prices(size_t dim)
         :_dim(dim)
     {
-        _prices = new double(_dim);
+        _prices = new double[_dim];
         _eq_descr = new Equity_description*[_dim];
         for (size_t i = 0; i < _dim; i++)
         {
-            _eq_descr[i] = new Equity_description;
+            //_eq_descr[i] = new Equity_description;
         }
     }
     HD ~Equity_prices()
@@ -89,9 +89,7 @@ class Equity_prices
 
     HD void Set_eq_description(size_t i , Equity_description * eq_description)
     {
-        Equity_description* temp = _eq_descr[i];
         _eq_descr[i] = eq_description; 
-        delete(temp);
     }
     HD void Set_eq_description(Equity_description * eq_description)
     {

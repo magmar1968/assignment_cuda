@@ -29,7 +29,7 @@ Process_eq_lognormal::Get_new_equity_price(
 __host__ __device__ Random_numbers *
 Process_eq_lognormal::Get_random_structure()
 {
-        Random_numbers *w = new Random_numbers(1) ;
+        Random_numbers* w = NULL; 
         w->Set_element(0, Get_random_gaussian() ) ;
     return w ;
 }
@@ -41,7 +41,7 @@ Process_eq_lognormal::Get_new_prices(
                         Random_numbers * w,
                         double delta_t)
 {
-    Equity_prices * eq_prices_out = new Equity_prices;
+    Equity_prices* eq_prices_out = NULL;
 
     double new_eq_price = Get_new_equity_price(
                         eq_prices_in -> Get_eq_description(),

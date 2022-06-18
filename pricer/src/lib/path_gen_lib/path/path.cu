@@ -43,21 +43,21 @@ Path::gen_path(Schedule * schedule,
 	}
 
 	double delta_t = schedule->Get_t(_start_ind) - start_t;   //first step, from starting_point
-
-	_random_numbers_scenario[_start_ind] = new Random_numbers(_n_eq);    
+	//_random_numbers_scenario[_start_ind] = NULL;
 	_random_numbers_scenario[_start_ind] = process_eq->Get_random_structure();
  
-	_eq_prices_scenario[_start_ind] = new Equity_prices(_n_eq); 
+	//_eq_prices_scenario[_start_ind] = NULL;
 	_eq_prices_scenario[_start_ind] = process_eq->Get_new_prices(_starting_point, _random_numbers_scenario[_start_ind], delta_t);
 
 	for (size_t j =  _start_ind + 1; j < _dim; j++)              //makes steps--->creates scenario
 	{
-		 delta_t = schedule->Get_t(j+1) - schedule->Get_t(j);
+		 delta_t = schedule->Get_t(j) - schedule->Get_t(j-1);
 
-		 _random_numbers_scenario[j] = new Random_numbers(_n_eq);
+		// _random_numbers_scenario[j] = NULL;
 		 _random_numbers_scenario[j] = process_eq->Get_random_structure(); //crea numeri random e li memorizza  //fare come lo step 1 con il setter
 
-		 _eq_prices_scenario[j] = new Equity_prices(_n_eq);
+
+		 _eq_prices_scenario[j] = NULL;
 		 _eq_prices_scenario[j] = 
 		       process_eq->Get_new_prices(_eq_prices_scenario[j - 1], _random_numbers_scenario[j],delta_t); 
 	}
