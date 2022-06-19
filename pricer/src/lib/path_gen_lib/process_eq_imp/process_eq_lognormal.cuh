@@ -3,6 +3,7 @@
 
 #include "../process_eq.cuh"
 #include "../../support_lib/myRandom/random_numbers.cuh"
+#include "../../support_lib//myDouble_lib/myudouble.cuh"
 
 // cuda macro
 #define H __host__
@@ -17,9 +18,9 @@ class Process_eq_lognormal : public Process_eq
     HD Process_eq_lognormal(rnd::MyRandom * gnr);
     HD virtual ~Process_eq_lognormal(){};
     //functions
-    HD double Get_new_equity_price(
+    HD pricer::udb Get_new_equity_price(
               Equity_description * eq_descr,
-              double eq_price,
+              pricer::udb eq_price,
               double w,
               double t_start,
               double t_end);
