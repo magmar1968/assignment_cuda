@@ -2,7 +2,7 @@
 #define __PROCESS_EQ_LOGNORMAL__
 
 #include "../process_eq.cuh"
-
+#include "../../support_lib/myRandom/random_numbers.cuh"
 
 // cuda macro
 #define H __host__
