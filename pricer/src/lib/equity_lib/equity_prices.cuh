@@ -10,7 +10,7 @@
 #define __EQUITY_PRICES__
 
 #include "equity_description.cuh"
-#include "../../support_lib//myDouble_lib/myudouble.cuh"
+#include "../../support_lib/myDouble_lib/myudouble.cuh"
 
 #define HD __host__ __device__
 
