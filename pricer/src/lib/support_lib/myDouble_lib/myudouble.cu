@@ -8,7 +8,10 @@ namespace pricer
     :_number(number)
     {
 
-        assert(check_sign());    //prossimamente: usare exit e ritornare codice
+        if (!check_sign())
+        {
+            _number = 0.;
+        }
     }
 
     HD double myudouble::get_number() const
