@@ -61,7 +61,14 @@ class Yield_curve_term_structure : public Yield_curve
 
     HD double Get_forward_rate(double t_start, double t_end)
     {
-        return Get_spot_rate(t_end - t_start); //corretto?? not sure
+
+        double rate_start = Get_spot_rate(t_start);
+        double rate_end = Get_spot_rate(t_end);
+
+        return (rate_end * t_end - rate_start * t_start) / (t_end - t_start);
+
+        
+
     } 
 
 };
