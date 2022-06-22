@@ -28,7 +28,6 @@ namespace pricer
         HD void operator=(const double& rhs);
 
         HD myudouble& operator+=(const myudouble& rhs);
-        HD myudouble& operator-=(const myudouble& rhs);
         HD myudouble& operator*=(const myudouble& rhs);
 
         // HD double& operator*(const myudouble& rhs)

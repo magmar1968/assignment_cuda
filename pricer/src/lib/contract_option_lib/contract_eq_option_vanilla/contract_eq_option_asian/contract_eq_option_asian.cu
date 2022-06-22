@@ -3,7 +3,7 @@
 __host__ __device__ double
 Contract_eq_option_asian::Pay_off(const Path * path)
 {
-    double S = 0.;
+    pricer::udb S = 0.;
     double mean_S = 0.;
 
     size_t n_eq = path->Get_starting_point()->Get_dim();
@@ -16,7 +16,7 @@ Contract_eq_option_asian::Pay_off(const Path * path)
         {
             S += current_eq ->Get_eq_price();
         }    
-        mean_S += S/(double)n_step;
+        mean_S += S.get_number()/(double)n_step;
     }
 
     return Pay_off_vanilla(mean_S);

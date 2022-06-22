@@ -2,6 +2,7 @@
 #define __CONTRACT_EQ_OPTION_ASIAN__
 
 #include "../contract_eq_option_vanilla.cuh"
+#include "../../../support_lib/myDouble_lib/myudouble.cuh"
 
 #define HD __host__ __device__
 

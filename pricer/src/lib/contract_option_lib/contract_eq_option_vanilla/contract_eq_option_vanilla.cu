@@ -12,7 +12,7 @@ Contract_eq_option_vanilla::Pay_off(const Path *path)
 
     for(size_t i = 0; i < n_eq; ++i)
     {
-        S_f += final_price -> Get_eq_price(i);
+        S_f += final_price -> Get_eq_price(i).get_number();
     }
     return Pay_off_vanilla(S_f);
 }
