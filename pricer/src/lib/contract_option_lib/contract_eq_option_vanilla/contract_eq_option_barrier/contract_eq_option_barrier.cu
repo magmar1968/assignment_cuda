@@ -22,7 +22,7 @@ Contract_eq_option_barrier::Pay_off(const Path * path)
 __host__ __device__ double
 Contract_eq_option_barrier::Pay_off_up_in(const Path * path)
 {
-    double S = 0;
+    pricer::udb S = 0;
     size_t n_eq = path->Get_starting_point()->Get_dim(); 
     for(size_t i = path->Get_start_ind(); i < path->Get_dim(); ++i)
     {
@@ -41,7 +41,7 @@ Contract_eq_option_barrier::Pay_off_up_in(const Path * path)
 __host__ __device__ double
 Contract_eq_option_barrier::Pay_off_up_out(const Path * path)
 {
-    double S = 0;
+    pricer::udb S = 0;
     size_t n_eq = path->Get_starting_point()->Get_dim(); 
     for(size_t i = path->Get_start_ind(); i < path->Get_dim(); ++i)
     {
@@ -60,7 +60,7 @@ Contract_eq_option_barrier::Pay_off_up_out(const Path * path)
 __host__ __device__ double
 Contract_eq_option_barrier::Pay_off_down_in(const Path * path)
 {
-    double S = 0;
+    pricer::udb S = 0;
     size_t n_eq = path->Get_starting_point()->Get_dim(); 
     for(size_t i = path->Get_start_ind(); i < path->Get_dim(); ++i)
     {
@@ -79,7 +79,7 @@ Contract_eq_option_barrier::Pay_off_down_in(const Path * path)
 __host__ __device__ double
 Contract_eq_option_barrier::Pay_off_down_out(const Path * path)
 {
-    double S = 0;
+    pricer::udb S = 0;
     size_t n_eq = path->Get_starting_point()->Get_dim(); 
     for(size_t i = path->Get_start_ind(); i < path->Get_dim(); ++i)
     {

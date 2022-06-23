@@ -32,7 +32,7 @@ Process_eq_lognormal_multivariante::Get_new_prices(
 
     for (size_t i = 0; i < _dim; ++i)
     {
-        double new_eq_price = Get_new_equity_price(
+        pricer::udb new_eq_price = Get_new_equity_price(
                         eq_prices_in -> Get_eq_description(i),
                         eq_prices_in -> Get_eq_price(i),
                         w_correlated -> Get_element(i),

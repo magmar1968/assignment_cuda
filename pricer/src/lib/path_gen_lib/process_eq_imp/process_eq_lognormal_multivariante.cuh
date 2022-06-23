@@ -2,6 +2,7 @@
 #define __PROCESS_EQ_LOGNORMAL_MULTIVARIANTE__
 
 #include "process_eq_lognormal.cuh"
+#include "../../support_lib//myDouble_lib/myudouble.cuh"
 
 #define H  __host__
 #define D  __device__
