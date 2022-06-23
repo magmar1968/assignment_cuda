@@ -18,4 +18,37 @@ namespace prcr
         return 0;
     }
 
+    //file options 
+
+
+    H bool fileOptionExist(std::string fileName, std::string option)
+    {
+        std::fstream ifs(fileName, std::fstream::in);
+
+        bool found = false;
+        std::string line;
+        while(!ifs.bad() and !ifs.eof())
+        {
+            std::getline(ifs,line,'!');
+            if(!(line.rfind("#",0)==0))//basically don't start with
+                continue;
+            found = line.find(option);
+            if(found) break;
+        }
+
+        return found;
+    }
+
+
+
+
+
+
+
+
+
+
+
 }
+
+

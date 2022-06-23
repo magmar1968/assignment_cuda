@@ -41,6 +41,8 @@ public:
 	HD size_t Get_start_ind() const;
 	//functions
 	HD Equity_prices * operator[](size_t i) const;
+	HD void regen_path(Schedule  * schedule,
+					   Process_eq* process_eq);
 
 };
 

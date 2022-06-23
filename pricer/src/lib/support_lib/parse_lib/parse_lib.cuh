@@ -3,6 +3,8 @@
 #include <math.h>
 #include <algorithm>
 #include <string>
+#include <fstream>
+#include <iostream>
 
 
 namespace prcr
@@ -16,6 +18,8 @@ namespace prcr
     H bool cmdOptionExists(char** begin, char** end, const std::string& option);
     H std::string getCmdOption(char ** begin, char ** end, const std::string & option);
 
+    H std::string preprocessInputFile(const std::string filename = "pricer.input");
+    H int pricerInput(const std::string& inputFile,const std::string option);
 
     struct Device
     {

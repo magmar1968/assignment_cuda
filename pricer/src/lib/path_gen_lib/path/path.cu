@@ -108,3 +108,11 @@ Path::operator[](size_t i)const
 {
 	return Get_equity_prices(i);
 }
+
+
+__host__ __device__ void
+Path::regen_path(Schedule  * schedule,
+					   Process_eq* process_eq)
+{
+	gen_path(schedule,process_eq);
+}
