@@ -42,7 +42,7 @@ class Yield_curve_term_structure : public Yield_curve
 
     //functions
 
-    HD double Get_spot_rate(double t)
+    HD double Get_spot_rate(double t) const
     {
         for(size_t i = 1; i < _dim; ++i)
         {
@@ -59,7 +59,7 @@ class Yield_curve_term_structure : public Yield_curve
         }
     }
 
-    HD double Get_forward_rate(double t_start, double t_end)
+    HD double Get_forward_rate(double t_start, double t_end) const
     {
 
         double rate_start = Get_spot_rate(t_start);
