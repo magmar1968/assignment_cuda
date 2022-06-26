@@ -57,6 +57,7 @@ class Yield_curve_term_structure : public Yield_curve
                 return (_rates[i] + _rates[i -1])/2. ;
             }
         }
+        return -1; //in case of errors
     }
 
     HD double Get_forward_rate(double t_start, double t_end) const

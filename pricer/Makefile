@@ -6,6 +6,7 @@ CC          := nvcc
 #The Target Binary Program
 TARGET      := #pricer
 TEST        := $(basename $(notdir $(wildcard ./src/tests/*.cu)))
+#TEST        := $(basename $(notdir $(wildcard ./src/tests/test_file_pars.cu)))
 #The Directories, Source, Includes, Objects, Binary and Resources
 SRCDIR      := src
 INCDIR      := inc
@@ -58,7 +59,7 @@ $(TEST): $(OBJECTS)
 	@printf "\n"
 	@$(CC) $(LDFLAGS) -o $(TARGETDIR)/$@ $(FILTER_OBJ) $(call FILTER_IN,$(basename $@),$(OBJECTS))
 	./$(TARGETDIR)/$@ -cpu 
-	./$(TARGETDIR)/$@ -gpu
+# ./?$(TARGETDIR)/$@ -gpu
 
 
 

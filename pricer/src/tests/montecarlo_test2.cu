@@ -1,23 +1,23 @@
 #include <iostream>
 #include "cuda_runtime.h"
 #include "device_launch_parameters.h"
-#include "../../../lib/path_gen_lib/path/path.cuh"
-#include "../../../lib/support_lib/myRandom/myRandom.cuh"
-#include "../../../lib/support_lib/myRandom/myRandom_gnr/combined.cuh"
-#include "../../../lib/support_lib/myRandom/myRandom_gnr/tausworth.cuh"
-#include "../../../lib/support_lib/myRandom/myRandom_gnr/linCongruential.cuh"
-#include "../../../lib/path_gen_lib/process_eq_imp/process_eq_lognormal_multivariante.cuh"
-#include "../../../lib/path_gen_lib/process_eq_imp/process_eq_lognormal.cuh"
-#include "../../../lib/equity_lib/schedule_lib/schedule.cuh"
-#include "../../../lib/equity_lib/yield_curve_lib/yield_curve.cuh"
-#include "../../../lib/equity_lib/yield_curve_lib/yield_curve_flat.cuh"
-#include "../../../lib/equity_lib/yield_curve_lib/yield_curve_term_structure.cuh"
-#include "../../../lib/support_lib/parse_lib/parse_lib.cuh"
-#include "../../../lib/option_pricer_lib/option_pricer.cuh"
-#include "../../../lib/option_pricer_lib/option_pricer_montecarlo/option_pricer_montecarlo.cuh"
-#include "../../../lib/contract_option_lib/contract_eq_option_vanilla/contract_eq_option_vanilla.cuh"
-#include "../../../lib/support_lib/statistic_lib/statistic_lib.cuh"
-#include "../../../lib/support_lib/myDouble_lib/myudouble.cuh"
+#include "../lib/path_gen_lib/path/path.cuh"
+#include "../lib/support_lib/myRandom/myRandom.cuh"
+#include "../lib/support_lib/myRandom/myRandom_gnr/combined.cuh"
+#include "../lib/support_lib/myRandom/myRandom_gnr/tausworth.cuh"
+#include "../lib/support_lib/myRandom/myRandom_gnr/linCongruential.cuh"
+#include "../lib/path_gen_lib/process_eq_imp/process_eq_lognormal_multivariante.cuh"
+#include "../lib/path_gen_lib/process_eq_imp/process_eq_lognormal.cuh"
+#include "../lib/equity_lib/schedule_lib/schedule.cuh"
+#include "../lib/equity_lib/yield_curve_lib/yield_curve.cuh"
+#include "../lib/equity_lib/yield_curve_lib/yield_curve_flat.cuh"
+#include "../lib/equity_lib/yield_curve_lib/yield_curve_term_structure.cuh"
+#include "../lib/support_lib/parse_lib/parse_lib.cuh"
+#include "../lib/option_pricer_lib/option_pricer.cuh"
+#include "../lib/option_pricer_lib/option_pricer_montecarlo/option_pricer_montecarlo.cuh"
+#include "../lib/contract_option_lib/contract_eq_option_vanilla/contract_eq_option_vanilla.cuh"
+#include "../lib/support_lib/statistic_lib/statistic_lib.cuh"
+#include "../lib/support_lib/myDouble_lib/myudouble.cuh"
 
 
 #define STEPS 5  // number of steps
@@ -26,7 +26,7 @@
 #define TPB 200    //threads per block
 #define PPT 100    //paths per thread
 
-//test2 per montecarlo: volatilità = tasso = 0 --> sottostante costante --> prezzo opzione noto
+//test2 per montecarlo: volatilitï¿½ = tasso = 0 --> sottostante costante --> prezzo opzione noto
 
 struct Result
 {
@@ -126,7 +126,7 @@ H void simulate_host(uint* seeds,
     Contract_eq_option_vanilla* contr_opt,
     Result* results)
 {
-    for (size_t index = 0; index < NBLOCKS * TPB; index++)   //l'espressione che risulta dalla moltiplicazione è il numero totale di threads
+    for (size_t index = 0; index < NBLOCKS * TPB; index++)   //l'espressione che risulta dalla moltiplicazione ï¿½ il numero totale di threads
     {
         simulate_generic(seeds, index, contr_opt, results);
     }
@@ -195,7 +195,7 @@ int main(int argc, char** argv)
     }
     strcpy(dscrp_args->isin_code, "qwertyuiopas");
     strcpy(dscrp_args->name, "opzione di prova");
-    strcpy(dscrp_args->currency, "£");
+    strcpy(dscrp_args->currency, "ï¿½");
     dscrp_args->div_yield = 0;
     for (size_t k = 0; k < STEPS; k++)
     {
@@ -338,7 +338,7 @@ int main(int argc, char** argv)
     for (size_t i = 0; i < NBLOCKS * TPB; i++)
     {
         final_res.opt_price += host_results[i].opt_price;
-        //final_res.error += host_results[i].error;          //---->come calcolare error? non è la media degli errors... vanno rimoltiplicati?
+        //final_res.error += host_results[i].error;          //---->come calcolare error? non ï¿½ la media degli errors... vanno rimoltiplicati?
     }
     final_res.opt_price /= (NBLOCKS * TPB);
 

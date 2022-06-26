@@ -1,0 +1,11 @@
+!
+!insert comments with the!
+
+#test1 !prova commandexist
+#test_int    10
+#test_bool   1
+#test_double 1.0333
+#test_string ciao?
+#test_s_array ciao come stai?
+#test_d_array 3.14 7.8111 4111
+#

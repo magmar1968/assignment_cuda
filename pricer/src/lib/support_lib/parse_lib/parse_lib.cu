@@ -19,35 +19,50 @@ namespace prcr
     }
 
     //file options 
-
-
-    H bool fileOptionExist(std::string fileName, std::string option)
+    H bool fileOptionExist(std::string fileName, 
+                           std::string option, 
+                           std::string *_line)
     {
         std::fstream ifs(fileName, std::fstream::in);
 
         bool found = false;
-        std::string line;
+        std::string * line = new std::string;
+        std::string appo;
+        if(!ifs.is_open())
+        {
+            std::cerr << "ERROR: unable to open the file input\n"
+                      << "       please check the file name   \n";
+            exit(-1);
+        }
         while(!ifs.bad() and !ifs.eof())
         {
-            std::getline(ifs,line,'!');
-            if(!(line.rfind("#",0)==0))//basically don't start with
+            std::getline(ifs,*line);
+            // eliminate line of comments and blank lines
+            if(line->size() == 0)
                 continue;
-            found = line.find(option);
-            if(found) break;
-        }
+            
+            if(line->find("!") != std::string::npos)
+            {
+                if(line->rfind("!")== 0)
+                    continue;
+                else{
+                    line->resize(line->find("!"));
+                }
+            }
 
+            if(!(line->rfind("#",0)==0))//basically a don't start with
+                continue;
+
+            //look for the option
+            if(line->find(option) != std::string::npos)
+            {
+                found = true;
+                *_line = *line;
+                break;
+            }
+        }
         return found;
     }
-
-
-
-
-
-
-
-
-
-
 
 }
 
