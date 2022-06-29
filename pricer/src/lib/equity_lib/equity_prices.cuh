@@ -25,7 +25,7 @@ class Equity_prices
   
   public:
     //constructors & destructors
-    HD Equity_prices() {};
+    HD Equity_prices(){} ;
     HD Equity_prices(double time,
                   pricer::udb * prices,
                   size_t   dim,
@@ -46,13 +46,11 @@ class Equity_prices
     {
         _prices = new pricer::udb[_dim];
         _eq_descr = new Equity_description*[_dim];
-        for (size_t i = 0; i < _dim; i++)
-        {
-            //_eq_descr[i] = new Equity_description;
-        }
     }
     HD ~Equity_prices()
     {
+	    delete[](_prices);
+	    delete[](_eq_descr);
     }
 
     // getter & setter

@@ -26,12 +26,12 @@ Process_eq_lognormal::Get_new_equity_price(
            delta_t + sigma * sqrt(delta_t) * w ) ;
 }
 
-__host__ __device__ Random_numbers *
-Process_eq_lognormal::Get_random_structure()
+__host__ __device__ void
+Process_eq_lognormal::Get_random_structure(Random_numbers* w)
 {
-        Random_numbers* w = NULL; 
+         
         w->Set_element(0, Get_random_gaussian() ) ;
-    return w ;
+    
 }
 
 

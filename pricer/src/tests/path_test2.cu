@@ -137,7 +137,7 @@ int main(int argc, char** argv)
     uint* seeds = new uint[4 * NPATH];
     for (size_t inc = 0; inc < 4 * NPATH; inc++)
     {
-        seeds[inc] = rnd::genSeed();       
+        seeds[inc] = rnd::genSeed(true);       
     }
     
     double dt = 0.2;

@@ -15,6 +15,10 @@ class Random_numbers
     {
         _rnd_num = new double[_dim];
     }
+    HD ~Random_numbers()
+    {
+	delete[](_rnd_num);
+    }
     HD void Set_element(size_t i,double num)
     {
         if (i < _dim)

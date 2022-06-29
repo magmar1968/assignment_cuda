@@ -81,4 +81,7 @@ HD bool Schedule::Get_order() const
 {
     return _ascending;
 }
-
+HD Schedule::~Schedule()
+{
+	delete[](_t);
+}	

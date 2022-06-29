@@ -73,7 +73,7 @@ int main(int argc, char** argv)
     double host_sq_sum[NBLOCKS * TPB];
     uint seeds[4*NBLOCKS* TPB];
 
-    srand(1);
+    srand(time(NULL));
     for (size_t i = 0; i < 4 * NBLOCKS * TPB; i++)
     {
         seeds[i] = rnd::genSeed(true);

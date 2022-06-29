@@ -10,8 +10,8 @@ Path::Path(Equity_prices* starting_point,
 	 _dim = schedule -> Get_dim(); // n schedule steps
 	 _n_eq = _starting_point -> Get_dim(); //n equities   //se serve, da qualche parte, fare check che number of equities sia coerente in tutti gli oggetti 
 	 _random_numbers_scenario = new Random_numbers* [_dim];
-	 _eq_prices_scenario = new Equity_prices * [_dim];
-	gen_path(schedule, process_eq);
+	 _eq_prices_scenario = new Equity_prices* [_dim];
+	 gen_path(schedule, process_eq);
 }
 
 __host__ __device__
@@ -35,33 +35,29 @@ Path::gen_path(Schedule * schedule,
 			_start_ind = k;
 			break;                                                     //tutto questo pezzo va discusso meglio
 		}
-		/*else if (start_t > schedule->Get_t(k))
-		{
-			_start_ind = k - 1;         
-			break;
-		}*/
 	}
 
 	double delta_t = schedule->Get_t(_start_ind) - start_t;   //first step, from starting_point
-	//_random_numbers_scenario[_start_ind] = NULL;
-	_random_numbers_scenario[_start_ind] = process_eq->Get_random_structure();
+	_random_numbers_scenario[_start_ind] = new Random_numbers(_n_eq);
+	 process_eq->Get_random_structure(_random_numbers_scenario[_start_ind]);
  
-	//_eq_prices_scenario[_start_ind] = NULL;
+	
 	_eq_prices_scenario[_start_ind] = process_eq->Get_new_prices(_starting_point, _random_numbers_scenario[_start_ind], delta_t);
 
 	for (size_t j =  _start_ind + 1; j < _dim; j++)              //makes steps--->creates scenario
 	{
 		 delta_t = schedule->Get_t(j) - schedule->Get_t(j-1);
 
-		// _random_numbers_scenario[j] = NULL;
-		 _random_numbers_scenario[j] = process_eq->Get_random_structure(); //crea numeri random e li memorizza  //fare come lo step 1 con il setter
+		  _random_numbers_scenario[j] = new Random_numbers(_n_eq);		
+		  process_eq->Get_random_structure(_random_numbers_scenario[j]); //crea numeri random e li memorizza  //fare come lo step 1 con il setter
 
 
 		 _eq_prices_scenario[j] = NULL;
 		 _eq_prices_scenario[j] = 
 		       process_eq->Get_new_prices(_eq_prices_scenario[j - 1], _random_numbers_scenario[j],delta_t); 
+		
 	}
-	// //per il momento, se processo non esatto ci accontentiamo dell'approssimazione
+	 //per il momento, se processo non esatto ci accontentiamo dell'approssimazione
 }
 
 
@@ -116,3 +112,19 @@ Path::regen_path(Schedule  * schedule,
 {
 	gen_path(schedule,process_eq);
 }
+
+__host__ __device__ Path::~Path()
+{
+
+	delete[](_eq_prices_scenario);
+	delete[](_random_numbers_scenario);
+}
+__host__ __device__ void Path::destroy()
+{
+	for(int i = _start_ind; i < _dim; i++)
+	{
+		delete(_random_numbers_scenario[i]);
+		delete(_eq_prices_scenario[i]);
+	}
+}
+

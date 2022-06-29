@@ -32,7 +32,7 @@ public:
 			Schedule     * schedule,
 			Process_eq   * process_eq);
 	HD Path(Path* path);
-	HD virtual ~Path(void){};
+	HD virtual ~Path(void);
 	//getter & setters
 	HD Equity_prices  * Get_starting_point(void) const;
 	HD Equity_prices  * Get_equity_prices(size_t i) const;
@@ -43,6 +43,7 @@ public:
 	HD Equity_prices * operator[](size_t i) const;
 	HD void regen_path(Schedule  * schedule,
 					   Process_eq* process_eq);
+	HD void destroy ();
 
 };
 

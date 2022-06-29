@@ -15,7 +15,7 @@ class Schedule {
 		HD Schedule(void){};
 		HD Schedule(double t_ref, double delta_t, int dim);
 		HD Schedule(double* t, int dim);
-		HD ~Schedule(void){};  
+		HD ~Schedule(void);  
 
 		HD bool Check_order() const;
 		HD bool Get_order() const;

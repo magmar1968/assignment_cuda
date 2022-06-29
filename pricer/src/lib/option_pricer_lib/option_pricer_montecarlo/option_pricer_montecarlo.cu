@@ -52,22 +52,23 @@ Option_pricer_montecarlo::simulate_option()
                static_cast<Contract_eq_option&>(*_contract_option);
     Schedule * schedule = contract.Get_schedule();
     Equity_prices * starting_point = contract.Get_eq_prices();
-    Path * path = new Path(starting_point,schedule,
+    Path  path =  Path(starting_point,schedule,
                         &static_cast<Process_eq&>(*_process));
 
     for(size_t i = 0; i < _N; ++i)
     {
 
-        pay_off[i] = contract.Pay_off(path);
+        pay_off[i] = contract.Pay_off(&path);
         pay_off2[i] = pay_off[i]*pay_off[i];
-        path -> regen_path(schedule,&static_cast<Process_eq&>(*_process));
+	path.destroy();
+        path.regen_path(schedule,&static_cast<Process_eq&>(*_process));
     }    
 
-    delete(path);
+    
     _price = prcr::avg(pay_off,_N);
     _error = prcr::dev_std(pay_off,pay_off2,_N);
 
-    delete(pay_off);delete(pay_off2);
+    delete[](pay_off);delete[](pay_off2);
 }
 
 

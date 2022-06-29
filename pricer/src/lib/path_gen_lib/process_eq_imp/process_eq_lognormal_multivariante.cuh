@@ -18,7 +18,7 @@ class Process_eq_lognormal_multivariante : public Process_eq_lognormal
     HD Process_eq_lognormal_multivariante(){}
     HD Process_eq_lognormal_multivariante(rnd::MyRandom * gnr,size_t dim);
 
-    HD Random_numbers * Get_random_structure();
+    HD void  Get_random_structure(Random_numbers* w);
     HD Equity_prices  * Get_new_prices(Equity_prices * in,
                                     Random_numbers * w,
                                     double delta_t);

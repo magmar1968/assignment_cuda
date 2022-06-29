@@ -8,16 +8,14 @@ Process_eq_lognormal_multivariante::Process_eq_lognormal_multivariante
     :Process_eq_lognormal(gnr),_dim(dim)
 {}
 
-__host__ __device__ Random_numbers * 
-Process_eq_lognormal_multivariante::Get_random_structure()
+__host__ __device__ void
+Process_eq_lognormal_multivariante::Get_random_structure(Random_numbers* w)
 {
-    Random_numbers * w = new Random_numbers(_dim);
     for( size_t i = 0; i<_dim; ++i)
     {
         w -> Set_element(i, Get_random_gaussian());
     }
-    return w;
-}
+  }
 
 __host__ __device__ Equity_prices * 
 Process_eq_lognormal_multivariante::Get_new_prices(
@@ -44,3 +42,4 @@ Process_eq_lognormal_multivariante::Get_new_prices(
     }
     return eq_prices_out;
 }
+

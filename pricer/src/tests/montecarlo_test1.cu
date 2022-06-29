@@ -22,9 +22,9 @@
 
 #define STEPS 5  // number of steps
 #define NEQ 1  //number of equities
-#define NBLOCKS 4  //cuda blocks
-#define TPB 4   //threads per block
-#define PPT 3
+#define NBLOCKS 32  //cuda blocks
+#define TPB 32  //threads per block
+#define PPT 200
 
 struct Result
 {
@@ -83,12 +83,12 @@ __global__ void kernel_mc(uint* dev_seeds,
     {
         start_prices[i] = dev_prices->start_prices[i];
     }
-    Equity_description** descr = new Equity_description * [NEQ];
+    Equity_description* descr[NEQ];
 
     double start_time = dev_prices->start_time;
-    Volatility_surface* vol = new Volatility_surface(dev_descr->vol[0]);
+    Volatility_surface vol = Volatility_surface(dev_descr->vol[0]);
     char* currency = (dev_descr->currency);
-    Yield_curve_term_structure* yc = new Yield_curve_term_structure(currency, dev_descr->yc, dev_sched->tempi, STEPS);
+    Yield_curve_term_structure yc = Yield_curve_term_structure(currency, dev_descr->yc, dev_sched->tempi, STEPS);
 
     for (int i = 0; i < NEQ; i++)
     {
@@ -97,18 +97,23 @@ __global__ void kernel_mc(uint* dev_seeds,
         descr[i]->Set_name(dev_descr->name);
         descr[i]->Set_currency(dev_descr->currency);
         descr[i]->Set_dividend_yield(dev_descr->div_yield);
-        descr[i]->Set_yc(yc);
-        descr[i]->Set_vol_surface(vol);
+        descr[i]->Set_yc(&yc);
+        descr[i]->Set_vol_surface(&vol);
     }
 	
-    Equity_prices* starting_point_in = new Equity_prices(start_time, start_prices, NEQ, descr);
-    Schedule* calen = new Schedule(dev_sched->tempi, STEPS);
+    Equity_prices starting_point_in = Equity_prices(start_time, &(start_prices[0]), NEQ, &(descr[0]));
+    Schedule calen =  Schedule(dev_sched->tempi, STEPS);
 	
-    Contract_eq_option_vanilla* contr_opt;
-    contr_opt = new Contract_eq_option_vanilla(starting_point_in, calen,
+    Contract_eq_option_vanilla contr_opt = Contract_eq_option_vanilla(&starting_point_in, &calen,
         dev_vnl_args->strike_price, dev_vnl_args->contract_type);
 
-    simulate_device(dev_seeds, contr_opt, dev_results);
+    simulate_device(dev_seeds, &(contr_opt), dev_results);
+    for(size_t i = 0; i < NEQ; i++)
+    {
+      delete (descr[i]);
+    }
+    
+
 
 }
 
@@ -126,6 +131,7 @@ H void simulate_host(uint* seeds,
 {
     for (size_t index = 0; index < NBLOCKS * TPB; index++)   //l'espressione che risulta dalla moltiplicazione � il numero totale di threads
     {
+        results[index].opt_price = 1;
         simulate_generic(seeds, index, contr_opt, results);
     }
 }
@@ -141,13 +147,11 @@ HD void simulate_generic(uint* seeds,
     uint seed2 = seeds[2 + index * 4];
     uint seed3 = seeds[3 + index * 4];
 
-    rnd::GenCombined* gnr_in = new rnd::GenCombined(seed0, seed1, seed2, seed3);
-    Process_eq_lognormal_multivariante* process = new Process_eq_lognormal_multivariante(gnr_in, NEQ);
-
-    Option_pricer_montecarlo* pric = new Option_pricer_montecarlo(contr_opt, process, PPT);
-
-    results[index].opt_price = pric->Get_price();
-    results[index].error = pric->Get_MonteCarlo_error();
+    rnd::GenCombined gnr_in = rnd::GenCombined(seed0, seed1, seed2, seed3);
+    Process_eq_lognormal_multivariante process = Process_eq_lognormal_multivariante(&gnr_in, NEQ);
+    Option_pricer_montecarlo pric = Option_pricer_montecarlo(contr_opt, &process, PPT);
+    results[index].opt_price = pric.Get_price();
+    results[index].error = 1;//pric.Get_MonteCarlo_error();
 }
 
 
@@ -155,14 +159,13 @@ HD void simulate_generic(uint* seeds,
 int main(int argc, char** argv)
 {
     cudaError_t cudaStatus;
-    uint NPATH = NBLOCKS * TPB  ;
     srand(1);
 
 
     Result* host_results = new Result[NBLOCKS * TPB];
 
-    uint* seeds = new uint[4 * NPATH];
-    for (size_t inc = 0; inc < 4 * NPATH; inc++)
+    uint* seeds = new uint[4 *NBLOCKS*TPB ];
+    for (size_t inc = 0; inc < 4 * NBLOCKS*TPB; inc++)
     {
         seeds[inc] = rnd::genSeed(true);
     }
@@ -172,6 +175,7 @@ int main(int argc, char** argv)
 
     vnl_args->contract_type = 'C';
     vnl_args->strike_price = 100;
+
 
 
 
@@ -193,7 +197,7 @@ int main(int argc, char** argv)
     }
     strcpy(dscrp_args->isin_code, "qwertyuiopas");
     strcpy(dscrp_args->name, "opzione di prova");
-    strcpy(dscrp_args->currency, "�");
+    strcpy(dscrp_args->currency, "euro");
     dscrp_args->div_yield = 0;
     for (size_t k = 0; k < STEPS; k++)
     {
@@ -265,12 +269,11 @@ int main(int argc, char** argv)
         Eq_description_arguments* dev_descr;
         Eq_prices_arguments* dev_prices;
         Vanilla_arguments* dev_vnl_args;
-        Result* dev_results = new Result[NBLOCKS * TPB];
-        double* dev_res = new double[NBLOCKS * TPB];
-        double* host_res = new double[NBLOCKS * TPB];
+        Result* dev_res;
+        
 
 
-        cudaStatus = cudaMalloc((void**)&dev_seeds, NPATH * 4 * sizeof(uint));
+        cudaStatus = cudaMalloc((void**)&dev_seeds, NBLOCKS*TPB * 4 * sizeof(uint));
         if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMalloc1 failed!\n"); }
 
         cudaStatus = cudaMalloc((void**)&dev_sched, sizeof(Schedule_arguments));
@@ -282,13 +285,13 @@ int main(int argc, char** argv)
         cudaStatus = cudaMalloc((void**)&dev_prices, sizeof(Eq_prices_arguments));
         if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMalloc4 failed!\n"); }
 
-        cudaStatus = cudaMalloc((void**)&dev_results, NBLOCKS * TPB * sizeof(Result));
+        cudaStatus = cudaMalloc((void**)&dev_res, NBLOCKS * TPB * sizeof(Result));
         if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMalloc5 failed!\n"); }
 
         cudaStatus = cudaMalloc((void**)&dev_vnl_args, NBLOCKS * TPB * sizeof(Vanilla_arguments));
         if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMalloc6 failed!\n"); }
 
-        cudaStatus = cudaMemcpy(dev_seeds, seeds, NPATH * 4 * sizeof(uint), cudaMemcpyHostToDevice);
+        cudaStatus = cudaMemcpy(dev_seeds, seeds, NBLOCKS*TPB * 4 * sizeof(uint), cudaMemcpyHostToDevice);
         if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMemcpy1 failed!\n"); }
         fprintf(stderr, "%s\n", cudaGetErrorString(cudaStatus));
 
@@ -310,17 +313,24 @@ int main(int argc, char** argv)
 
 
 
-        kernel_mc << < NBLOCKS, TPB >> > (dev_seeds, dev_sched, dev_descr, dev_prices, dev_vnl_args, dev_results);
+        kernel_mc << < NBLOCKS, TPB >> > (dev_seeds, dev_sched, dev_descr, dev_prices, dev_vnl_args, dev_res);
         cudaStatus = cudaGetLastError();
         if (cudaStatus != cudaSuccess) { fprintf(stderr, "Kernel failed: %s\n", cudaGetErrorString(cudaStatus)); }
+	
+	cudaFree(dev_seeds);
+	cudaFree(dev_sched);
+	cudaFree(dev_descr);
+	cudaFree(dev_prices);
+	cudaFree(dev_vnl_args);
+	
 
-
-
-        cudaStatus = cudaMemcpy(host_results, dev_results, NBLOCKS * TPB * sizeof(Result), cudaMemcpyDeviceToHost);
+       cudaStatus = cudaMemcpy(host_results, dev_res, NBLOCKS * TPB * sizeof(Result), cudaMemcpyDeviceToHost);
         if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMemcpy backwards failed!\n"); }
+	printf("%d", cudaStatus);
         fprintf(stderr, "%s\n", cudaGetErrorString(cudaStatus));
 
-
+	
+	
 
 
 
@@ -342,7 +352,8 @@ int main(int argc, char** argv)
     }
     final_res.opt_price /= double(NBLOCKS * TPB);
 
-    std::cout << final_res.opt_price;
+    std::cout <<"\n" << final_res.opt_price << std::endl;
+    std::cout << final_res.error << std::endl;
     if (final_res.opt_price - 1900.77 <100)
         return 0;
     else

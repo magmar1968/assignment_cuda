@@ -25,7 +25,7 @@ class Process_eq_lognormal : public Process_eq
               double t_start,
               double t_end);
     
-    HD Random_numbers * Get_random_structure();
+    HD void  Get_random_structure(Random_numbers* w);
     HD virtual Equity_prices* Get_new_prices(
               Equity_prices  * eq_prices_in,
               Random_numbers * w,

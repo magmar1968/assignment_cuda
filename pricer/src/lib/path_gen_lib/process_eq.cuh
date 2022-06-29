@@ -21,7 +21,7 @@ class Process_eq : public Process
     }
 
 
-    HD virtual Random_numbers * Get_random_structure() = 0;
+    HD virtual void Get_random_structure(Random_numbers* w) = 0;
     HD virtual Equity_prices  * Get_new_prices(
                                            Equity_prices * eq_prices_in, 
                                            Random_numbers * w,
