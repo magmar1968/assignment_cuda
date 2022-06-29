@@ -28,11 +28,22 @@ dev_std(const double * array, const double mean, const size_t dim)
 }
 
 __host__ __device__ double
+sum_array(const double* arr, const size_t dim)
+{
+    double sum_array = 0;
+    for (int i = 0; i < dim; i++)
+    {
+        sum_array += arr[i];
+    }
+    return sum_array;
+}
+
+__host__ __device__ double
 dev_std(const double * array, const double * array2, const size_t dim)
 {
     double avg = prcr::avg(array,dim);
     double avg_2 = prcr::avg(array2,dim);
 
-    return sqrt(avg*avg - avg_2);//?
+    return sqrt(avg*avg - avg_2);//? 
 }
 }

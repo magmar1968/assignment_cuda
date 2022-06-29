@@ -151,7 +151,7 @@ HD void simulate_generic(uint* seeds,
     Process_eq_lognormal_multivariante process = Process_eq_lognormal_multivariante(&gnr_in, NEQ);
     Option_pricer_montecarlo pric = Option_pricer_montecarlo(contr_opt, &process, PPT);
     results[index].opt_price = pric.Get_price();
-    results[index].error = 1;//pric.Get_MonteCarlo_error();
+    results[index].error = pric.Get_MonteCarlo_error();
 }
 
 
@@ -159,7 +159,7 @@ HD void simulate_generic(uint* seeds,
 int main(int argc, char** argv)
 {
     cudaError_t cudaStatus;
-    srand(1);
+    srand(time(NULL));
 
 
     Result* host_results = new Result[NBLOCKS * TPB];
@@ -193,7 +193,7 @@ int main(int argc, char** argv)
 
     for (size_t i = 0; i < STEPS; i++)
     {
-       dscrp_args->vol[i] = 0.1;
+       dscrp_args->vol[i] = 0.001;
     }
     strcpy(dscrp_args->isin_code, "qwertyuiopas");
     strcpy(dscrp_args->name, "opzione di prova");
@@ -347,14 +347,15 @@ int main(int argc, char** argv)
     final_res.error = 0;
     for (size_t i = 0; i < NBLOCKS * TPB; i++)
     {
-       final_res.opt_price += host_results[i].opt_price;
-        final_res.error += host_results[i].error;          //---->come calcolare error? non � la media degli errors... vanno rimoltiplicati?
+        final_res.opt_price += host_results[i].opt_price;
+        final_res.error += host_results[i].error;
     }
     final_res.opt_price /= double(NBLOCKS * TPB);
+    final_res.error = sqrt(final_res.error / double(NBLOCKS*TPB*PPT) - final_res.opt_price * final_res.opt_price);
 
     std::cout <<"\n" << final_res.opt_price << std::endl;
     std::cout << final_res.error << std::endl;
-    if (final_res.opt_price - 1900.77 <100)
+    if (final_res.opt_price - 111.7 <3*final_res.error)
         return 0;
     else
         return 1;

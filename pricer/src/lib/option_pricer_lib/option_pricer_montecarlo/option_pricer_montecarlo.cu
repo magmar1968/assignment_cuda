@@ -66,7 +66,7 @@ Option_pricer_montecarlo::simulate_option()
 
     
     _price = prcr::avg(pay_off,_N);
-    _error = prcr::dev_std(pay_off,pay_off2,_N);
+    _error = prcr::sum_array(pay_off2,_N);  //così è la somma dei quadrati ---> forse meglio cambiargli nome
 
     delete[](pay_off);delete[](pay_off2);
 }
