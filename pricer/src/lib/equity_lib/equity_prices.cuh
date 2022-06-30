@@ -32,13 +32,7 @@ class Equity_prices
                   Equity_description ** equity_descriptions)
         :_time(time),_dim(dim)
     {
-        _prices = new pricer::udb[_dim];
         _prices = prices;
-        _eq_descr = new Equity_description * [_dim];
-        for (size_t i = 0; i < _dim; i++)
-        {
-            //_eq_descr[i] = new Equity_description;
-        }
         _eq_descr = equity_descriptions;
     }
     HD Equity_prices(size_t dim)

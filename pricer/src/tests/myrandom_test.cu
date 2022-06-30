@@ -10,9 +10,9 @@
 
   
 
-#define NBLOCKS 4
-#define TPB 4
-#define PPT 2
+#define NBLOCKS 128
+#define TPB 512
+#define PPT 10000
 
 __global__ void kernel (uint*, double*, double*);
 __device__ void rnd_test_dev(uint*, double*, double*);
@@ -28,10 +28,10 @@ __global__ void kernel(uint* seeds, double* dev_sum, double* dev_sq_sum)
 __device__ void rnd_test_dev(uint* seeds, double* dev_sum, double* dev_sq_sum)
 {
     size_t index = blockIdx.x * blockDim.x + threadIdx.x;
-    if (index < NBLOCKS*TPB)
-    {
+   // if (index < NBLOCKS*TPB)
+    
         rnd_test_generic(seeds, dev_sum, dev_sq_sum, index);
-    }
+    
 }
 __host__ void rnd_test_hst(uint* seeds, double* sum, double* sq_sum)
 {
@@ -44,13 +44,14 @@ __host__ __device__ void rnd_test_generic(uint* seeds, double* sum, double* sq_s
     uint seed1 = seeds[4 * index + 1];
     uint seed2 = seeds[4 * index + 2];
     uint seed3 = seeds[4 * index + 3];
-    rnd::GenCombined* gnr = new rnd::GenCombined(seed0, seed1, seed2, seed3);
+    rnd::GenCombined gnr = rnd::GenCombined(seed0, seed1, seed2, seed3);
     double number;
     for (size_t i = 0; i < PPT; i++)
     {
-        number = gnr->genGaussian();
+        number = gnr.genGaussian();
         sum[index] += number;
-        sq_sum[index] += number * number;
+        sq_sum[index] += number*number;
+	
     }
     
 
@@ -59,6 +60,7 @@ __host__ __device__ void rnd_test_generic(uint* seeds, double* sum, double* sq_s
 
 int main(int argc, char** argv)
 {
+    printf("Iniziamo il test_random\n");
 
     prcr::Device dev;
     dev.CPU = false;
@@ -69,9 +71,9 @@ int main(int argc, char** argv)
     if (prcr::cmdOptionExists(argv, argv + argc, "-cpu"))
         dev.CPU = true;
 
-    double host_sum[NBLOCKS * TPB];
-    double host_sq_sum[NBLOCKS * TPB];
-    uint seeds[4*NBLOCKS* TPB];
+    double* host_sum = new double[NBLOCKS * TPB];
+    double* host_sq_sum =new double[NBLOCKS * TPB];
+    uint* seeds = new uint [4*NBLOCKS* TPB];
 
     srand(time(NULL));
     for (size_t i = 0; i < 4 * NBLOCKS * TPB; i++)
@@ -89,7 +91,9 @@ int main(int argc, char** argv)
 
     if(dev.CPU)
     { 
+	printf("prima!\n");
         rnd_test_hst(seeds, host_sum, host_sq_sum);
+	printf("dopo!\n");
     }
 
 
@@ -129,7 +133,7 @@ int main(int argc, char** argv)
 
         cudaStatus = cudaMemcpy(host_sq_sum, dev_sq_sum, NBLOCKS * TPB * sizeof(double), cudaMemcpyDeviceToHost);
         if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMemcpy back2 failed!\n"); }
-
+        //fprintf(stderr, "\n memcpyback failed: %s\n", cudaGetErrorString(cudaStatus));
 
        
     }
@@ -142,6 +146,7 @@ int main(int argc, char** argv)
 
     for (size_t i = 0; i < NBLOCKS * TPB; i++)
     {
+	//std::cout << host_sum[i] <<std::endl;
         meas_mean += host_sum[i];
         meas_std_dev += host_sq_sum[i];
     }

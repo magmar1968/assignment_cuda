@@ -60,7 +60,7 @@ Option_pricer_montecarlo::simulate_option()
 
         pay_off[i] = contract.Pay_off(&path);
         pay_off2[i] = pay_off[i]*pay_off[i];
-	path.destroy();
+	    path.destroy();
         path.regen_path(schedule,&static_cast<Process_eq&>(*_process));
     }    
 
