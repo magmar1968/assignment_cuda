@@ -1,4 +1,4 @@
-#include <iostream>
+﻿#include <iostream>
 #include "cuda_runtime.h"
 #include "device_launch_parameters.h"
 #include "../lib/path_gen_lib/path/path.cuh"
@@ -11,143 +11,216 @@
 #include "../lib/equity_lib/schedule_lib/schedule.cuh"
 #include "../lib/equity_lib/yield_curve_lib/yield_curve.cuh"
 #include "../lib/equity_lib/yield_curve_lib/yield_curve_flat.cuh"
+#include "../lib/equity_lib/yield_curve_lib/yield_curve_term_structure.cuh"
 #include "../lib/support_lib/parse_lib/parse_lib.cuh"
+#include "../lib/contract_option_lib/contract_eq_option_vanilla/contract_eq_option_vanilla.cuh"
+#include "../lib/support_lib/statistic_lib/statistic_lib.cuh"
+#include "../lib/support_lib/myDouble_lib/myudouble.cuh"
 
 
-#define NPATH 1  //number of paths
+//in questo test creiamo path e memorizziamo last step, poi mediamo (no calcolo payoff ecc)
+
 #define STEPS 5  // number of steps
-#define NEQ 5  //number of equities
-
-
-__global__ void kernel(double*, uint* );
-D void createPath_device(Equity_prices*, Schedule*, double*, size_t, uint*);
-H void createPath_host(Equity_prices*, Schedule*, double*, size_t, uint*);
-HD void createPath_generic(Process_eq*, Equity_prices*, Schedule*, double* , size_t);
+#define NEQ 1  //number of equities
+#define NBLOCKS 4  //cuda blocks
+#define TPB 4 //threads per block
+#define PPT 20
 
 
 
+struct Vanilla_data
+{
+    char contract_type;
+    double strike_price;
+};
 
-__global__ void kernel(double* path_out, uint* seeds)
+struct Schedule_data
+{
+    double tempi[STEPS];
+};
+
+struct Eq_description_data
+{
+    double vol[STEPS];
+    char isin_code[12];
+    char name[30];
+    char currency[20];
+    double div_yield;
+    double yc[STEPS];
+};
+
+struct Eq_prices_data
 {
     pricer::udb start_prices[NEQ];
+    double start_time;
+};
+
+
+
+
+
+__global__ void kernel_mc(uint*, Schedule_data*, Eq_description_data*, Eq_prices_data*, Vanilla_data*, double*);
+D void simulate_device(uint*, Contract_eq_option_vanilla*, double*);
+H void simulate_host(uint*, Contract_eq_option_vanilla*, double*);
+HD void simulate_generic(uint*, int, Contract_eq_option_vanilla*, double*);
+
+
+
+
+__global__ void kernel_mc(uint* dev_seeds,
+    Schedule_data* dev_sched,
+    Eq_description_data* dev_descr,
+    Eq_prices_data* dev_prices,
+    Vanilla_data* dev_vnl_args,
+    double* dev_results)
+{
+    pricer::udb* start_prices = new pricer::udb[NEQ];                              //definiamo oggetti dentro a kernel
     for (int i = 0; i < NEQ; i++)
     {
-        start_prices[i] = 100 * i;
+        start_prices[i] = dev_prices->start_prices[i];
     }
-    double start_time = 0.15;
-    Equity_description** descr = new Equity_description * [NEQ];
+    Equity_description** descr= new Equity_description*[NEQ];
 
-    Volatility_surface* vol = new Volatility_surface(0.5);
-    Yield_curve_flat* yc = new Yield_curve_flat("euro", 0);
+    double start_time = dev_prices->start_time;
+    Volatility_surface* vol =new Volatility_surface(dev_descr->vol[0]);
+    char* currency;
+    currency = (dev_descr->currency);
+    Yield_curve_term_structure* yc = new Yield_curve_term_structure(currency, dev_descr->yc, dev_sched->tempi, STEPS);
 
     for (int i = 0; i < NEQ; i++)
     {
         descr[i] = new Equity_description;
-        descr[i]->Set_isin_code("isin codein");
-        descr[i]->Set_name("namein ");
-        descr[i]->Set_currency("currencyin");
-        descr[i]->Set_dividend_yield(0);
+        descr[i]->Set_isin_code(dev_descr->isin_code);
+        descr[i]->Set_name(dev_descr->name);
+        descr[i]->Set_currency(dev_descr->currency);
+        descr[i]->Set_dividend_yield(dev_descr->div_yield);
         descr[i]->Set_yc(yc);
         descr[i]->Set_vol_surface(vol);
     }
 
     Equity_prices* starting_point_in = new Equity_prices(start_time, start_prices, NEQ, descr);
-    double tempi[STEPS];
-    for (size_t k = 0; k < STEPS; k++)
-    {
-        tempi[k] = 0.2 + k * 0.2;
-    }
-    Schedule* calen = new Schedule(tempi, STEPS);
+    Schedule* calen = new Schedule(dev_sched->tempi, STEPS);
 
+    Contract_eq_option_vanilla* contr_opt = new Contract_eq_option_vanilla(starting_point_in, calen,
+        dev_vnl_args->strike_price, dev_vnl_args->contract_type);
+    simulate_device(dev_seeds, contr_opt, dev_results);
     for (size_t i = 0; i < NEQ; i++)
     {
-        path_out[i] = 0;
+        delete(descr[i]);
     }
-    createPath_device(starting_point_in, calen, path_out, NPATH, seeds);
-    __syncthreads();
-   
+    //delete[] (start_prices);
+    //delete[] (descr);
+    delete(vol);
+    delete(yc);
+    delete(starting_point_in);
+    delete(calen);
+    delete(contr_opt);
+
+
+
 }
 
-D void createPath_device(Equity_prices* starting_point,
-    Schedule* calendar,
-    double* path_out,
-    size_t totpaths,
-    uint* seeds)
+D void simulate_device(uint* seeds,
+    Contract_eq_option_vanilla* contr_opt,
+    double* results)
 {
     size_t index = blockIdx.x * blockDim.x + threadIdx.x;
-    uint seed0;
-    uint seed1;
-    uint seed2;
-    uint seed3;
-    //while (index < totpaths)
-        
-    //{
-        seed0 = seeds[0 + index*4];
-        seed1 = seeds[1 + index*4];
-        seed2 = seeds[2 + index*4];
-        seed3 = seeds[3 + index*4];
-
-        rnd::GenCombined* gnr_in = new rnd::GenCombined(seed0, seed1, seed2, seed3);
-        Process_eq_lognormal_multivariante* process = new Process_eq_lognormal_multivariante(gnr_in, NEQ);
-
-        createPath_generic(process, starting_point, calendar, path_out, index);
-      
-
-       // index += blockDim.x * gridDim.x;
-    //}
+    /*if (index < NBLOCKS * TPB)*/ simulate_generic(seeds, index, contr_opt, results);
 }
 
-H void createPath_host(Equity_prices* starting_point,
-    Schedule* calendar,
-    double* path_out,
-    size_t totpaths,
-    uint* seeds)
+H void simulate_host(uint* seeds,
+    Contract_eq_option_vanilla* contr_opt,
+    double* results)
 {
-    uint seed0;
-    uint seed1;
-    uint seed2;
-    uint seed3;
-    for (size_t index = 0; index < totpaths; index++)
+    for (size_t index = 0; index < NBLOCKS * TPB; index++)   //l'espressione che risulta dalla moltiplicazione � il numero totale di threads
     {
-        seed0 = seeds[0 + index*4];
-        seed1 = seeds[1 + index*4];
-        seed2 = seeds[2 + index*4];
-        seed3 = seeds[3 + index*4];
-        rnd::GenCombined* gnr_in = new rnd::GenCombined(seed0, seed1, seed2, seed3);
-        Process_eq_lognormal_multivariante* process = new Process_eq_lognormal_multivariante(gnr_in, NEQ);
-
-        createPath_generic(process, starting_point, calendar, path_out, index);
+        simulate_generic(seeds, index, contr_opt, results);
     }
 }
 
 
-HD void createPath_generic(Process_eq* process,
-    Equity_prices* starting_point,
-    Schedule* calendar,
-    double* path_out ,
-    size_t index)
+HD void simulate_generic(uint* seeds,
+    int index,
+    Contract_eq_option_vanilla* contr_opt,
+    double* results)
 {
-        Path cammino = Path(starting_point, calendar, process);
-        for (size_t i = 0; i < NEQ; i++)
-        {
-            path_out[i] = cammino.Get_equity_prices(STEPS - 1)->Get_eq_price(i).get_number();
-        }
+    uint seed0 = seeds[0 + index * 4];
+    uint seed1 = seeds[1 + index * 4];
+    uint seed2 = seeds[2 + index * 4];
+    uint seed3 = seeds[3 + index * 4];
+
+    //rnd::GenCombined gnr_in = rnd::GenCombined(seed0, seed1, seed2, seed3);
+    //Process_eq_lognormal_multivariante process = Process_eq_lognormal_multivariante(&gnr_in, NEQ);
+    
+    //Path* cammino = new Path(contr_opt->Get_eq_prices(), contr_opt->Get_schedule(), &static_cast<Process_eq&>(process));
+    results[index] += 1;//cammino->Get_equity_prices(STEPS - 1)->Get_eq_price(0).get_number();
+    for (int i = 1; i < PPT; i++)
+    {
+       // cammino->regen_path(contr_opt->Get_schedule(), &static_cast<Process_eq&>(process));
+        results[index] += 1;//cammino->Get_equity_prices(STEPS - 1)->Get_eq_price(0).get_number();
+    }
 }
-        
 
 
-int main(int argc, char **argv)
+
+int main(int argc, char** argv)
 {
     cudaError_t cudaStatus;
     srand(time(NULL));
-    size_t* npath = new size_t(NPATH);
-    size_t* neq = new size_t(NEQ);
 
-    uint* seeds = new uint[4 * NPATH];
-    for (size_t inc = 0; inc < 4 * NPATH; inc++)
+
+    double* host_results = new double[NBLOCKS * TPB];
+    for (int i = 0; i < NBLOCKS * TPB; i++)
     {
-        seeds[inc] = rnd::genSeed(true);       //same seeds for gpu and cpu
+        host_results[i] = 0;
     }
+
+    uint* seeds = new uint[4 * NBLOCKS * TPB];
+    for (size_t inc = 0; inc < 4 * NBLOCKS * TPB; inc++)
+    {
+        seeds[inc] = rnd::genSeed(true);
+    }
+
+    Vanilla_data* vnl_args = new Vanilla_data;
+
+    vnl_args->contract_type = 'C';
+    vnl_args->strike_price = 100;
+
+    Schedule_data* sch_args = new Schedule_data;
+
+    double dt = 0.3;
+    for (size_t k = 0; k < STEPS; k++)
+    {
+        sch_args->tempi[k] = (k + 1) * dt;
+    }
+
+    Eq_description_data* dscrp_args = new Eq_description_data;
+
+    for (size_t i = 0; i < STEPS; i++)
+    {
+        dscrp_args->vol[i] = 0.;
+    }
+    strcpy(dscrp_args->isin_code, "qwertyuiopas");
+    strcpy(dscrp_args->name, "opzione di prova");
+    strcpy(dscrp_args->currency, "euro");
+    dscrp_args->div_yield = 0;
+    for (size_t k = 0; k < STEPS; k++)
+    {
+        dscrp_args->yc[k] = 0.;
+    }
+
+
+
+    Eq_prices_data* prices_args = new Eq_prices_data;
+
+    prices_args->start_time = 0;
+    for (size_t k = 0; k < NEQ; k++)
+    {
+        prices_args->start_prices[k] = (k + 1) * 100;
+    }
+
+
+
 
     prcr::Device dev;
     dev.CPU = false;
@@ -155,116 +228,137 @@ int main(int argc, char **argv)
 
     if (prcr::cmdOptionExists(argv, argv + argc, "-gpu"))
         dev.GPU = true;
-    //if (prcr::cmdOptionExists(argv, argv + argc, "-cpu"))
+    if (prcr::cmdOptionExists(argv, argv + argc, "-cpu"))
         dev.CPU = true;
 
-        if (dev.CPU == true)
+
+    if (dev.CPU == true)
+    {
+        Equity_description** descr = new Equity_description * [NEQ];
+
+        Volatility_surface* vol = new Volatility_surface(dscrp_args->vol[0]);
+        char* currency = (dscrp_args->currency);
+        Yield_curve_term_structure* yc = new Yield_curve_term_structure(currency, dscrp_args->yc, sch_args->tempi, STEPS);
+
+        for (int i = 0; i < NEQ; i++)
         {
-
-            pricer::udb start_prices[NEQ];
-            for (int i = 0; i < NEQ; i++)
-            {
-                start_prices[i] = 100 * i;
-            }
-            double start_time = 0.15;
-            Equity_description** descr = new Equity_description * [NEQ];
-
-            Volatility_surface* vol = new Volatility_surface(0.5);
-            Yield_curve_flat* yc = new Yield_curve_flat("euro", 0);
-
-            for (int i = 0; i < NEQ; i++)
-            {
-                descr[i] = new Equity_description;
-                descr[i]->Set_isin_code("isin codein");
-                descr[i]->Set_name("namein ");
-                descr[i]->Set_currency("currencyin");
-                descr[i]->Set_dividend_yield(0);
-                descr[i]->Set_yc(yc);
-                descr[i]->Set_vol_surface(vol);
-            }
-
-            Equity_prices* starting_point_in = new Equity_prices(start_time, start_prices, NEQ, descr);
-
-            double tempi[STEPS];
-            for (size_t k = 0; k < STEPS; k++)
-            {
-                tempi[k] = 0.2 + k * 0.2;
-            }
-            Schedule* calen = new Schedule(tempi, STEPS);
-
-            double* path_CPU = new double[NEQ];
-
-
-            createPath_host(starting_point_in, calen, path_CPU, NPATH, seeds);
-
-
-            //stampa CPU
-            std::cout << std::endl << "results CPU:\n\n" << std::endl;
-            for (int k = 0; k < NEQ; k++)
-            {
-                std::cout << "\nequity " << k << ":";
-                std::cout << "\t" << path_CPU[k] << "\n";
-            }
-            std::cout << std::endl;
-            if (dev.GPU == true)
-            {
-
-                //CudaSetDevice(0);
-                double* dev_path;
-                double* path_GPU = new double[NEQ];
-                /*for (size_t t = 0; t < NPATH; t++)
-                {
-                    paths[t] = new double*[STEPS];
-                    for(size_t y = 0; y < STEPS; y++)
-                    {
-                        paths[t][y] = new double[NEQ];
-                    }
-                }*/
-
-                uint* dev_seeds;
-
-                cudaStatus = cudaMalloc((void**)&dev_path, NEQ * sizeof(double));
-                if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMalloc1 failed!\n"); }
-
-                cudaStatus = cudaMalloc((void**)&dev_seeds, NPATH * 4 * sizeof(uint));
-                if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMalloc2 failed!\n"); }
-
-                cudaStatus = cudaMemcpy(dev_seeds, seeds, NPATH * 4 * sizeof(uint), cudaMemcpyHostToDevice);
-                if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMemcpy1 failed!\n"); }
-                fprintf(stderr, "%s\n", cudaGetErrorString(cudaStatus));
-
-                kernel << <1, 1 >> > (dev_path, dev_seeds);
-                cudaStatus = cudaGetLastError();
-                if (cudaStatus != cudaSuccess) { fprintf(stderr, "Kernel failed: %s\n", cudaGetErrorString(cudaStatus)); }
-
-                cudaStatus = cudaMemcpy(path_GPU, dev_path, NEQ * sizeof(double), cudaMemcpyDeviceToHost);
-                if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMemcpy2 failed!\n"); }
-                fprintf(stderr, "%s\n", cudaGetErrorString(cudaStatus));
-                //stampa  GPU
-		std::cout << "results GPU:\n";
-                for (int k = 0; k < NEQ; k++)
-                {
-                    std::cout << "\nequity " << k << ":";
-                    std::cout << "\t" << path_GPU[k] << "\n";
-                }
-
-
-
-
-
-
-                //confronto con cpu
-                int err_msg = 0;
-		double minimum;
-                for (int k = 0; k < NEQ; k++)
-                {
-		    minimum = min(path_CPU[k], path_GPU[k]);   
-                    if (abs(path_CPU[k] - path_GPU[k])>0.000001*minimum) err_msg += pow(2, k) ;
-                }
-		if(err_msg == 0) {std::cout << "path_test1 ok!\n";}
-                return err_msg;
-            }
+            descr[i] = new Equity_description;
+            descr[i]->Set_isin_code(dscrp_args->isin_code);
+            descr[i]->Set_name(dscrp_args->name);
+            descr[i]->Set_currency(dscrp_args->currency);
+            descr[i]->Set_dividend_yield(dscrp_args->div_yield);
+            descr[i]->Set_yc(yc);
+            descr[i]->Set_vol_surface(vol);
         }
-    std::cout << std::endl;
+
+        Equity_prices* starting_point_in = new Equity_prices(prices_args->start_time, &(prices_args->start_prices[0]), NEQ, descr);
+
+        Schedule* calen = new Schedule(sch_args->tempi, STEPS);
+
+        Contract_eq_option_vanilla* contr_opt;
+        contr_opt = new Contract_eq_option_vanilla(starting_point_in, calen,
+            vnl_args->strike_price, vnl_args->contract_type);
+
+        simulate_host(seeds, contr_opt, host_results);
+    }
+
+
+
+
+    if (dev.GPU == true)
+    {
+
+        //CudaSetDevice(0);
+        uint* dev_seeds;
+        Schedule_data* dev_sched;
+        Eq_description_data* dev_descr;
+        Eq_prices_data* dev_prices;
+        Vanilla_data* dev_vnl_args;
+        double* dev_res;
+
+
+
+        cudaStatus = cudaMalloc((void**)&dev_seeds, NBLOCKS * TPB * 4 * sizeof(uint));
+        if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMalloc1 failed!\n"); }
+
+        cudaStatus = cudaMalloc((void**)&dev_sched, sizeof(Schedule_data));
+        if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMalloc2 failed!\n"); }
+
+        cudaStatus = cudaMalloc((void**)&dev_descr, sizeof(Eq_description_data));
+        if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMalloc3 failed!\n"); }
+
+        cudaStatus = cudaMalloc((void**)&dev_prices, sizeof(Eq_prices_data));
+        if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMalloc4 failed!\n"); }
+
+        cudaStatus = cudaMalloc((void**)&dev_res, NBLOCKS * TPB * sizeof(double));
+        if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMalloc5 failed!\n"); }
+
+        cudaStatus = cudaMalloc((void**)&dev_vnl_args, NBLOCKS * TPB * sizeof(Vanilla_data));
+        if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMalloc6 failed!\n"); }
+
+        cudaStatus = cudaMemcpy(dev_seeds, seeds, NBLOCKS * TPB * 4 * sizeof(uint), cudaMemcpyHostToDevice);
+        if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMemcpy1 failed!\n"); }
+        fprintf(stderr, "%s\n", cudaGetErrorString(cudaStatus));
+
+        cudaStatus = cudaMemcpy(dev_sched, sch_args, sizeof(Schedule_data), cudaMemcpyHostToDevice);
+        if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMemcpy2 failed!\n"); }
+        fprintf(stderr, "%s\n", cudaGetErrorString(cudaStatus));
+
+        cudaStatus = cudaMemcpy(dev_descr, dscrp_args, sizeof(Eq_description_data), cudaMemcpyHostToDevice);
+        if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMemcpy3 failed!\n"); }
+        fprintf(stderr, "%s\n", cudaGetErrorString(cudaStatus));
+
+        cudaStatus = cudaMemcpy(dev_prices, prices_args, sizeof(Eq_prices_data), cudaMemcpyHostToDevice);
+        if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMemcpy4 failed!\n"); }
+        fprintf(stderr, "%s\n", cudaGetErrorString(cudaStatus));
+
+        cudaStatus = cudaMemcpy(dev_vnl_args, vnl_args, sizeof(Vanilla_data), cudaMemcpyHostToDevice);
+        if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMemcpy5 failed!\n"); }
+        fprintf(stderr, "%s\n", cudaGetErrorString(cudaStatus));
+
+        cudaStatus = cudaMemcpy(dev_res, host_results, NBLOCKS*TPB*sizeof(double), cudaMemcpyHostToDevice);
+        if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMemcpy6 failed!\n"); }
+        fprintf(stderr, "%s\n", cudaGetErrorString(cudaStatus));
+
+        kernel_mc << < NBLOCKS, TPB >> > (dev_seeds, dev_sched, dev_descr, dev_prices, dev_vnl_args, dev_res);
+        cudaStatus = cudaGetLastError();
+        if (cudaStatus != cudaSuccess) { fprintf(stderr, "Kernel failed: %s\n", cudaGetErrorString(cudaStatus)); }
+
+        cudaFree(dev_seeds);
+        cudaFree(dev_sched);
+        cudaFree(dev_descr);
+        cudaFree(dev_prices);
+        cudaFree(dev_vnl_args);
+
+
+        cudaStatus = cudaMemcpy(host_results, dev_res, NBLOCKS * TPB * sizeof(double), cudaMemcpyDeviceToHost);
+        if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMemcpy backwards failed!\n"); }
+        printf("%d", cudaStatus);
+        fprintf(stderr, "%s\n", cudaGetErrorString(cudaStatus));
+
+
+
+
+
+
+
+
+
+
+
+    }
+
+    //statistica finale --- scrivere funzione media per struct?
+    double final_res;
+    for (size_t i = 0; i < NBLOCKS * TPB; i++)
+    {
+        final_res += host_results[i];
+    }
+    final_res /= double(PPT*NBLOCKS * TPB);
+    //final_res.error = sqrt(final_res.error / double(NBLOCKS * TPB * PPT) - final_res.opt_price * final_res.opt_price);
+
+    std::cout << "\n" << final_res << std::endl;
+    //std::cout << final_res.error << std::endl;
     return 0;
+
 }

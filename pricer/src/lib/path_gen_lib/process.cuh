@@ -35,8 +35,9 @@ class Process
     {
         if(_gnr->Get_status())
             return _gnr->genUniform();
-        else 
-            exit(2);
+        else
+	    return -100;
+           // exit(2);
     }
 
 

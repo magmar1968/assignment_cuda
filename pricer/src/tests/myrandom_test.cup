@@ -1,0 +1,119 @@
+#include "../lib/support_lib/myRandom/myRandom_gnr/combined.cuh"
+#include "../lib/support_lib/myRandom/myRandom.cuh"
+#include "../lib/support_lib/myRandom/random_numbers.cuh"
+#include "../lib/support_lib/parse_lib/parse_lib.cuh"
+#include <cmath>
+
+
+//genero numeri casuali, li sommo e vedo se media è consistente
+//genero numeri casuali a partire da seed noti e vedo se non cambiano
+
+  
+
+#define NPATH 100
+
+__global__ void kernel (double*, double*);
+__device__ void rnd_test_dev(double*, double*);
+//__host__ void rnd_test_hst();
+__host__ __device__ double rnd_test_generic(double, double, double, double, rnd::GenCombined*);
+
+
+__global__ void kernel(double* seeds, double* somma)
+{
+    double* mynumbers = new double[NPATH];
+    rnd_test_dev(seeds, mynumbers);
+
+   __syncthreads();
+    for (size_t j = 0; j < NPATH; j++)
+    {
+        *somma += mynumbers[j];
+    }
+}
+
+__device__ void rnd_test_dev(double* seeds, double* mynumbers)
+{
+    size_t index = blockIdx.x * blockDim.x + threadIdx.x;
+    while (index < NPATH)
+    {
+        double seed0 = seeds[index];
+        double seed1 = seeds[index + 1];
+        double seed2 = seeds[index + 2];
+        double seed3 = seeds[index + 3];
+        rnd::GenCombined* gnr = new rnd::GenCombined(seed0, seed1, seed2, seed3);
+        mynumbers[index] = rnd_test_generic(seed0, seed1, seed2, seed3, gnr);
+        index += blockDim.x * gridDim.x;
+    }
+}
+//__device__ void rnd_test_hst()
+__host__ __device__ double rnd_test_generic(double seed0, double seed1, double seed2, double seed3, rnd::GenCombined* gnr)
+{
+        return gnr->genGaussian();
+
+}
+
+
+int main(int argc, char** argv)
+{
+
+    prcr::Device dev;
+    dev.CPU = false;
+    dev.GPU = false;
+
+    if (prcr::cmdOptionExists(argv, argv + argc, "-gpu"))
+        dev.GPU = true;
+    if (prcr::cmdOptionExists(argv, argv + argc, "-cpu"))
+        dev.CPU = true;
+
+    double* somma= new double[1];
+    double seeds[4 * NPATH];
+    for (size_t i = 0; i < 4*NPATH; i++)
+    {
+        seeds[i] = rnd::genSeed(true);
+    }
+
+
+
+
+    if(dev.CPU)
+    { 
+
+    }
+
+
+
+    if (dev.GPU)
+    {
+	cudaError_t cudaStatus;
+        double* dev_seeds = new double[4 * NPATH];
+        double* dev_somma;
+        cudaStatus = cudaMalloc((void**)&dev_seeds, NPATH * 4 * sizeof(double));
+        if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMalloc failed!\n"); }
+
+        cudaStatus = cudaMalloc((void**)&dev_somma,  sizeof(double));
+        if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMalloc failed!\n"); }
+
+        cudaStatus = cudaMemcpy(dev_seeds, seeds, NPATH * 4 * sizeof(double), cudaMemcpyHostToDevice);
+        if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMemcpy failed!\n"); }
+	fprintf(stderr," %s\n", cudaGetErrorString(cudaStatus));	
+        kernel << <32, 32 >> > (dev_seeds, dev_somma);
+        cudaStatus = cudaGetLastError();
+        if (cudaStatus != cudaSuccess) { fprintf(stderr, "Kernel failed: %s\n", cudaGetErrorString(cudaStatus)); }
+
+        cudaStatus = cudaMemcpy(somma, dev_somma, sizeof(double), cudaMemcpyDeviceToHost);
+        if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMemcpy failed!\n"); }
+	fprintf(stderr," help %s\n", cudaGetErrorString(cudaStatus));
+        double std_dev = 1. / sqrt(NPATH);
+	printf("ok");
+        if (abs(*somma) < 3 * std_dev){
+printf("k");
+            printf("%f\n", *somma);
+            return 0;}
+        else{
+		printf("%f\n", *somma);
+            return *somma;
+    }
+}
+
+
+
+}
