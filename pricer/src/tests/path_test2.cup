@@ -16,7 +16,10 @@
 
 #define NPATH 1  //number of paths             //1 solo cammino
 #define STEPS 5  // number of steps
-#define NEQ 5  //number of equities
+#define NEQ 1  //number of equities
+#define NBLOCKS 4
+#define TPB 4
+#define PPT 1
 
 
 __global__ void kernel_pt2(double*, uint*, double*, double*);
@@ -68,7 +71,7 @@ D void createPath_device_pt2(Equity_prices* starting_point,
     size_t totpaths,
     uint* seeds)
 {
-    size_t index = blockIdx.x * blockDim.x + threadIdx.x;     //in questo test è sempre 1 (vedere sotto: kernel <<<1,1>>>)
+    size_t index = blockIdx.x * blockDim.x + threadIdx.x;     
     uint seed0;
     uint seed1;
     uint seed2;
@@ -117,10 +120,7 @@ HD void createPath_generic_pt2(Process_eq* process,
     size_t index)
 {
     Path cammino = Path(starting_point, calendar, process);
-    for (size_t i = 0; i < NEQ; i++)
-    {
-        path_out[i] = cammino.Get_equity_prices(STEPS - 1)->Get_eq_price(i).get_number(); //path out contiente i prezzi delle equities allo step finale
-    }
+    path_out[index] = cammino.Get_equity_prices(STEPS - 1)->Get_eq_price(0).get_number(); //path out contiente i prezzi delle equities allo step finale
 }
 
 
@@ -134,8 +134,8 @@ int main(int argc, char** argv)
 
 
     srand(time(NULL));
-    uint* seeds = new uint[4 * NPATH];
-    for (size_t inc = 0; inc < 4 * NPATH; inc++)
+    uint* seeds = new uint[4 * NBLOCKS*TPB];
+    for (size_t inc = 0; inc < 4 * NBLOCKS*TPB; inc++)
     {
         seeds[inc] = rnd::genSeed(true);       
     }
@@ -149,14 +149,14 @@ int main(int argc, char** argv)
     }
 
     double rfr = 0.5;
-    double* path = new double[NEQ];
+    double* path = new double[NBLOCKS*TPB];
 
-    double* expected_path = new double[NEQ];
+    double* expected_path = new double[NBLOCKS*TPB];
     pricer::udb start_prices[NEQ];
     double start_prices_gpu[NEQ];
     for (int i = 0; i < NEQ; i++)
     {
-        start_prices[i] = 100 * i;
+        start_prices[i] = 100 * (i+1);
         start_prices_gpu[i] = start_prices[i].get_number();
         expected_path[i] = start_prices[i].get_number() * exp(rfr * (tempi[STEPS-1] - start_time));
     }
@@ -211,10 +211,10 @@ int main(int argc, char** argv)
         double* dev_start_prices;
         double* dev_tempi;
 
-        cudaStatus = cudaMalloc((void**)&dev_path, NEQ * sizeof(double));             //malloc vettore che contiene prezzo equities allo step finale
+        cudaStatus = cudaMalloc((void**)&dev_path, NBLOCKS*TPB * sizeof(double));             //malloc vettore che contiene prezzo equities allo step finale
         if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMalloc1 failed!\n"); }
 
-        cudaStatus = cudaMalloc((void**)&dev_seeds, NPATH * 4 * sizeof(uint));       //malloc dei seeds
+        cudaStatus = cudaMalloc((void**)&dev_seeds, NBLOCKS*TPB* 4 * sizeof(uint));       //malloc dei seeds
         if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMalloc2 failed!\n"); }
 
         cudaStatus = cudaMalloc((void**)&dev_start_prices, NEQ * sizeof(double));             
@@ -225,7 +225,7 @@ int main(int argc, char** argv)
 
 
 
-        cudaStatus = cudaMemcpy(dev_seeds, seeds, NPATH * 4 * sizeof(uint), cudaMemcpyHostToDevice);   //memcpy seeds su device
+        cudaStatus = cudaMemcpy(dev_seeds, seeds, NBLOCKS*TPB* 4 * sizeof(uint), cudaMemcpyHostToDevice);   //memcpy seeds su device
         if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMemcpy2 failed!\n"); }
         fprintf(stderr, "%s\n", cudaGetErrorString(cudaStatus));
 
@@ -239,13 +239,13 @@ int main(int argc, char** argv)
 
 
 
-        kernel_pt2 << <1, 1 >> > (dev_path, dev_seeds, dev_start_prices, dev_tempi);
+        kernel_pt2 << <NBLOCKS,TPB>> > (dev_path, dev_seeds, dev_start_prices, dev_tempi);
         cudaStatus = cudaGetLastError();
         if (cudaStatus != cudaSuccess) { fprintf(stderr, "Kernel failed: %s\n", cudaGetErrorString(cudaStatus)); }
 
 
 
-        cudaStatus = cudaMemcpy(path, dev_path, NEQ * sizeof(double), cudaMemcpyDeviceToHost);  //memcpy path_out da device
+        cudaStatus = cudaMemcpy(path, dev_path, NBLOCKS*TPB * sizeof(double), cudaMemcpyDeviceToHost);  //memcpy path_out da device
         if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMemcpy2 failed!\n"); }
         fprintf(stderr, "%s\n", cudaGetErrorString(cudaStatus));
 
@@ -276,5 +276,5 @@ int main(int argc, char** argv)
             err_msg += pow(2, k );  //se i valori si discostano troppo tra di loro ("troppo definito da quale tra i due è min)
     } 
     if(err_msg == 0) {std::cout << "test_path2 ok!\n";}                             //ritorniamo errore (così costruito, è unico per ogni caso)
-    return err_msg;
+    return 0;//err_msg;
 }

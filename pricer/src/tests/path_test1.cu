@@ -59,7 +59,7 @@ struct Eq_prices_data
 
 
 
-__global__ void kernel_mc(uint*, Schedule_data*, Eq_description_data*, Eq_prices_data*, Vanilla_data*, double*);
+__global__ void kernel_mc(uint*, Schedule_data*, Eq_description_data*, Eq_prices_data*, Vanilla_data*, double*, bool*);
 D void simulate_device(uint*, Contract_eq_option_vanilla*, double*);
 H void simulate_host(uint*, Contract_eq_option_vanilla*, double*);
 HD void simulate_generic(uint*, int, Contract_eq_option_vanilla*, double*);
@@ -72,7 +72,8 @@ __global__ void kernel_mc(uint* dev_seeds,
     Eq_description_data* dev_descr,
     Eq_prices_data* dev_prices,
     Vanilla_data* dev_vnl_args,
-    double* dev_results)
+    double* dev_results,
+    bool* cuda_bool)
 {
     pricer::udb* start_prices = new pricer::udb[NEQ];                              //definiamo oggetti dentro a kernel
     for (int i = 0; i < NEQ; i++)
@@ -149,16 +150,20 @@ HD void simulate_generic(uint* seeds,
     uint seed2 = seeds[2 + index * 4];
     uint seed3 = seeds[3 + index * 4];
 
-    //rnd::GenCombined gnr_in = rnd::GenCombined(seed0, seed1, seed2, seed3);
-    //Process_eq_lognormal_multivariante process = Process_eq_lognormal_multivariante(&gnr_in, NEQ);
+    rnd::GenCombined* gnr_in = new rnd::GenCombined(seed0, seed1, seed2, seed3);
+    Process_eq_lognormal_multivariante* process = new Process_eq_lognormal_multivariante(gnr_in, NEQ);
     
-    //Path* cammino = new Path(contr_opt->Get_eq_prices(), contr_opt->Get_schedule(), &static_cast<Process_eq&>(process));
-    results[index] += 1;//cammino->Get_equity_prices(STEPS - 1)->Get_eq_price(0).get_number();
+    Path* cammino = new Path(contr_opt->Get_eq_prices(), contr_opt->Get_schedule(), &static_cast<Process_eq&>(*process));
+    results[index] += cammino->Get_equity_prices(STEPS - 1)->Get_eq_price(0).get_number();
     for (int i = 1; i < PPT; i++)
     {
-       // cammino->regen_path(contr_opt->Get_schedule(), &static_cast<Process_eq&>(process));
-        results[index] += 1;//cammino->Get_equity_prices(STEPS - 1)->Get_eq_price(0).get_number();
+        cammino->regen_path(contr_opt->Get_schedule(), &static_cast<Process_eq&>(*process));
+        results[index] += cammino->Get_equity_prices(STEPS - 1)->Get_eq_price(0).get_number();
+	cammino->destroy();
     }
+    delete(cammino);
+    delete(gnr_in);
+    delete(process);
 }
 
 
@@ -198,7 +203,7 @@ int main(int argc, char** argv)
 
     for (size_t i = 0; i < STEPS; i++)
     {
-        dscrp_args->vol[i] = 0.;
+        dscrp_args->vol[i] = 0.1;
     }
     strcpy(dscrp_args->isin_code, "qwertyuiopas");
     strcpy(dscrp_args->name, "opzione di prova");
@@ -206,7 +211,7 @@ int main(int argc, char** argv)
     dscrp_args->div_yield = 0;
     for (size_t k = 0; k < STEPS; k++)
     {
-        dscrp_args->yc[k] = 0.;
+        dscrp_args->yc[k] = 0.1;
     }
 
 
@@ -275,6 +280,8 @@ int main(int argc, char** argv)
         Eq_prices_data* dev_prices;
         Vanilla_data* dev_vnl_args;
         double* dev_res;
+        host_cuda_bool = true;
+        bool* dev_cuda_bool;
 
 
 
@@ -295,6 +302,9 @@ int main(int argc, char** argv)
 
         cudaStatus = cudaMalloc((void**)&dev_vnl_args, NBLOCKS * TPB * sizeof(Vanilla_data));
         if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMalloc6 failed!\n"); }
+
+        cudaStatus = cudaMemcpy(dev_cuda_bool, host_cuda_bool, sizeof(bool), cudaMemcpyHostToDevice);
+        if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMemcpy0 failed!\n"); }
 
         cudaStatus = cudaMemcpy(dev_seeds, seeds, NBLOCKS * TPB * 4 * sizeof(uint), cudaMemcpyHostToDevice);
         if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMemcpy1 failed!\n"); }
@@ -332,9 +342,12 @@ int main(int argc, char** argv)
 
 
         cudaStatus = cudaMemcpy(host_results, dev_res, NBLOCKS * TPB * sizeof(double), cudaMemcpyDeviceToHost);
-        if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMemcpy backwards failed!\n"); }
+        if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMemcpy backwards1 failed!\n"); }
         printf("%d", cudaStatus);
         fprintf(stderr, "%s\n", cudaGetErrorString(cudaStatus));
+
+        cudaStatus = cudaMemcpy(host_cuda_bool, dev_cuda_bool, sizeof(bool), cudaMemcpyDeviceToHost);
+        if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMemcpy back2 failed!\n"); }
 
 
 

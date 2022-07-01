@@ -12,15 +12,15 @@
 
 #define NBLOCKS 128
 #define TPB 512
-#define PPT 10000
+#define PPT 50000
 
-__global__ void kernel (uint*, double*, double*);
+__global__ void kernel (uint*, double*, double*, bool*);
 __device__ void rnd_test_dev(uint*, double*, double*);
 __host__ void rnd_test_hst(uint*, double*, double*);
 __host__ __device__ void rnd_test_generic(uint*, double*, double*, size_t);
 
 
-__global__ void kernel(uint* seeds, double* dev_sum, double* dev_sq_sum)
+__global__ void kernel(uint* seeds, double* dev_sum, double* dev_sq_sum, bool* cuda_bool)
 {
     rnd_test_dev(seeds, dev_sum, dev_sq_sum);
 }
@@ -44,24 +44,28 @@ __host__ __device__ void rnd_test_generic(uint* seeds, double* sum, double* sq_s
     uint seed1 = seeds[4 * index + 1];
     uint seed2 = seeds[4 * index + 2];
     uint seed3 = seeds[4 * index + 3];
-    rnd::GenCombined gnr = rnd::GenCombined(seed0, seed1, seed2, seed3);
+    rnd::MyRandom* gnr = new rnd::GenCombined(seed0, seed1, seed2, seed3);
     double number;
     for (size_t i = 0; i < PPT; i++)
     {
-        number = gnr.genGaussian();
+        number = gnr->genGaussian();
+	if((isnan(number))||(isinf(number)))
+	{
+        dev_cuda_bool = false;
+	}
+	else{
         sum[index] += number;
-        sq_sum[index] += number*number;
+        sq_sum[index] += number*number;}
 	
     }
-    
+    delete(gnr);
 
 }
 
 
 int main(int argc, char** argv)
 {
-    printf("Iniziamo il test_random\n");
-
+ 
     prcr::Device dev;
     dev.CPU = false;
     dev.GPU = false;
@@ -76,9 +80,19 @@ int main(int argc, char** argv)
     uint* seeds = new uint [4*NBLOCKS* TPB];
 
     srand(time(NULL));
+    uint seed_aus[4];
+    for( size_t i = 0; i < 4; i++)
+    {
+    	seed_aus[i] = rnd::genSeed();
+    }
+    rnd::GenLinCongruential gnr_aus(seed_aus[0]);
     for (size_t i = 0; i < 4 * NBLOCKS * TPB; i++)
     {
-        seeds[i] = rnd::genSeed(true);
+        seeds[i] = gnr_aus.genUniformInt();
+	while(seeds[i] <=128)
+	{
+		seeds[i] = gnr_aus.genUniformInt();
+        }
     }
     for(size_t i = 0; i < NBLOCKS*TPB; i++)
     {
@@ -91,9 +105,8 @@ int main(int argc, char** argv)
 
     if(dev.CPU)
     { 
-	printf("prima!\n");
+	
         rnd_test_hst(seeds, host_sum, host_sq_sum);
-	printf("dopo!\n");
     }
 
 
@@ -104,27 +117,36 @@ int main(int argc, char** argv)
         uint* dev_seeds = new uint[4*NBLOCKS*TPB];
         double* dev_sum = new double[NBLOCKS * TPB];
         double* dev_sq_sum = new double[NBLOCKS * TPB];
+        bool* host_cuda_bool = new bool;
+        host_cuda_bool = true;
+        bool* dev_cuda_bool;
 
 
         cudaStatus = cudaMalloc((void**)&dev_seeds, NBLOCKS *4* TPB * sizeof(uint));
         if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMalloc1 failed!\n"); }
 
-        cudaStatus = cudaMalloc((void**)&dev_sum,  NBLOCKS*TPB*sizeof(double));
+        cudaStatus = cudaMalloc((void**)&dev_cuda_bool, sizeof(bool));
         if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMalloc2 failed!\n"); }
 
-        cudaStatus = cudaMalloc((void**)&dev_sq_sum, NBLOCKS * TPB * sizeof(double));
+        cudaStatus = cudaMalloc((void**)&dev_sum,  NBLOCKS*TPB*sizeof(double));
         if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMalloc3 failed!\n"); }
 
+        cudaStatus = cudaMalloc((void**)&dev_sq_sum, NBLOCKS * TPB * sizeof(double));
+        if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMalloc4 failed!\n"); }
+
         cudaStatus = cudaMemcpy(dev_seeds, seeds, NBLOCKS * 4 *TPB* sizeof(uint), cudaMemcpyHostToDevice);
-        if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMemcpy1 failed!\n"); }
+        if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMemcpy5 failed!\n"); }
 
         cudaStatus = cudaMemcpy(dev_sum, host_sum, NBLOCKS  *TPB* sizeof(double), cudaMemcpyHostToDevice);
-        if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMemcpy2 failed!\n"); }
+        if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMemcpy6 failed!\n"); }
 
         cudaStatus = cudaMemcpy(dev_sq_sum, host_sq_sum, NBLOCKS *TPB* sizeof(double), cudaMemcpyHostToDevice);
-        if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMemcpy3 failed!\n"); }
+        if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMemcpy7 failed!\n"); }
 
-       kernel << <NBLOCKS,TPB >> > (dev_seeds, dev_sum, dev_sq_sum);
+        cudaStatus = cudaMemcpy(dev_cuda_bool, host_cuda_bool, sizeof(bool), cudaMemcpyHosttoDevice);
+        if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMemcpy8 failed!\n"); }
+
+       kernel << <NBLOCKS,TPB >> > (dev_seeds, dev_sum, dev_sq_sum, dev_cuda_bool);
         cudaStatus = cudaGetLastError();
         if (cudaStatus != cudaSuccess) { fprintf(stderr, "Kernel failed: %s\n", cudaGetErrorString(cudaStatus)); }
 
@@ -135,35 +157,49 @@ int main(int argc, char** argv)
         if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMemcpy back2 failed!\n"); }
         //fprintf(stderr, "\n memcpyback failed: %s\n", cudaGetErrorString(cudaStatus));
 
+        cudaStatus = cudaMemcpy(host_cuda_bool, dev_cuda_bool, sizeof(bool), cudaMemcpyDeviceToHost);
+        if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMemcpy back3 failed!\n"); }
+
        
     }
 
-    double std_dev = 1. / sqrt(NBLOCKS * TPB * PPT);
-    std::cout << "std dev teorica (della media): " << std_dev << std::endl;
+    if (!*dev_cuda_bool)
+    {
+        printf("Something went wrong... (nan o inf generated)\n");
+    }
+
+    double std_dev = 1. / sqrt(NBLOCKS * TPB );
+    std_dev /= sqrt(PPT);
+    
 
     double meas_mean = 0;
     double meas_std_dev = 0;
 
     for (size_t i = 0; i < NBLOCKS * TPB; i++)
     {
-	//std::cout << host_sum[i] <<std::endl;
+	    std::cout << host_sum[i] <<std::endl;
         meas_mean += host_sum[i];
         meas_std_dev += host_sq_sum[i];
     }
+   
+    meas_mean /= double (NBLOCKS * TPB)  ;
+    meas_mean /= double(PPT);
+    meas_std_dev /= double(NBLOCKS*TPB);
+    meas_std_dev = sqrt((meas_std_dev/(PPT)-meas_mean*meas_mean)/double(NBLOCKS*TPB));
+    meas_std_dev /= sqrt(PPT);
 
-    meas_mean /= (NBLOCKS * TPB * PPT);
-    meas_std_dev =sqrt((meas_std_dev/(NBLOCKS * TPB * PPT)-meas_mean*meas_mean)/(NBLOCKS*TPB*PPT));
 
+    std::cout << "std dev teorica (della media): " << std_dev << std::endl;
     std::cout << " measured std dev:" << meas_std_dev<< std::endl;
     if (abs(meas_mean) < 3 * std_dev) 
     {
         printf("ok, ");
-        printf("la media dei numeri generati e': %f\n", meas_mean);
+        printf("la media dei numeri generati e': %.3e\n", meas_mean);
         return 0;
     }
     else 
     {
-        printf("La media non e' entro 3 standard deviation: %f\n", meas_mean);
+        printf("La media non e' entro 3 standard deviation: %.3e\n", meas_mean);
         return 1;
     }
 }
