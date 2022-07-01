@@ -10,35 +10,35 @@
 
   
 
-#define NBLOCKS 128
+#define NBLOCKS 2048
 #define TPB 512
-#define PPT 50000
+#define PPT 100000
 
 __global__ void kernel (uint*, double*, double*, bool*);
-__device__ void rnd_test_dev(uint*, double*, double*);
-__host__ void rnd_test_hst(uint*, double*, double*);
-__host__ __device__ void rnd_test_generic(uint*, double*, double*, size_t);
+__device__ void rnd_test_dev(uint*, double*, double*, bool*);
+__host__ void rnd_test_hst(uint*, double*, double*, bool*);
+__host__ __device__ void rnd_test_generic(uint*, double*, double*, size_t, bool*);
 
 
 __global__ void kernel(uint* seeds, double* dev_sum, double* dev_sq_sum, bool* cuda_bool)
 {
-    rnd_test_dev(seeds, dev_sum, dev_sq_sum);
+    rnd_test_dev(seeds, dev_sum, dev_sq_sum, cuda_bool);
 }
 
-__device__ void rnd_test_dev(uint* seeds, double* dev_sum, double* dev_sq_sum)
+__device__ void rnd_test_dev(uint* seeds, double* dev_sum, double* dev_sq_sum, bool* cuda_bool)
 {
     size_t index = blockIdx.x * blockDim.x + threadIdx.x;
    // if (index < NBLOCKS*TPB)
     
-        rnd_test_generic(seeds, dev_sum, dev_sq_sum, index);
+        rnd_test_generic(seeds, dev_sum, dev_sq_sum, index, cuda_bool);
     
 }
-__host__ void rnd_test_hst(uint* seeds, double* sum, double* sq_sum)
+__host__ void rnd_test_hst(uint* seeds, double* sum, double* sq_sum, bool* host_bool)
 {
     for(size_t index = 0; index < NBLOCKS*TPB; index++)
-    rnd_test_generic(seeds, sum, sq_sum, index);
+    rnd_test_generic(seeds, sum, sq_sum, index, host_bool);
 }
-__host__ __device__ void rnd_test_generic(uint* seeds, double* sum, double* sq_sum, size_t index)
+__host__ __device__ void rnd_test_generic(uint* seeds, double* sum, double* sq_sum, size_t index, bool* status_bool)
 {
     uint seed0 = seeds[4 * index];
     uint seed1 = seeds[4 * index + 1];
@@ -51,7 +51,7 @@ __host__ __device__ void rnd_test_generic(uint* seeds, double* sum, double* sq_s
         number = gnr->genGaussian();
 	if((isnan(number))||(isinf(number)))
 	{
-        dev_cuda_bool = false;
+        *status_bool = false;
 	}
 	else{
         sum[index] += number;
@@ -78,7 +78,10 @@ int main(int argc, char** argv)
     double* host_sum = new double[NBLOCKS * TPB];
     double* host_sq_sum =new double[NBLOCKS * TPB];
     uint* seeds = new uint [4*NBLOCKS* TPB];
+    
 
+    bool* host_cuda_bool = new bool;
+    *host_cuda_bool = true;
     srand(time(NULL));
     uint seed_aus[4];
     for( size_t i = 0; i < 4; i++)
@@ -106,19 +109,17 @@ int main(int argc, char** argv)
     if(dev.CPU)
     { 
 	
-        rnd_test_hst(seeds, host_sum, host_sq_sum);
+        rnd_test_hst(seeds, host_sum, host_sq_sum, host_cuda_bool);
     }
 
 
 
     if (dev.GPU)
     {
-	    cudaError_t cudaStatus;
+	cudaError_t cudaStatus;
         uint* dev_seeds = new uint[4*NBLOCKS*TPB];
         double* dev_sum = new double[NBLOCKS * TPB];
         double* dev_sq_sum = new double[NBLOCKS * TPB];
-        bool* host_cuda_bool = new bool;
-        host_cuda_bool = true;
         bool* dev_cuda_bool;
 
 
@@ -143,7 +144,7 @@ int main(int argc, char** argv)
         cudaStatus = cudaMemcpy(dev_sq_sum, host_sq_sum, NBLOCKS *TPB* sizeof(double), cudaMemcpyHostToDevice);
         if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMemcpy7 failed!\n"); }
 
-        cudaStatus = cudaMemcpy(dev_cuda_bool, host_cuda_bool, sizeof(bool), cudaMemcpyHosttoDevice);
+        cudaStatus = cudaMemcpy(dev_cuda_bool, host_cuda_bool, sizeof(bool), cudaMemcpyHostToDevice);
         if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMemcpy8 failed!\n"); }
 
        kernel << <NBLOCKS,TPB >> > (dev_seeds, dev_sum, dev_sq_sum, dev_cuda_bool);
@@ -163,7 +164,7 @@ int main(int argc, char** argv)
        
     }
 
-    if (!*dev_cuda_bool)
+    if (!*host_cuda_bool)
     {
         printf("Something went wrong... (nan o inf generated)\n");
     }

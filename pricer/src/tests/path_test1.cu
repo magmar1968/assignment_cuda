@@ -60,9 +60,9 @@ struct Eq_prices_data
 
 
 __global__ void kernel_mc(uint*, Schedule_data*, Eq_description_data*, Eq_prices_data*, Vanilla_data*, double*, bool*);
-D void simulate_device(uint*, Contract_eq_option_vanilla*, double*);
-H void simulate_host(uint*, Contract_eq_option_vanilla*, double*);
-HD void simulate_generic(uint*, int, Contract_eq_option_vanilla*, double*);
+D void simulate_device(uint*, Contract_eq_option_vanilla*, double*, bool*);
+H void simulate_host(uint*, Contract_eq_option_vanilla*, double*, bool*);
+HD void simulate_generic(uint*, int, Contract_eq_option_vanilla*, double*, bool*);
 
 
 
@@ -104,7 +104,7 @@ __global__ void kernel_mc(uint* dev_seeds,
 
     Contract_eq_option_vanilla* contr_opt = new Contract_eq_option_vanilla(starting_point_in, calen,
         dev_vnl_args->strike_price, dev_vnl_args->contract_type);
-    simulate_device(dev_seeds, contr_opt, dev_results);
+    simulate_device(dev_seeds, contr_opt, dev_results, cuda_bool);
     for (size_t i = 0; i < NEQ; i++)
     {
         delete(descr[i]);
@@ -123,19 +123,21 @@ __global__ void kernel_mc(uint* dev_seeds,
 
 D void simulate_device(uint* seeds,
     Contract_eq_option_vanilla* contr_opt,
-    double* results)
+    double* results,
+    bool* cuda_bool)
 {
     size_t index = blockIdx.x * blockDim.x + threadIdx.x;
-    /*if (index < NBLOCKS * TPB)*/ simulate_generic(seeds, index, contr_opt, results);
+    /*if (index < NBLOCKS * TPB)*/ simulate_generic(seeds, index, contr_opt, results, cuda_bool);
 }
 
 H void simulate_host(uint* seeds,
     Contract_eq_option_vanilla* contr_opt,
-    double* results)
+    double* results,
+    bool* host_bool)
 {
     for (size_t index = 0; index < NBLOCKS * TPB; index++)   //l'espressione che risulta dalla moltiplicazione � il numero totale di threads
     {
-        simulate_generic(seeds, index, contr_opt, results);
+        simulate_generic(seeds, index, contr_opt, results, host_bool);
     }
 }
 
@@ -143,7 +145,8 @@ H void simulate_host(uint* seeds,
 HD void simulate_generic(uint* seeds,
     int index,
     Contract_eq_option_vanilla* contr_opt,
-    double* results)
+    double* results,
+    status_bool)
 {
     uint seed0 = seeds[0 + index * 4];
     uint seed1 = seeds[1 + index * 4];
@@ -173,6 +176,8 @@ int main(int argc, char** argv)
     cudaError_t cudaStatus;
     srand(time(NULL));
 
+    bool* host_cuda_bool = new bool;
+    *host_cuda_bool = true;
 
     double* host_results = new double[NBLOCKS * TPB];
     for (int i = 0; i < NBLOCKS * TPB; i++)
@@ -279,8 +284,6 @@ int main(int argc, char** argv)
         Eq_description_data* dev_descr;
         Eq_prices_data* dev_prices;
         Vanilla_data* dev_vnl_args;
-        double* dev_res;
-        host_cuda_bool = true;
         bool* dev_cuda_bool;
 
 
@@ -330,7 +333,7 @@ int main(int argc, char** argv)
         if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMemcpy6 failed!\n"); }
         fprintf(stderr, "%s\n", cudaGetErrorString(cudaStatus));
 
-        kernel_mc << < NBLOCKS, TPB >> > (dev_seeds, dev_sched, dev_descr, dev_prices, dev_vnl_args, dev_res);
+        kernel_mc << < NBLOCKS, TPB >> > (dev_seeds, dev_sched, dev_descr, dev_prices, dev_vnl_args, dev_res, dev_cuda_bool);
         cudaStatus = cudaGetLastError();
         if (cudaStatus != cudaSuccess) { fprintf(stderr, "Kernel failed: %s\n", cudaGetErrorString(cudaStatus)); }
 
@@ -359,6 +362,11 @@ int main(int argc, char** argv)
 
 
 
+    }
+
+    if (!*host_cuda_bool)
+    {
+        printf("Something went wrong... \n"); //codice di errore intero?
     }
 
     //statistica finale --- scrivere funzione media per struct?
