@@ -1,7 +1,7 @@
 #include "../lib/support_lib/myRandom/myRandom_gnr/combined.cuh"
 #include "../lib/support_lib/myRandom/myRandom.cuh"
-//#include "../lib/support_lib/myRandom/random_numbers.cuh"
 #include "../lib/support_lib/parse_lib/parse_lib.cuh"
+#include "../lib/support_lib/timer_lib/myTimer.cuh"
 #include <cmath>
 
 
@@ -10,9 +10,9 @@
 
   
 
-#define NBLOCKS 2048
+#define NBLOCKS 128
 #define TPB 512
-#define PPT 100000
+#define PPT 100
 
 __global__ void kernel (uint*, double*, double*, bool*);
 __device__ void rnd_test_dev(uint*, double*, double*, bool*);
@@ -48,6 +48,8 @@ __host__ __device__ void rnd_test_generic(uint* seeds, double* sum, double* sq_s
     double number;
     for (size_t i = 0; i < PPT; i++)
     {
+	if(gnr->Get_status() == false)
+	*status_bool = false;
         number = gnr->genGaussian();
 	if((isnan(number))||(isinf(number)))
 	{
@@ -86,9 +88,9 @@ int main(int argc, char** argv)
     uint seed_aus[4];
     for( size_t i = 0; i < 4; i++)
     {
-    	seed_aus[i] = rnd::genSeed();
+    	seed_aus[i] = rnd::genSeed(true);
     }
-    rnd::GenLinCongruential gnr_aus(seed_aus[0]);
+    rnd::GenCombined gnr_aus(seed_aus[0], seed_aus[1], seed_aus[2], seed_aus[3]);
     for (size_t i = 0; i < 4 * NBLOCKS * TPB; i++)
     {
         seeds[i] = gnr_aus.genUniformInt();
@@ -108,8 +110,9 @@ int main(int argc, char** argv)
 
     if(dev.CPU)
     { 
-	
+        Timer cpu_timer;
         rnd_test_hst(seeds, host_sum, host_sq_sum, host_cuda_bool);
+        cpu_timer.Stop();
     }
 
 
@@ -120,8 +123,8 @@ int main(int argc, char** argv)
         uint* dev_seeds = new uint[4*NBLOCKS*TPB];
         double* dev_sum = new double[NBLOCKS * TPB];
         double* dev_sq_sum = new double[NBLOCKS * TPB];
-        bool* dev_cuda_bool;
-
+        bool* dev_cuda_bool = new bool;
+        Timer gpu_timer;  //spostare sopra a kernel se necessario
 
         cudaStatus = cudaMalloc((void**)&dev_seeds, NBLOCKS *4* TPB * sizeof(uint));
         if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMalloc1 failed!\n"); }
@@ -152,16 +155,14 @@ int main(int argc, char** argv)
         if (cudaStatus != cudaSuccess) { fprintf(stderr, "Kernel failed: %s\n", cudaGetErrorString(cudaStatus)); }
 
         cudaStatus = cudaMemcpy(host_sum, dev_sum, NBLOCKS*TPB*sizeof(double), cudaMemcpyDeviceToHost);
-        if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMemcpy back1 failed!\n"); }
-
+        if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMemcpy back1 failed! %s\n", cudaGetErrorString(cudaStatus)); }
         cudaStatus = cudaMemcpy(host_sq_sum, dev_sq_sum, NBLOCKS * TPB * sizeof(double), cudaMemcpyDeviceToHost);
         if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMemcpy back2 failed!\n"); }
-        //fprintf(stderr, "\n memcpyback failed: %s\n", cudaGetErrorString(cudaStatus));
 
         cudaStatus = cudaMemcpy(host_cuda_bool, dev_cuda_bool, sizeof(bool), cudaMemcpyDeviceToHost);
         if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMemcpy back3 failed!\n"); }
 
-       
+        gpu_timer.Stop();  //spostare sotto a kernel se necessario
     }
 
     if (!*host_cuda_bool)
@@ -178,7 +179,7 @@ int main(int argc, char** argv)
 
     for (size_t i = 0; i < NBLOCKS * TPB; i++)
     {
-	    std::cout << host_sum[i] <<std::endl;
+	    //std::cout << host_sum[i] <<std::endl;
         meas_mean += host_sum[i];
         meas_std_dev += host_sq_sum[i];
     }

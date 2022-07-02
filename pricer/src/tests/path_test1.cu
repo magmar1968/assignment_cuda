@@ -146,7 +146,7 @@ HD void simulate_generic(uint* seeds,
     int index,
     Contract_eq_option_vanilla* contr_opt,
     double* results,
-    status_bool)
+    bool* status_bool)
 {
     uint seed0 = seeds[0 + index * 4];
     uint seed1 = seeds[1 + index * 4];
@@ -269,7 +269,7 @@ int main(int argc, char** argv)
         contr_opt = new Contract_eq_option_vanilla(starting_point_in, calen,
             vnl_args->strike_price, vnl_args->contract_type);
 
-        simulate_host(seeds, contr_opt, host_results);
+        simulate_host(seeds, contr_opt, host_results, host_cuda_bool);
     }
 
 
@@ -284,6 +284,7 @@ int main(int argc, char** argv)
         Eq_description_data* dev_descr;
         Eq_prices_data* dev_prices;
         Vanilla_data* dev_vnl_args;
+        double dev_res[NBLOCKS * TPB];
         bool* dev_cuda_bool;
 
 
