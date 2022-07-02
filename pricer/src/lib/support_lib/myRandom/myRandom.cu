@@ -50,6 +50,10 @@ namespace rnd
             {
             case GAUSSIAN_1:
                 u = genUniform(); v = genUniform(); //input numbers
+                while (u == 0)
+                {
+                    u = genUniform();
+                }
                 num    = (sqrt(-2 * log( u) ) * cos( v * (2 * M_PI)));
                 _value = (sqrt(-2 * log( u) ) * sin( v * (2 * M_PI)));
                 break;
