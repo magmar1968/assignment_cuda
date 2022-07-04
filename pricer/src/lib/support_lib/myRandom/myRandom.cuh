@@ -98,10 +98,13 @@ namespace rnd
   };
 
 
+  //seeds generetor functions
+
+  H uint genSeed(bool tausworth = false); // tausworth seed must be > 128
+
+
   /**
-   * @brief This class will be used in some unit tests. Its methods return fixed numbers rather than random numbers.
-   *
-   *
+   * @brief This class will be used in some unit tests. Despite their names, its methods return fixed numbers.
    */
   class MyRandomDummy : public MyRandom
   {
@@ -111,17 +114,18 @@ namespace rnd
           Set_status(true);
       }
       HD ~MyRandomDumy() {};
+
       HD uint genUniformInt() { return 1; }
-      HD double genUniform(const double min = 0., const double max = 1.) { return 2.; }
-      HD double genGaussian(const double mean = 0., const double dev_std = 1.) { return 3.; }
+
+      HD double genUniform() { return 2.; }
+
+      HD double genGaussian() { return 3.; }
   };
       
 
 
   
-  //seeds generetor functions
-  
-  H uint genSeed(bool tausworth = false); // tausworth seed must be > 128
+
 }
 
 
