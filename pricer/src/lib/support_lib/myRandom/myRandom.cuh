@@ -96,7 +96,28 @@ namespace rnd
       double  _value;
       uint    _m, _type;
   };
-  
+
+
+  /**
+   * @brief This class will be used in some unit tests. Its methods return fixed numbers rather than random numbers.
+   *
+   *
+   */
+  class MyRandomDummy : public MyRandom
+  {
+  public:
+      HD MyRandomDummy()
+      {
+          Set_status(true);
+      }
+      HD ~MyRandomDumy() {};
+      HD uint genUniformInt() { return 1; }
+      HD double genUniform(const double min = 0., const double max = 1.) { return 2.; }
+      HD double genGaussian(const double mean = 0., const double dev_std = 1.) { return 3.; }
+  };
+      
+
+
   
   //seeds generetor functions
   

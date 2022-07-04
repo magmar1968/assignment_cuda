@@ -10,9 +10,9 @@
 
   
 
-#define NBLOCKS 128
+#define NBLOCKS 2048
 #define TPB 512
-#define PPT 100
+#define PPT 100000
 
 __global__ void kernel (uint*, double*, double*, bool*);
 __device__ void rnd_test_dev(uint*, double*, double*, bool*);
@@ -28,10 +28,11 @@ __global__ void kernel(uint* seeds, double* dev_sum, double* dev_sq_sum, bool* c
 __device__ void rnd_test_dev(uint* seeds, double* dev_sum, double* dev_sq_sum, bool* cuda_bool)
 {
     size_t index = blockIdx.x * blockDim.x + threadIdx.x;
-   // if (index < NBLOCKS*TPB)
-    
+    if (index < NBLOCKS*TPB)
+    {
         rnd_test_generic(seeds, dev_sum, dev_sq_sum, index, cuda_bool);
-    
+	//__syncthreads();
+    }
 }
 __host__ void rnd_test_hst(uint* seeds, double* sum, double* sq_sum, bool* host_bool)
 {
@@ -44,30 +45,33 @@ __host__ __device__ void rnd_test_generic(uint* seeds, double* sum, double* sq_s
     uint seed1 = seeds[4 * index + 1];
     uint seed2 = seeds[4 * index + 2];
     uint seed3 = seeds[4 * index + 3];
-    rnd::MyRandom* gnr = new rnd::GenCombined(seed0, seed1, seed2, seed3);
+    rnd::GenCombined gnr = rnd::GenCombined(seed0, seed1, seed2, seed3);
+    //rnd::MyRandomDummy gnr();
     double number;
     for (size_t i = 0; i < PPT; i++)
     {
-	if(gnr->Get_status() == false)
+	if(gnr.Get_status() == false)
 	*status_bool = false;
-        number = gnr->genGaussian();
-	if((isnan(number))||(isinf(number)))
-	{
-        *status_bool = false;
-	}
-	else{
-        sum[index] += number;
-        sq_sum[index] += number*number;}
+        else
+        {
+        	number = gnr.genGaussian();
+		if((isnan(number))||(isinf(number)))
+		{	
+        		*status_bool = false;
+		}	
+		else
+        	{
+        		sum[index] += number;
+        		sq_sum[index] += number*number;
+       	        }
 	
+        }
     }
-    delete(gnr);
-
 }
 
 
 int main(int argc, char** argv)
 {
- 
     prcr::Device dev;
     dev.CPU = false;
     dev.GPU = false;
