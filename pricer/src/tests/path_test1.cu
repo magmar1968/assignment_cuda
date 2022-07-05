@@ -22,9 +22,9 @@
 
 #define STEPS 5  // number of steps
 #define NEQ 1  //number of equities
-#define NBLOCKS 4  //cuda blocks
-#define TPB 4 //threads per block
-#define PPT 20
+#define NBLOCKS 16  //cuda blocks
+#define TPB 512 //threads per block
+#define PPT 1
 
 
 
@@ -59,10 +59,10 @@ struct Eq_prices_data
 
 
 
-__global__ void kernel_mc(uint*, Schedule_data*, Eq_description_data*, Eq_prices_data*, Vanilla_data*, double*, bool*);
-D void simulate_device(uint*, Contract_eq_option_vanilla*, double*, bool*);
-H void simulate_host(uint*, Contract_eq_option_vanilla*, double*, bool*);
-HD void simulate_generic(uint*, int, Contract_eq_option_vanilla*, double*, bool*);
+__global__ void kernel_mc(uint*, Schedule_data*, Eq_description_data*, Eq_prices_data*, Vanilla_data*, double*, int*);
+D void simulate_device(uint*, Contract_eq_option_vanilla*, double*, int*);
+H void simulate_host(uint*, Contract_eq_option_vanilla*, double*, int*);
+HD void simulate_generic(uint*, int, Contract_eq_option_vanilla*, double*, int*);
 
 
 
@@ -73,7 +73,7 @@ __global__ void kernel_mc(uint* dev_seeds,
     Eq_prices_data* dev_prices,
     Vanilla_data* dev_vnl_args,
     double* dev_results,
-    bool* cuda_bool)
+    int* cuda_bool)
 {
     pricer::udb* start_prices = new pricer::udb[NEQ];                              //definiamo oggetti dentro a kernel
     for (int i = 0; i < NEQ; i++)
@@ -111,11 +111,11 @@ __global__ void kernel_mc(uint* dev_seeds,
     }
     //delete[] (start_prices);
     //delete[] (descr);
-    delete(vol);
+    /*delete(vol);
     delete(yc);
     delete(starting_point_in);
     delete(calen);
-    delete(contr_opt);
+    delete(contr_opt);*/
 
 
 
@@ -124,7 +124,7 @@ __global__ void kernel_mc(uint* dev_seeds,
 D void simulate_device(uint* seeds,
     Contract_eq_option_vanilla* contr_opt,
     double* results,
-    bool* cuda_bool)
+    int* cuda_bool)
 {
     size_t index = blockIdx.x * blockDim.x + threadIdx.x;
     /*if (index < NBLOCKS * TPB)*/ simulate_generic(seeds, index, contr_opt, results, cuda_bool);
@@ -133,7 +133,7 @@ D void simulate_device(uint* seeds,
 H void simulate_host(uint* seeds,
     Contract_eq_option_vanilla* contr_opt,
     double* results,
-    bool* host_bool)
+    int* host_bool)
 {
     for (size_t index = 0; index < NBLOCKS * TPB; index++)   //l'espressione che risulta dalla moltiplicazione � il numero totale di threads
     {
@@ -146,14 +146,14 @@ HD void simulate_generic(uint* seeds,
     int index,
     Contract_eq_option_vanilla* contr_opt,
     double* results,
-    bool* status_bool)
+    int* status_bool)
 {
     uint seed0 = seeds[0 + index * 4];
     uint seed1 = seeds[1 + index * 4];
     uint seed2 = seeds[2 + index * 4];
     uint seed3 = seeds[3 + index * 4];
 
-    rnd::GenCombined* gnr_in = new rnd::GenCombined(seed0, seed1, seed2, seed3);
+    rnd::MyRandomDummy* gnr_in = new rnd::MyRandomDummy();//(seed0, seed1, seed2, seed3);
     Process_eq_lognormal_multivariante* process = new Process_eq_lognormal_multivariante(gnr_in, NEQ);
     
     Path* cammino = new Path(contr_opt->Get_eq_prices(), contr_opt->Get_schedule(), &static_cast<Process_eq&>(*process));
@@ -162,7 +162,7 @@ HD void simulate_generic(uint* seeds,
     {
         cammino->regen_path(contr_opt->Get_schedule(), &static_cast<Process_eq&>(*process));
         results[index] += cammino->Get_equity_prices(STEPS - 1)->Get_eq_price(0).get_number();
-	cammino->destroy();
+	//cammino->destroy();
     }
     delete(cammino);
     delete(gnr_in);
@@ -176,8 +176,8 @@ int main(int argc, char** argv)
     cudaError_t cudaStatus;
     srand(time(NULL));
 
-    bool* host_cuda_bool = new bool;
-    *host_cuda_bool = true;
+    int* host_cuda_bool = new int(0);
+    //*host_cuda_bool = true;
 
     double* host_results = new double[NBLOCKS * TPB];
     for (int i = 0; i < NBLOCKS * TPB; i++)
@@ -284,8 +284,8 @@ int main(int argc, char** argv)
         Eq_description_data* dev_descr;
         Eq_prices_data* dev_prices;
         Vanilla_data* dev_vnl_args;
-        double dev_res[NBLOCKS * TPB];
-        bool* dev_cuda_bool;
+        double* dev_res = new double[NBLOCKS * TPB];
+        int* dev_cuda_bool = new int(0);
 
 
 
@@ -306,9 +306,12 @@ int main(int argc, char** argv)
 
         cudaStatus = cudaMalloc((void**)&dev_vnl_args, NBLOCKS * TPB * sizeof(Vanilla_data));
         if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMalloc6 failed!\n"); }
+       
+        cudaStatus = cudaMalloc((void**)&dev_cuda_bool, sizeof(int));
+        if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMalloc7 failed!\n"); }
 
-        cudaStatus = cudaMemcpy(dev_cuda_bool, host_cuda_bool, sizeof(bool), cudaMemcpyHostToDevice);
-        if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMemcpy0 failed!\n"); }
+        cudaStatus = cudaMemcpy(dev_cuda_bool, host_cuda_bool, sizeof(int), cudaMemcpyHostToDevice);
+        if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMemcpy0 failed! %s\n", cudaGetErrorString(cudaStatus)); }
 
         cudaStatus = cudaMemcpy(dev_seeds, seeds, NBLOCKS * TPB * 4 * sizeof(uint), cudaMemcpyHostToDevice);
         if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMemcpy1 failed!\n"); }
@@ -330,7 +333,7 @@ int main(int argc, char** argv)
         if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMemcpy5 failed!\n"); }
         fprintf(stderr, "%s\n", cudaGetErrorString(cudaStatus));
 
-        cudaStatus = cudaMemcpy(dev_res, host_results, NBLOCKS*TPB*sizeof(double), cudaMemcpyHostToDevice);
+        cudaStatus = cudaMemcpy(dev_res,host_results, NBLOCKS*TPB*sizeof(double), cudaMemcpyHostToDevice);
         if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMemcpy6 failed!\n"); }
         fprintf(stderr, "%s\n", cudaGetErrorString(cudaStatus));
 
@@ -350,7 +353,7 @@ int main(int argc, char** argv)
         printf("%d", cudaStatus);
         fprintf(stderr, "%s\n", cudaGetErrorString(cudaStatus));
 
-        cudaStatus = cudaMemcpy(host_cuda_bool, dev_cuda_bool, sizeof(bool), cudaMemcpyDeviceToHost);
+        cudaStatus = cudaMemcpy(host_cuda_bool, dev_cuda_bool, sizeof(int), cudaMemcpyDeviceToHost);
         if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMemcpy back2 failed!\n"); }
 
 
@@ -365,10 +368,10 @@ int main(int argc, char** argv)
 
     }
 
-    if (!*host_cuda_bool)
+    /*if (!*host_cuda_bool)
     {
         printf("Something went wrong... \n"); //codice di errore intero?
-    }
+    }*/
 
     //statistica finale --- scrivere funzione media per struct?
     double final_res;

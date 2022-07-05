@@ -12,7 +12,7 @@
 
 #define NBLOCKS 2048
 #define TPB 512
-#define PPT 100000
+#define PPT 50000
 
 __global__ void kernel (uint*, double*, double*, bool*);
 __device__ void rnd_test_dev(uint*, double*, double*, bool*);
@@ -45,16 +45,19 @@ __host__ __device__ void rnd_test_generic(uint* seeds, double* sum, double* sq_s
     uint seed1 = seeds[4 * index + 1];
     uint seed2 = seeds[4 * index + 2];
     uint seed3 = seeds[4 * index + 3];
-    rnd::GenCombined gnr = rnd::GenCombined(seed0, seed1, seed2, seed3);
-    //rnd::MyRandomDummy gnr();
+    //void* mem = malloc(sizeof(rnd::MyRandomDummy));
+    //rnd::MyRandomDummy* gnr = new (mem) rnd::MyRandomDummy();//GenCombined(seed0, seed1, seed2, seed3);         //funziona con queste due e le ueìltime due deletefre
+    rnd::GenCombined* gnr = new rnd::GenCombined(seed0, seed1, seed2, seed3);
+    //rnd::GenCombined gnr(seed0, seed1, seed2, seed3);      //funziona con questa senza delete e cambiando -> in .
+    //rnd::MyRandomaDummy* gnr = new rnd::MyRandomDummy();   //funziona con questa linea e delete(gnr)
     double number;
     for (size_t i = 0; i < PPT; i++)
     {
-	if(gnr.Get_status() == false)
+	if(gnr->Get_status() == false)
 	*status_bool = false;
         else
         {
-        	number = gnr.genGaussian();
+        	number = gnr->genGaussian();
 		if((isnan(number))||(isinf(number)))
 		{	
         		*status_bool = false;
@@ -67,6 +70,9 @@ __host__ __device__ void rnd_test_generic(uint* seeds, double* sum, double* sq_s
 	
         }
     }
+    delete(gnr);
+    //gnr->~MyRandomDummy();
+    //free(mem);
 }
 
 
@@ -84,7 +90,7 @@ int main(int argc, char** argv)
     double* host_sum = new double[NBLOCKS * TPB];
     double* host_sq_sum =new double[NBLOCKS * TPB];
     uint* seeds = new uint [4*NBLOCKS* TPB];
-    
+        
 
     bool* host_cuda_bool = new bool;
     *host_cuda_bool = true;
@@ -129,7 +135,10 @@ int main(int argc, char** argv)
         double* dev_sq_sum = new double[NBLOCKS * TPB];
         bool* dev_cuda_bool = new bool;
         Timer gpu_timer;  //spostare sopra a kernel se necessario
-
+        
+        //cudaStatus = cudaDeviceSetLimit(cudaLimitMallocHeapSize, NBLOCKS*TPB*sizeof(rnd::GenCombined));
+        //if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaSetLimit failed\n"); }
+   
         cudaStatus = cudaMalloc((void**)&dev_seeds, NBLOCKS *4* TPB * sizeof(uint));
         if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMalloc1 failed!\n"); }
 
