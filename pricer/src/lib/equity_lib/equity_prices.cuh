@@ -44,7 +44,7 @@ class Equity_prices
     HD ~Equity_prices()
     {
 	    delete[](_prices);
-	    delete[](_eq_descr);
+	    //delete[](_eq_descr);
     }
 
     // getter & setter

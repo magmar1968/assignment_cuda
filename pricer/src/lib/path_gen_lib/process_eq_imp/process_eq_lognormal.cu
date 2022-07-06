@@ -41,7 +41,7 @@ Process_eq_lognormal::Get_new_prices(
                         Random_numbers * w,
                         double delta_t)
 {
-    Equity_prices* eq_prices_out = NULL;
+    Equity_prices* eq_prices_out = new Equity_prices(1);
 
     pricer::udb new_eq_price = Get_new_equity_price(
                         eq_prices_in -> Get_eq_description(),

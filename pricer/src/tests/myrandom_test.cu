@@ -10,9 +10,9 @@
 
   
 
-#define NBLOCKS 2048
+#define NBLOCKS 64
 #define TPB 512
-#define PPT 50000
+#define PPT 50
 
 __global__ void kernel (uint*, double*, double*, bool*);
 __device__ void rnd_test_dev(uint*, double*, double*, bool*);
@@ -45,11 +45,10 @@ __host__ __device__ void rnd_test_generic(uint* seeds, double* sum, double* sq_s
     uint seed1 = seeds[4 * index + 1];
     uint seed2 = seeds[4 * index + 2];
     uint seed3 = seeds[4 * index + 3];
-    //void* mem = malloc(sizeof(rnd::MyRandomDummy));
-    //rnd::MyRandomDummy* gnr = new (mem) rnd::MyRandomDummy();//GenCombined(seed0, seed1, seed2, seed3);         //funziona con queste due e le ueìltime due deletefre
+
     rnd::GenCombined* gnr = new rnd::GenCombined(seed0, seed1, seed2, seed3);
-    //rnd::GenCombined gnr(seed0, seed1, seed2, seed3);      //funziona con questa senza delete e cambiando -> in .
-    //rnd::MyRandomaDummy* gnr = new rnd::MyRandomDummy();   //funziona con questa linea e delete(gnr)
+    //rnd::GenCombined gnr(seed0, seed1, seed2, seed3);      
+    //rnd::MyRandomDummy* gnr = new rnd::MyRandomDummy();   
     double number;
     for (size_t i = 0; i < PPT; i++)
     {
@@ -66,13 +65,11 @@ __host__ __device__ void rnd_test_generic(uint* seeds, double* sum, double* sq_s
         	{
         		sum[index] += number;
         		sq_sum[index] += number*number;
-       	        }
+       	    }
 	
         }
     }
     delete(gnr);
-    //gnr->~MyRandomDummy();
-    //free(mem);
 }
 
 
@@ -94,7 +91,7 @@ int main(int argc, char** argv)
 
     bool* host_cuda_bool = new bool;
     *host_cuda_bool = true;
-    srand(time(NULL));
+    srand(1);  //CPU and GPU results must be the same (but not when srand(time(NULL)))
     uint seed_aus[4];
     for( size_t i = 0; i < 4; i++)
     {
@@ -134,9 +131,8 @@ int main(int argc, char** argv)
         double* dev_sum = new double[NBLOCKS * TPB];
         double* dev_sq_sum = new double[NBLOCKS * TPB];
         bool* dev_cuda_bool = new bool;
-        Timer gpu_timer;  //spostare sopra a kernel se necessario
         
-        //cudaStatus = cudaDeviceSetLimit(cudaLimitMallocHeapSize, NBLOCKS*TPB*sizeof(rnd::GenCombined));
+        //cudaStatus = cudaDeviceSetLimit(cudaLimitMallocHeapSize, sizeof(??)); //?
         //if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaSetLimit failed\n"); }
    
         cudaStatus = cudaMalloc((void**)&dev_seeds, NBLOCKS *4* TPB * sizeof(uint));
@@ -163,9 +159,13 @@ int main(int argc, char** argv)
         cudaStatus = cudaMemcpy(dev_cuda_bool, host_cuda_bool, sizeof(bool), cudaMemcpyHostToDevice);
         if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMemcpy8 failed!\n"); }
 
-       kernel << <NBLOCKS,TPB >> > (dev_seeds, dev_sum, dev_sq_sum, dev_cuda_bool);
+
+        Timer gpu_timer;
+        kernel << <NBLOCKS,TPB >> > (dev_seeds, dev_sum, dev_sq_sum, dev_cuda_bool);
+        gpu_timer.Stop(); 
         cudaStatus = cudaGetLastError();
         if (cudaStatus != cudaSuccess) { fprintf(stderr, "Kernel failed: %s\n", cudaGetErrorString(cudaStatus)); }
+
 
         cudaStatus = cudaMemcpy(host_sum, dev_sum, NBLOCKS*TPB*sizeof(double), cudaMemcpyDeviceToHost);
         if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMemcpy back1 failed! %s\n", cudaGetErrorString(cudaStatus)); }
@@ -175,7 +175,14 @@ int main(int argc, char** argv)
         cudaStatus = cudaMemcpy(host_cuda_bool, dev_cuda_bool, sizeof(bool), cudaMemcpyDeviceToHost);
         if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMemcpy back3 failed!\n"); }
 
-        gpu_timer.Stop();  //spostare sotto a kernel se necessario
+        cudaFree(dev_seeds);
+        cudaFree(dev_sum);
+        cudaFree(dev_sq_sum);
+        cudaFree(dev_cuda_bool);
+        /*delete[](dev_seeds);
+        delete[](dev_sum);
+        delete[](dev_sq_sum);
+        delete(dev_cuda_bool);*/
     }
 
     if (!*host_cuda_bool)
@@ -204,6 +211,12 @@ int main(int argc, char** argv)
     meas_std_dev /= sqrt(PPT);
 
 
+    delete[](seeds);
+    delete[](host_sum);
+    delete[](host_sq_sum);
+    delete(host_cuda_bool);
+
+
     std::cout << "std dev teorica (della media): " << std_dev << std::endl;
     std::cout << " measured std dev:" << meas_std_dev<< std::endl;
     if (abs(meas_mean) < 3 * std_dev) 
@@ -217,6 +230,7 @@ int main(int argc, char** argv)
         printf("La media non e' entro 3 standard deviation: %.3e\n", meas_mean);
         return 1;
     }
+
 }
 
 

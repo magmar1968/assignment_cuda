@@ -25,7 +25,7 @@ Process_eq_lognormal_multivariante::Get_new_prices(
 {
     Equity_prices * eq_prices_out = new Equity_prices(_dim);
 
-    //Generate_corellations(w_correlated, w); da implementare
+    //Generate_corellations(w_correlated, w); da implementare se serve
     w_correlated = w;
 
     for (size_t i = 0; i < _dim; ++i)
