@@ -20,9 +20,9 @@
 //in questo test creiamo path e memorizziamo last step, poi mediamo (no calcolo payoff ecc)
 
 #define STEPS 5  // number of steps
-#define NEQ 1  //number of equities
-#define NBLOCKS 16  //cuda blocks
-#define TPB 4 //threads per block
+#define NEQ 1  //number of variables
+#define NBLOCKS 64  //cuda blocks
+#define TPB 64 //threads per block
 #define PPT 1 //paths per thread
 
 
@@ -74,7 +74,7 @@ __global__ void kernel(uint* dev_seeds,
     double* dev_results,
     int* cuda_int_error)
 {
-    pricer::udb* start_prices = new pricer::udb[NEQ];                              //definiamo oggetti dentro a kernel
+    pricer::udb* start_prices = new pricer::udb[NEQ];                           
     for (int i = 0; i < NEQ; i++)
     {
         start_prices[i] = dev_prices->start_prices[i];
@@ -108,13 +108,13 @@ __global__ void kernel(uint* dev_seeds,
     {
         delete(descr[i]);
     }
-    /*delete[] (start_prices);
+    //delete[] (start_prices);
     delete[] (descr);
     delete(vol);
     delete(yc);
     delete(starting_point_in);
     delete(calen);
-    delete(contr_opt);*/
+    delete(contr_opt);
 
 
 
@@ -183,7 +183,7 @@ HD void simulate_generic(uint* seeds,
     for (int i = 0; i < STEPS; i++)
     {
 	delete(eq_prices_scenario[i]);
-    delete(random_numbers_scenario[i]);
+        delete(random_numbers_scenario[i]);
     }
 }
 
@@ -227,7 +227,7 @@ int main(int argc, char** argv)
     {
         dscrp_args->vol[i] = 0.;
     }
-    strcpy(dscrp_args->isin_code, "qwertyuiopas");
+    strcpy(dscrp_args->isin_code, "00e99y88o00s");
     strcpy(dscrp_args->name, "opzione di prova");
     strcpy(dscrp_args->currency, "euro");
     dscrp_args->div_yield = 0;
@@ -294,7 +294,7 @@ int main(int argc, char** argv)
         delete[](descr);
         delete(vol);
         delete(yc);
-        delete(starting_point_in);
+        //delete(starting_point_in);
         delete(calen);
         delete(contr_opt);
 
