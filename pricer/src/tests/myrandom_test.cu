@@ -10,9 +10,9 @@
 
   
 
-#define NBLOCKS 64
+#define NBLOCKS 2048
 #define TPB 512
-#define PPT 50
+#define PPT 500
 
 __global__ void kernel (uint*, double*, double*, bool*);
 __device__ void rnd_test_dev(uint*, double*, double*, bool*);
@@ -46,7 +46,7 @@ __host__ __device__ void rnd_test_generic(uint* seeds, double* sum, double* sq_s
     uint seed2 = seeds[4 * index + 2];
     uint seed3 = seeds[4 * index + 3];
 
-    rnd::GenCombined* gnr = new rnd::GenCombined(seed0, seed1, seed2, seed3);
+    rnd::MyRandomImplementation* gnr = new rnd::GenCombined(seed0, seed1, seed2, seed3);//, seed1, seed2, seed3);
     //rnd::GenCombined gnr(seed0, seed1, seed2, seed3);      
     //rnd::MyRandomDummy* gnr = new rnd::MyRandomDummy();   
     double number;
@@ -91,7 +91,7 @@ int main(int argc, char** argv)
 
     bool* host_cuda_bool = new bool;
     *host_cuda_bool = true;
-    srand(1);  //CPU and GPU results must be the same (but not when srand(time(NULL)))
+    srand(time(NULL));  //CPU and GPU results must be the same (but not when srand(time(NULL)))
     uint seed_aus[4];
     for( size_t i = 0; i < 4; i++)
     {
@@ -162,7 +162,7 @@ int main(int argc, char** argv)
 
         Timer gpu_timer;
         kernel << <NBLOCKS,TPB >> > (dev_seeds, dev_sum, dev_sq_sum, dev_cuda_bool);
-        gpu_timer.Stop(); 
+         
         cudaStatus = cudaGetLastError();
         if (cudaStatus != cudaSuccess) { fprintf(stderr, "Kernel failed: %s\n", cudaGetErrorString(cudaStatus)); }
 
@@ -179,10 +179,8 @@ int main(int argc, char** argv)
         cudaFree(dev_sum);
         cudaFree(dev_sq_sum);
         cudaFree(dev_cuda_bool);
-        /*delete[](dev_seeds);
-        delete[](dev_sum);
-        delete[](dev_sq_sum);
-        delete(dev_cuda_bool);*/
+       
+        gpu_timer.Stop();
     }
 
     if (!*host_cuda_bool)
@@ -223,14 +221,14 @@ int main(int argc, char** argv)
     {
         printf("ok, ");
         printf("la media dei numeri generati e': %.3e\n", meas_mean);
-        return 0;
+        //return 0;
     }
     else 
     {
         printf("La media non e' entro 3 standard deviation: %.3e\n", meas_mean);
-        return 1;
+        //return 1;
     }
-
+	return 0;	
 }
 
 

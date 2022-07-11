@@ -33,11 +33,14 @@ namespace rnd
 
     HD double MyRandomImplementation::genUniform(const double min, const double max)
     {  
-        return genUniformInt()/(double)_m * (max - min) + min;
+       
+       return genUniformInt()/double(_m) * (max - min) + min;
     }
 
     HD double MyRandomImplementation::genGaussian(const double mean, const double dev_std)
     {
+        
+          
         if(_storedValue)
         {
             _storedValue = false;
@@ -45,15 +48,22 @@ namespace rnd
         }
         else
         {
-            double num = 0,r = 0,u,v;
+            
+            double num;
+            double r;
+            r = 0;
+            double u;
+            double v;
             switch (_type)
             {
             case GAUSSIAN_1:
+                
                 u = genUniform(); v = genUniform(); //input numbers
                 while (u == 0)
                 {
                     u = genUniform();
                 }
+                
                 num    = (sqrt(-2 * log( u) ) * cos( v * (2 * M_PI)));
                 _value = (sqrt(-2 * log( u) ) * sin( v * (2 * M_PI)));
                 break;
