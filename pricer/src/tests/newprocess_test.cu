@@ -216,6 +216,8 @@ int main(int argc, char** argv)
 						if (host_out[i].sq_sum != 100) { printf("errore in sq_sum: numero blocchi %d, numero tpb %d, indice %d\n", blocchi, tpb, i); }
 					}
 				}
+				delete[](host_in);
+				delete[](host_out);
 			}
 		}
 	}
