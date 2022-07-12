@@ -11,7 +11,7 @@
 #include "../lib/contract_option_lib/contract_eq_option_vanilla/contract_eq_option_vanilla.cuh"
 #include "../lib/support_lib/statistic_lib/statistic_lib.cuh"
 #include "../lib/support_lib/timer_lib/myTimer.cuh"
-//#include "../lib/support_lib/myDouble_lib/myudouble.cuh"
+#include "../lib/support_lib/myDouble_lib/myudouble.cuh"
 
 #define NEQ 1
 
@@ -22,8 +22,8 @@ struct Input_data
 	double delta_t;
 	double vol;
 	char isin_code[12];
-	char name[30];
-	char currency[20];
+	char name[5];
+	char currency[4];
 	double div_yield;
 	double yc;
 	double start_prices[NEQ];
@@ -68,14 +68,17 @@ H void simulate_host(Input_data* input_data, Output_data* output_data, Dimension
 
 HD void simulate_generic(Input_data* input_data, Output_data* output_data, size_t index)
 {
-	output_data[index].sum = input_data[index].strike_price;
-	output_data[index].sq_sum = input_data[index].start_prices[0];
+	//pricer::udb*_prices = new pricer::udb[NEQ];
+        //_prices[0] = pricer::udb(input_data[index].start_prices[0]);
+	output_data[index].sum = 100;//_prices[0].get_number();
+	output_data[index].sq_sum = input_data[index].div_yield;
+        //delete[](_prices);
 }
 
 void Gen_dimensions(Dimensions* dim, int a, int b)
 {
 	dim->BLOCKS = 128 * pow(2, a);
-	dim->TPB = 256 * pow(2, b);
+	dim->TPB = 128 * pow(2, b);
 }
 
 
@@ -85,13 +88,13 @@ int main(int argc, char** argv)
 	srand(time(NULL));
 	Dimensions* dim = new Dimensions;
 	Timer _timer;
-	for (int t = 0; t < 100; t++)
+	for (int t = 0; t <1; t++)
 	{
 		//printf("Progresso: %d di 100", t);
 		
-		for (size_t a = 1; a < 6; a++)
+		for (size_t a = 1; a <= 7; a++)
 		{
-			for (size_t b = 1; b < 3; b++)
+			for (size_t b = 1; b <= 3; b++)
 			{
 				Gen_dimensions(dim, a, b);
 				int blocchi = dim->BLOCKS;
@@ -153,7 +156,8 @@ int main(int argc, char** argv)
 					cudaStatus = cudaMalloc((void**)&dev_in, blocchi * tpb * sizeof(Input_data));
 					if (cudaStatus != cudaSuccess) 
 					{
-						fprintf(stderr, "cudaMalloc1 failed!\n"); 
+						fprintf(stderr, "cudaMalloc1 failed! codice errore %s\n", cudaGetErrorString(cudaStatus)); 
+						
 						printf("Errore con blocchi : %d, tpb: %d \n", blocchi, tpb);
 						error_bool = false;
 					}
@@ -201,7 +205,7 @@ int main(int argc, char** argv)
 					}
 
 					cudaFree(dev_out);
-
+					
 
 
 
@@ -213,11 +217,11 @@ int main(int argc, char** argv)
 					{
 						// std::cout << host_out[].sum <<"   "  << host_out[i].sq_sum << std::endl;
 						if (host_out[i].sum - 100 != 0) { printf("errore in sum: numero blocchi %d, numero tpb %d,  indice %d\n", blocchi, tpb, i); }
-						if (host_out[i].sq_sum != 100) { printf("errore in sq_sum: numero blocchi %d, numero tpb %d, indice %d\n", blocchi, tpb, i); }
+						if (host_out[i].sq_sum != 0) { printf("errore in sq_sum: numero blocchi %d, numero tpb %d, indice %d\n", blocchi, tpb, i); }
 					}
 				}
 				delete[](host_in);
-				delete[](host_out);
+                                delete[](host_out);
 			}
 		}
 	}
