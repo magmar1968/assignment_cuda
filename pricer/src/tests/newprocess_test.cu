@@ -14,6 +14,7 @@
 #include "../lib/support_lib/myDouble_lib/myudouble.cuh"
 
 #define NEQ 1
+#define STEPS 6
 
 struct Input_data
 {
@@ -21,13 +22,13 @@ struct Input_data
 	double strike_price;
 	double delta_t;
 	double vol;
-	char isin_code[12];
-	char name[5];
-	char currency[4];
+	char isin_code[16];
+	char name[8];
+	char currency[8];
 	double div_yield;
 	double yc;
 	double start_prices[NEQ];
-	double seeds[4];
+	uint seeds[4];
 };
 
 struct Dimensions
@@ -68,11 +69,42 @@ H void simulate_host(Input_data* input_data, Output_data* output_data, Dimension
 
 HD void simulate_generic(Input_data* input_data, Output_data* output_data, size_t index)
 {
-	//pricer::udb*_prices = new pricer::udb[NEQ];
-        //_prices[0] = pricer::udb(input_data[index].start_prices[0]);
-	output_data[index].sum = 100;//_prices[0].get_number();
-	output_data[index].sq_sum = input_data[index].div_yield;
-        //delete[](_prices);
+        uint seed0 = input_data[index].seeds[0];
+        uint seed1 = input_data[index].seeds[1];
+	uint seed2 = input_data[index].seeds[2];
+        uint seed3 = input_data[index].seeds[3];  
+	rnd::GenCombined* gnr = new rnd::GenCombined(seed0, seed1, seed2, seed3);
+        double num;
+	double prezzo_prova = input_data[index].start_prices[0];
+	Equity_prices* eqp = new Equity_prices(1);    //oggetto eq prices di prova
+	eqp->Set_eq_price(pricer::udb(prezzo_prova));
+        for(int i = 0; i <100; i++)
+	{	
+		pricer::udb*_prices = new pricer::udb[NEQ];
+		_prices[0] = pricer::udb(200);
+		
+		num = gnr->genGaussian(1.,0.);   //genera sempre 1
+                if(isnan(num)||isinf(num)) {input_data[index].seeds[3] = 0;}
+                Equity_prices** eps = new Equity_prices* [STEPS]; //equity prices scenario
+		eps[0] = new Equity_prices(1);
+		eps[0]->Set_eq_price(pricer::udb(prezzo_prova));
+		/*for(int j = 1;  j < STEPS; j++)
+		{
+			eps[j] = new Equity_prices(1);
+			eps[j]->Set_eq_price(pricer::udb(num+eps[j-1]->Get_eq_price().get_number()));
+		}*/
+		if(i==1){output_data[index].sum = 105.;}// + eps[0]->Get_eq_price().get_number();}
+                delete[](_prices);
+		delete(eps[0]);
+                //for(int j = 1; j < STEPS; j++)
+		//	{delete (eps[j]);}
+		delete[](eps);
+		
+        }
+	delete(eqp);
+	delete(gnr);
+	output_data[index].sq_sum = input_data[index].seeds[3];
+        
 }
 
 void Gen_dimensions(Dimensions* dim, int a, int b)
@@ -84,6 +116,8 @@ void Gen_dimensions(Dimensions* dim, int a, int b)
 
 int main(int argc, char** argv)
 {
+	printf("Sizeof eq: %d\n", sizeof(Equity_prices));
+        printf("Size of input structure: %d bytes\n", sizeof(Input_data));
 	cudaError_t cudaStatus;
 	srand(time(NULL));
 	Dimensions* dim = new Dimensions;
@@ -92,9 +126,9 @@ int main(int argc, char** argv)
 	{
 		//printf("Progresso: %d di 100", t);
 		
-		for (size_t a = 1; a <= 7; a++)
+		for (size_t a = 0; a <= 2; a++)
 		{
-			for (size_t b = 1; b <= 3; b++)
+			for (size_t b = 2; b <=2 ; b++)
 			{
 				Gen_dimensions(dim, a, b);
 				int blocchi = dim->BLOCKS;
@@ -130,7 +164,7 @@ int main(int argc, char** argv)
 					host_in[i].yc = 0.05;
 					host_in[i].start_prices[0] = 100;
 				}
-
+				
 				prcr::Device dev;
 				dev.CPU = false;
 				dev.GPU = false;
@@ -216,8 +250,10 @@ int main(int argc, char** argv)
 					if (error_bool)
 					{
 						// std::cout << host_out[].sum <<"   "  << host_out[i].sq_sum << std::endl;
-						if (host_out[i].sum - 100 != 0) { printf("errore in sum: numero blocchi %d, numero tpb %d,  indice %d\n", blocchi, tpb, i); }
-						if (host_out[i].sq_sum != 0) { printf("errore in sq_sum: numero blocchi %d, numero tpb %d, indice %d\n", blocchi, tpb, i); }
+					if (host_out[i].sum - 105 >0.00001)
+						 { printf("errore in sum: numero blocchi %d, numero tpb %d,  indice %d\n", blocchi, tpb, i); }
+					if (host_out[i].sq_sum != host_in[i].seeds[3])
+						 { printf("errore in sq_sum: numero blocchi %d, numero tpb %d, indice %d\n", blocchi, tpb, i); }
 					}
 				}
 				delete[](host_in);
@@ -227,5 +263,6 @@ int main(int argc, char** argv)
 	}
 	delete(dim);
 	_timer.Stop();
+	printf("Fine.\t");
 	return 0;
 }
