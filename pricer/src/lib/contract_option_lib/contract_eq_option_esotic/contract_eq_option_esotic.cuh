@@ -8,6 +8,7 @@
 class Contract_eq_option_esotic : public Contract_eq_option {
   private:
     double _strike_price ;
+protected:
     char   _contract_type ; // C for call P for put
   public:
     // constructors & destructors

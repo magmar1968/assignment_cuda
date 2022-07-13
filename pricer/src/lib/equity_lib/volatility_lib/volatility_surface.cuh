@@ -29,7 +29,11 @@ class Volatility_surface
     {
         return _vol;
     }
-
+    HD double Get_volatility()
+    {
+        return _vol;
+    }
+       
 };
 
 #endif
