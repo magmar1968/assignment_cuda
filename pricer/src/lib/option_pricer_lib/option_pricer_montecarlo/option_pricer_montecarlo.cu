@@ -51,16 +51,19 @@ Option_pricer_montecarlo::simulate_option()
     Contract_eq_option &contract = 
                static_cast<Contract_eq_option&>(*_contract_option);
     Schedule * schedule = contract.Get_schedule();
-    Equity_prices * starting_point = contract.Get_eq_prices();
+    Equity_prices * starting_point = contract.Get_eq_price();
+    Equity_prices* eps = new Equity_prices[schedule->Get_dim()];
+    double* rns = new double[schedule->Get_dim()];
     Path  path =  Path(starting_point,schedule,
-                        &static_cast<Process_eq&>(*_process));
+                        &static_cast<Process_eq&>(*_process),
+                        _gnr,rns,eps);
+
 
     for(size_t i = 0; i < _N; ++i)
     {
 
         pay_off[i] = contract.Pay_off(&path);
         pay_off2[i] = pay_off[i]*pay_off[i];
-	path.destroy();
         path.regen_path(schedule,&static_cast<Process_eq&>(*_process));
     }    
 
@@ -68,6 +71,7 @@ Option_pricer_montecarlo::simulate_option()
     _price = prcr::avg(pay_off,_N);
     _error = prcr::sum_array(pay_off2,_N);  //così è la somma dei quadrati ---> forse meglio cambiargli nome
 
+    delete[](eps); delete[](rns);
     delete[](pay_off);delete[](pay_off2);
 }
 

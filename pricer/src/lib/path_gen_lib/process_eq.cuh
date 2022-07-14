@@ -15,17 +15,17 @@ class Process_eq : public Process
 {
   public:
     HD Process_eq(){};
-    HD Process_eq(rnd::MyRandom * gnr)
+    HD Process_eq(rnd::MyRandom* gnr)
         :Process(gnr)
-    {
-    }
+    {}
 
 
-    HD virtual void Get_random_structure(Random_numbers* w) = 0;
-    HD virtual Equity_prices  * Get_new_prices(
-                                           Equity_prices * eq_prices_in, 
-                                           Random_numbers * w,
-                                           double delta_t) = 0;
+    //HD virtual double Get_random_structure() = 0;
+    HD virtual void Get_new_price(
+                                    Equity_prices* eq_prices_out,
+                                    Equity_prices* eq_prices_in, 
+                                    double w,
+                                    double delta_t) = 0;
 
 };
 

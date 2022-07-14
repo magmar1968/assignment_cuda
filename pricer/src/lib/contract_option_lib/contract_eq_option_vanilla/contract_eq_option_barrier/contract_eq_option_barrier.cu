@@ -22,16 +22,10 @@ Contract_eq_option_barrier::Pay_off(const Path * path)
 __host__ __device__ double
 Contract_eq_option_barrier::Pay_off_up_in(const Path * path)
 {
-    pricer::udb S = 0;
-    size_t n_eq = path->Get_starting_point()->Get_dim(); 
+    pricer::udb S;
     for(size_t i = path->Get_start_ind(); i < path->Get_dim(); ++i)
     {
-        S = 0.;
-        Equity_prices *  current_eq = path->Get_equity_prices(i); 
-        for(size_t j = 0; j < n_eq; ++i )
-        {
-            S += current_eq->Get_eq_price(j);
-        }
+        S = path->Get_equity_prices(i).Get_eq_price();
         if(S >= _barrier_level)
             return Contract_eq_option_vanilla::Pay_off(path);
     }
@@ -41,16 +35,10 @@ Contract_eq_option_barrier::Pay_off_up_in(const Path * path)
 __host__ __device__ double
 Contract_eq_option_barrier::Pay_off_up_out(const Path * path)
 {
-    pricer::udb S = 0;
-    size_t n_eq = path->Get_starting_point()->Get_dim(); 
+    pricer::udb S;
     for(size_t i = path->Get_start_ind(); i < path->Get_dim(); ++i)
     {
-        S = 0.;
-        Equity_prices *  current_eq = path->Get_equity_prices(i); 
-        for(size_t j = 0; j < n_eq; ++i )
-        {
-            S += current_eq->Get_eq_price(j);
-        }
+        S = path->Get_equity_prices(i).Get_eq_price();
         if(S >= _barrier_level)
             return 0;
     }
@@ -60,16 +48,10 @@ Contract_eq_option_barrier::Pay_off_up_out(const Path * path)
 __host__ __device__ double
 Contract_eq_option_barrier::Pay_off_down_in(const Path * path)
 {
-    pricer::udb S = 0;
-    size_t n_eq = path->Get_starting_point()->Get_dim(); 
+    pricer::udb S;
     for(size_t i = path->Get_start_ind(); i < path->Get_dim(); ++i)
     {
-        S = 0.;
-        Equity_prices *  current_eq = path->Get_equity_prices(i); 
-        for(size_t j = 0; j < n_eq; ++i )
-        {
-            S += current_eq->Get_eq_price(j);
-        }
+        S = path->Get_equity_prices(i).Get_eq_price();
         if(S <= _barrier_level)
             return Contract_eq_option_vanilla::Pay_off(path);
     }
@@ -79,16 +61,10 @@ Contract_eq_option_barrier::Pay_off_down_in(const Path * path)
 __host__ __device__ double
 Contract_eq_option_barrier::Pay_off_down_out(const Path * path)
 {
-    pricer::udb S = 0;
-    size_t n_eq = path->Get_starting_point()->Get_dim(); 
+    pricer::udb S;
     for(size_t i = path->Get_start_ind(); i < path->Get_dim(); ++i)
     {
-        S = 0.;
-        Equity_prices *  current_eq = path->Get_equity_prices(i); 
-        for(size_t j = 0; j < n_eq; ++i )
-        {
-            S += current_eq->Get_eq_price(j);
-        }
+        S = path->Get_equity_prices(i).Get_eq_price();
         if(S <= _barrier_level)
             return 0;
     }

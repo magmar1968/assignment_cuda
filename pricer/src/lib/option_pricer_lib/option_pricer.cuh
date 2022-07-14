@@ -11,6 +11,7 @@ class Option_pricer
   protected:// è una buona pratica?
     Contract_option * _contract_option ;
     Process         * _process ;
+    rnd::MyRandom   * _gnr;
 
   public:
 // Constructors & destructors

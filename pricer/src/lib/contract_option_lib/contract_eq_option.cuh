@@ -10,23 +10,23 @@
 class Contract_eq_option : public Contract_option
 {
   private:
-    Equity_prices * _eq_prices;
+    Equity_prices * _eq_price;
 
   public:
     //constructor & destructors
     HD Contract_eq_option(void) {}
     HD Contract_eq_option(
-                       Equity_prices *equity_prices,
+                       Equity_prices *equity_price,
                        Schedule      *schedule)
-        :Contract_option(schedule),_eq_prices(equity_prices)
+        :Contract_option(schedule),_eq_price(equity_price)
         {}
 
     HD virtual ~Contract_eq_option(void){}
     
     HD virtual double Pay_off(const Path *path){return 0.;} ;
 
-    HD Equity_prices * Get_eq_prices() const
-    {return _eq_prices;}
+    HD Equity_prices * Get_eq_price() const
+    {return _eq_price;}
 } ;
 
 

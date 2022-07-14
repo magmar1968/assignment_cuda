@@ -2,15 +2,15 @@
 
 __host__ __device__
 Path::Path(Equity_prices* starting_point,
-		   Schedule     * schedule,
-		   Process_eq   * process_eq)
-	:_starting_point(starting_point)
+	Schedule* schedule,
+	Process_eq* process_eq,
+	rnd::MyRandom* gnr,
+	double* rns,
+	Equity_prices* eps)
+	:_starting_point(starting_point), _gnr(gnr), _eq_prices_scenario(eps), _random_numbers_scenario(rns)
 {
 
 	 _dim = schedule -> Get_dim(); // n schedule steps
-	 _n_eq = _starting_point -> Get_dim(); //n equities   //se serve, da qualche parte, fare check che number of equities sia coerente in tutti gli oggetti 
-	 _random_numbers_scenario = new Random_numbers* [_dim];
-	 _eq_prices_scenario = new Equity_prices* [_dim];
 	 gen_path(schedule, process_eq);
 }
 
@@ -38,23 +38,14 @@ Path::gen_path(Schedule * schedule,
 	}
 
 	double delta_t = schedule->Get_t(_start_ind) - start_t;   //first step, from starting_point
-	_random_numbers_scenario[_start_ind] = new Random_numbers(_n_eq);
-	 process_eq->Get_random_structure(_random_numbers_scenario[_start_ind]);
- 
-	
-	_eq_prices_scenario[_start_ind] = process_eq->Get_new_prices(_starting_point, _random_numbers_scenario[_start_ind], delta_t);
+	_random_numbers_scenario[_start_ind] = _gnr->genGaussian();
+	process_eq->Get_new_price(&_eq_prices_scenario[_start_ind], _starting_point, _random_numbers_scenario[_start_ind], delta_t);
 
 	for (size_t j =  _start_ind + 1; j < _dim; j++)              //makes steps--->creates scenario
 	{
 		 delta_t = schedule->Get_t(j) - schedule->Get_t(j-1);
-
-		  _random_numbers_scenario[j] = new Random_numbers(_n_eq);		
-		  process_eq->Get_random_structure(_random_numbers_scenario[j]); //crea numeri random e li memorizza  //fare come lo step 1 con il setter
-
-
-		 _eq_prices_scenario[j] = NULL;
-		 _eq_prices_scenario[j] = 
-		       process_eq->Get_new_prices(_eq_prices_scenario[j - 1], _random_numbers_scenario[j],delta_t); 
+		 _random_numbers_scenario[j] = _gnr->genGaussian();  //crea numeri random e li memorizza  //fare come lo step 1 con il setter
+		 process_eq->Get_new_price(&_eq_prices_scenario[j],&_eq_prices_scenario[j - 1], _random_numbers_scenario[j],delta_t); 
 		
 	}
 	 //per il momento, se processo non esatto ci accontentiamo dell'approssimazione
@@ -68,22 +59,16 @@ Path::Get_starting_point(void) const
 	return _starting_point;
 }
 
-__host__ __device__ Equity_prices* 
+__host__ __device__ Equity_prices 
 Path::Get_equity_prices(size_t i) const
 {
-	if(i < _dim)
-		return _eq_prices_scenario[i];
-	else 
-		return NULL; //exit(1);// probably it doesn't work on cuda
+	return _eq_prices_scenario[i];
 }
 
-__host__ __device__ Random_numbers* 
+__host__ __device__ Random_numbers 
 Path::Get_random_numbers(size_t i) const
 {
-	if(i < _dim)
-		return _random_numbers_scenario[i];
-	else 
-		return NULL; //exit(1);
+	return _random_numbers_scenario[i];
 }
 
 __host__ __device__ size_t
@@ -99,11 +84,11 @@ Path::Get_start_ind() const
 }
 
 
-__host__ __device__ Equity_prices * 
+/*__host__ __device__ Equity_prices*
 Path::operator[](size_t i)const
 {
 	return Get_equity_prices(i);
-}
+}*/
 
 
 __host__ __device__ void
@@ -112,19 +97,3 @@ Path::regen_path(Schedule  * schedule,
 {
 	gen_path(schedule,process_eq);
 }
-
-__host__ __device__ Path::~Path()
-{
-
-	delete[](_eq_prices_scenario);
-	delete[](_random_numbers_scenario);
-}
-__host__ __device__ void Path::destroy()
-{
-	for(int i = _start_ind; i < _dim; i++)
-	{
-		delete(_random_numbers_scenario[i]);
-		delete(_eq_prices_scenario[i]);
-	}
-}
-

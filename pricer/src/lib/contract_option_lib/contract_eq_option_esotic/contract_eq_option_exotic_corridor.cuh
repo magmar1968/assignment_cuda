@@ -47,7 +47,7 @@ private:
 HD double Contract_eq_option_exotic_corridor::Pay_off(const Path* path)
 {
 	int P = 0;
-	for (size_t i = 0; i < _steps-1; i++)
+	for (size_t i = 0; i < _steps; i++)
 	{
 		if (Evaluate_log_return(i, path))
 			P++;
@@ -64,8 +64,19 @@ HD double Contract_eq_option_exotic_corridor::Pay_off(const Path* path)
 
 HD bool Contract_eq_option_exotic_corridor::Evaluate_log_return(size_t i, const Path* path)
 {
-	double S_a = path->Get_equity_prices(i)->Get_eq_price(0).get_number();
-	double S_b = path->Get_equity_prices(i+1)->Get_eq_price(0).get_number();
+	double S_a;
+	double S_b;
+	if (i == 0)
+	{
+		S_a = _eq_price->get_number();
+		S_b = path->Get_equity_price(0).get_number()
+	}
+	else
+	{
+		S_a = path->Get_equity_price(i - 1).get_number();
+		S_b = path->Get_equity_price(i).get_number();
+	}
+	
 	if (abs((log(S_a / S_b)) / _delta_t) < _B * _sigma)
 		return 1;
 	else

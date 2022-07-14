@@ -1,10 +1,5 @@
 #include "process_eq_lognormal.cuh"
 
-__host__ __device__
-Process_eq_lognormal::Process_eq_lognormal(rnd::MyRandom * gnr)
-    :Process_eq(gnr)
-{
-}
 
 __host__ __device__ pricer::udb
 Process_eq_lognormal::Get_new_equity_price(
@@ -26,35 +21,33 @@ Process_eq_lognormal::Get_new_equity_price(
            delta_t + sigma * sqrt(delta_t) * w ) ;
 }
 
-__host__ __device__ void
-Process_eq_lognormal::Get_random_structure(Random_numbers* w)
+/*__host__ __device__ void
+Process_eq_lognormal::Get_random_structure()
 {
          
-        w->Set_element(0, Get_random_gaussian() ) ;
+        return Get_random_gaussian();
     
-}
+}*/
 
 
-__host__ __device__ Equity_prices * 
-Process_eq_lognormal::Get_new_prices(
+__host__ __device__ void
+Process_eq_lognormal::Get_new_price(
+                        Equity_prices  * eq_prices_out,
                         Equity_prices  * eq_prices_in,
-                        Random_numbers * w,
+                        double w,
                         double delta_t)
 {
-    Equity_prices* eq_prices_out = new Equity_prices(1);
 
     pricer::udb new_eq_price = Get_new_equity_price(
                         eq_prices_in -> Get_eq_description(),
                         eq_prices_in -> Get_eq_price(),
-                        w-> Get_element() ,
+                        w,
                         eq_prices_in -> Get_time(),
                         eq_prices_in -> Get_time() + delta_t); 
 
     eq_prices_out -> Set_eq_price(new_eq_price);
     eq_prices_out -> Set_time(eq_prices_in->Get_time() + delta_t);
-    eq_prices_out -> Set_eq_description(eq_prices_in -> Get_eq_description());
-
-    return eq_prices_out;
+    eq_prices_out->Set_eq_description(eq_prices_in->Get_eq_description());
 }
 
 

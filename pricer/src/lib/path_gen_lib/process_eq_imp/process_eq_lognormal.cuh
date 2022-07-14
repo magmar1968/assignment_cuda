@@ -15,7 +15,6 @@ class Process_eq_lognormal : public Process_eq
 {
   public:
     HD Process_eq_lognormal(){};
-    HD Process_eq_lognormal(rnd::MyRandom * gnr);
     HD virtual ~Process_eq_lognormal(){};
     //functions
     HD pricer::udb Get_new_equity_price(
@@ -25,10 +24,11 @@ class Process_eq_lognormal : public Process_eq
               double t_start,
               double t_end);
     
-    HD void  Get_random_structure(Random_numbers* w);
-    HD virtual Equity_prices* Get_new_prices(
+    /*HD void  Get_random_structure(Random_numbers* w);*/
+    HD virtual void Get_new_price(
+              Equity_prices * eq_prices_out,
               Equity_prices  * eq_prices_in,
-              Random_numbers * w,
+              double w,
               double delta_t
             );
 };
