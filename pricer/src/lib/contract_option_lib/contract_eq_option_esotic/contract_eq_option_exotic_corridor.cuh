@@ -68,13 +68,13 @@ HD bool Contract_eq_option_exotic_corridor::Evaluate_log_return(size_t i, const 
 	double S_b;
 	if (i == 0)
 	{
-		S_a = _eq_price->get_number();
-		S_b = path->Get_equity_price(0).get_number()
+		S_a = _eq_price->Get_eq_price().get_number();
+		S_b = path->Get_equity_price(0).Get_eq_price().get_number()
 	}
 	else
 	{
 		S_a = path->Get_equity_price(i - 1).get_number();
-		S_b = path->Get_equity_price(i).get_number();
+		S_b = path->Get_equity_price(i).Get_eq_price().get_number();
 	}
 	
 	if (abs((log(S_a / S_b)) / _delta_t) < _B * _sigma)
