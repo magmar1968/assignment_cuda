@@ -6,7 +6,6 @@
 #include "../lib/support_lib/myRandom/myRandom_gnr/combined.cuh"
 #include "../lib/support_lib/myRandom/myRandom_gnr/tausworth.cuh"
 #include "../lib/support_lib/myRandom/myRandom_gnr/linCongruential.cuh"
-#include "../lib/path_gen_lib/process_eq_imp/process_eq_lognormal_multivariante.cuh"
 #include "../lib/path_gen_lib/process_eq_imp/process_eq_lognormal.cuh"
 #include "../lib/equity_lib/schedule_lib/schedule.cuh"
 #include "../lib/equity_lib/yield_curve_lib/yield_curve.cuh"
@@ -16,14 +15,16 @@
 #include "../lib/option_pricer_lib/option_pricer.cuh"
 #include "../lib/option_pricer_lib/option_pricer_montecarlo/option_pricer_montecarlo.cuh"
 #include "../lib/contract_option_lib/contract_eq_option_vanilla/contract_eq_option_vanilla.cuh"
+#include "../lib/contract_option_lib/contract_eq_option_esotic/contract_eq_option_esotic.cuh"
+#include "../lib/contract_option_lib/contract_eq_option_esotic/contract_eq_option_exotic_corridor.cuh"
 #include "../lib/support_lib/statistic_lib/statistic_lib.cuh"
 #include "../lib/support_lib/myDouble_lib/myudouble.cuh"
 
 
 #define STEPS 5  // number of steps
 #define NEQ 1  //number of equities
-#define NBLOCKS 16  //cuda blocks
-#define TPB 16  //threads per block
+#define NBLOCKS 128  //cuda blocks
+#define TPB 128  //threads per block
 #define PPT 2000
 
 struct Result
@@ -64,9 +65,9 @@ struct Eq_prices_arguments
 
 
 __global__ void kernel_mc(uint*, Schedule_arguments*, Eq_description_arguments*, Eq_prices_arguments*, Vanilla_arguments*, Result*);
-D void simulate_device(uint*, Contract_eq_option_vanilla*, Result*);
-H void simulate_host(uint*, Contract_eq_option_vanilla*, Result*);
-HD void simulate_generic(uint*, int, Contract_eq_option_vanilla*, Result*);
+D void simulate_device(uint*, Contract_eq_option*, Result*);
+H void simulate_host(uint*, Contract_eq_option*, Result*);
+HD void simulate_generic(uint*, int, Contract_eq_option*, Result*);
 
 
 
@@ -104,9 +105,10 @@ __global__ void kernel_mc(uint* dev_seeds,
 
     Equity_prices starting_point_in = Equity_prices(start_time, &(start_prices[0]), NEQ, &(descr[0]));
     Schedule calen = Schedule(dev_sched->tempi, STEPS);
-
-    Contract_eq_option_vanilla contr_opt = Contract_eq_option_vanilla(&starting_point_in, &calen,
-        dev_vnl_args->strike_price, dev_vnl_args->contract_type);
+    Contract_eq_option_exotic_corridor contr_opt = 
+        Contract_eq_option_exotic_corridor(&starting_point_in, &calen,dev_vnl_args->strike_price, dev_vnl_args->contract_type, 1., 1., 10.);
+    //Contract_eq_option_vanilla contr_opt = Contract_eq_opti, on_vanilla(&starting_point_in, &calen,
+        //dev_vnl_args->strike_price, dev_vnl_args->contract_type);
     simulate_device(dev_seeds, &(contr_opt), dev_results);
     for (size_t i = 0; i < NEQ; i++)
     {
@@ -118,7 +120,7 @@ __global__ void kernel_mc(uint* dev_seeds,
 }
 
 D void simulate_device(uint* seeds,
-    Contract_eq_option_vanilla* contr_opt,
+    Contract_eq_option* contr_opt,
     Result* results)
 {
     size_t index = blockIdx.x * blockDim.x + threadIdx.x;
@@ -126,7 +128,7 @@ D void simulate_device(uint* seeds,
 }
 
 H void simulate_host(uint* seeds,
-    Contract_eq_option_vanilla* contr_opt,
+    Contract_eq_option* contr_opt,
     Result* results)
 {
     for (size_t index = 0; index < NBLOCKS * TPB; index++)   //l'espressione che risulta dalla moltiplicazione � il numero totale di threads
@@ -139,7 +141,7 @@ H void simulate_host(uint* seeds,
 
 HD void simulate_generic(uint* seeds,
     int index,
-    Contract_eq_option_vanilla* contr_opt,
+    Contract_eq_option* contr_opt,
     Result* results)
 {
     uint seed0 = seeds[0 + index * 4];
@@ -148,7 +150,7 @@ HD void simulate_generic(uint* seeds,
     uint seed3 = seeds[3 + index * 4];
 
     rnd::GenCombined gnr_in = rnd::GenCombined(seed0, seed1, seed2, seed3);
-    Process_eq_lognormal_multivariante process = Process_eq_lognormal_multivariante(&gnr_in, NEQ);
+    Process_eq_lognormal process = Process_eq_lognormal(&gnr_in, NEQ);
     Option_pricer_montecarlo pric = Option_pricer_montecarlo(contr_opt, &process, PPT);
     results[index].opt_price = pric.Get_price();
     results[index].error = pric.Get_MonteCarlo_error();
@@ -178,7 +180,7 @@ int main(int argc, char** argv)
 
     Vanilla_arguments* vnl_args = new Vanilla_arguments;
 
-    vnl_args->contract_type = 'C';
+    vnl_args->contract_type = 'P';
     vnl_args->strike_price = 100;
 
 
@@ -186,7 +188,7 @@ int main(int argc, char** argv)
 
     Schedule_arguments* sch_args = new Schedule_arguments;
 
-    double dt = 0.3;
+    double dt = 1.;
     for (size_t k = 0; k < STEPS; k++)
     {
         sch_args->tempi[k] = (k + 1) * dt;
@@ -197,7 +199,7 @@ int main(int argc, char** argv)
 
     for (size_t i = 0; i < STEPS; i++)
     {
-        dscrp_args->vol[i] = 0.001;
+        dscrp_args->vol[i] = 1.;
     }
     strcpy(dscrp_args->isin_code, "qw");
     strcpy(dscrp_args->name, "o");
@@ -205,14 +207,14 @@ int main(int argc, char** argv)
     dscrp_args->div_yield = 0;
     for (size_t k = 0; k < STEPS; k++)
     {
-        dscrp_args->yc[k] = 0.5;
+        dscrp_args->yc[k] = 2.;
     }
 
 
 
     Eq_prices_arguments* prices_args = new Eq_prices_arguments;
 
-    prices_args->start_time = 0;
+    prices_args->start_time = -1.;
     for (size_t k = 0; k < NEQ; k++)
     {
         prices_args->start_prices[k] = (k + 1) * 100;
@@ -254,11 +256,12 @@ int main(int argc, char** argv)
 
         Schedule* calen = new Schedule(sch_args->tempi, STEPS);
 
-        Contract_eq_option_vanilla* contr_opt;
-        contr_opt = new Contract_eq_option_vanilla(starting_point_in, calen,
-            vnl_args->strike_price, vnl_args->contract_type);
-
-        simulate_host(seeds, contr_opt, host_results);
+        //Contract_eq_option_vanilla* contr_opt;
+        //contr_opt = new Contract_eq_option_vanilla(starting_point_in, calen,
+            //vnl_args->strike_price, vnl_args->contract_type);
+        Contract_eq_option_exotic_corridor contr_opt =
+            Contract_eq_option_exotic_corridor(starting_point_in, calen, vnl_args->strike_price, vnl_args->contract_type, 1., 1., 1.);
+        simulate_host(seeds, &contr_opt, host_results);
     }
 
 
@@ -359,7 +362,7 @@ int main(int argc, char** argv)
     final_res.opt_price /= double(NBLOCKS * TPB);
     final_res.error = sqrt(final_res.error / double(NBLOCKS * TPB * PPT) - final_res.opt_price * final_res.opt_price);
 
-    std::cout << "\n" << final_res.opt_price << std::endl;
+    std::cout << "\n" << final_res.opt_price << std::endl;    
     std::cout << final_res.error << std::endl;
     if (final_res.opt_price - 111.7 < 3 * final_res.error)
         return 0;
