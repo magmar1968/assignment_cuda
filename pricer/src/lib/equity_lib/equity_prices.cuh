@@ -1,9 +1,9 @@
 /**
  * @file equity_prices.cuh
  * @author Lorenzo Magnoni - Andrea Ripamonti
- * @brief  Tiene traccia del prezzo di un determinato numero (_dim) di sottostanti
- *         al tempo _time. I sottostanti interessati sono contenuti nel vettore 
- *         _eq_descr. La classe può lavorare sia su device che host
+ * @brief  Tiene traccia del prezzo di un sottostante al tempo _time.
+ *         Il sottostante interessato è contenuto in eq_descr. 
+ *         La classe può lavorare sia su device che host
  * 
  */
 #ifndef __EQUITY_PRICES__
@@ -18,75 +18,44 @@
 class Equity_prices
 {
   private:
-    double   _time;      //current time
-    pricer::udb * _prices;    //current price
-    size_t   _dim;       //# equities
-    Equity_description ** _eq_descr;
+    double               _time;      //current time
+    pricer::udb          _price;    //current price
+    Equity_description * _eq_descr;   
   
   public:
     //constructors & destructors
     HD Equity_prices(){} ;
     HD Equity_prices(double time,
-                  pricer::udb * prices,
-                  size_t   dim,
-                  Equity_description ** equity_descriptions)
-        :_time(time),_dim(dim)
+                    pricer::udb  price,                               
+                    Equity_description * equity_descriptions)
+        :_time(time)
     {
-        _prices = prices;
-        _eq_descr = equity_descriptions;
+        _price = price;
+        _eq_descr = equity_descriptions; 
     }
-    HD Equity_prices(size_t dim)
-        :_dim(dim)
+    HD Equity_prices()
     {
-        _prices = new pricer::udb[_dim];
-        _eq_descr = new Equity_description*[_dim];
+        _eq_descr = new Equity_description;
     }
     HD ~Equity_prices()
     {
-	    delete[](_prices);
-	    //delete[](_eq_descr);
+        delete(_eq_descr); 
     }
 
     // getter & setter
-    HD double Get_time()const{ return _time;}
-    HD pricer::udb Get_eq_price(const size_t i) const
+    HD double      Get_time()     const{ return _time;}
+    HD pricer::udb Get_eq_price() const{ return _price;}
+    HD Equity_description * Get_eq_description() const // ha senso?
     {
-        if(i < _dim)
-            return _prices[i];
-        else
-            return -100;// exit(1); //forse non funzica su cuda
-    }
-    HD pricer::udb Get_eq_price() const {return Get_eq_price(0);}
-    HD size_t Get_dim() const {return _dim;}
+        return _eq_descr;
+    }    
 
-    HD Equity_description * Get_eq_description(const size_t i) const
-    {
-        if (i < _dim)
-            return _eq_descr[i];
-        else
-            return NULL; //exit(1); //forse non funzica su cuda
-    }
-    HD Equity_description * Get_eq_description() const {return Get_eq_description(0);}
-    
     //setters
-    HD void Set_time(double t) {_time = t;}
-
-    HD void Set_eq_price(size_t i, pricer::udb price)
+    HD void Set_time(double t)             { _time  = t;}
+    HD void Set_eq_price(pricer::udb price){ _price = price;}
+    HD void Set_eq_description( Equity_description * eq_description)
     {
-        if (i < _dim)
-            _prices[i] = price;
-        else
-           ;// exit(1); //forse non funzica su cuda
-    }
-    HD void Set_eq_price(pricer::udb price){ Set_eq_price(0,price);}
-
-    HD void Set_eq_description(size_t i , Equity_description * eq_description)
-    {
-        _eq_descr[i] = eq_description; 
-    }
-    HD void Set_eq_description(Equity_description * eq_description)
-    {
-        Set_eq_description(0,eq_description);
+        _eq_descr = eq_description; 
     }
 };
 

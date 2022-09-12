@@ -20,15 +20,12 @@ HD Schedule::Schedule(double t_ref, double delta_t, int dim)
             _t[i] = t_ref + delta_t * i;
         }
     }
-        
-        
 }
 
 
 HD Schedule::Schedule(double* t_init, int dim)
     :_dim(dim)
 {
-
     _t = new double[dim];
     for (int i = 0; i < _dim; i++)
     {

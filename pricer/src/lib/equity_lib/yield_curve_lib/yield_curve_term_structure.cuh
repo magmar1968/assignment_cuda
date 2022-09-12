@@ -18,16 +18,16 @@ class Yield_curve_term_structure : public Yield_curve
     //constructor & destructors
     HD Yield_curve_term_structure(){}
 
-    HD Yield_curve_term_structure(char   * currency_init,
-                               double * rate_deposit,
-                               double * t_deposit,
-                               int      num_deposit,
-                               double * rate_swap,
-                               double * t_swap,
-                               int      num_swap )
-    {
-        // to implement
-    }
+    // HD Yield_curve_term_structure(char   * currency_init,
+    //                            double * rate_deposit,
+    //                            double * t_deposit,
+    //                            int      num_deposit,
+    //                            double * rate_swap,
+    //                            double * t_swap,
+    //                            int      num_swap )
+    // {
+    //     // to implement
+    // }
 
     HD Yield_curve_term_structure(
                                char   * currency,
@@ -67,9 +67,6 @@ class Yield_curve_term_structure : public Yield_curve
         double rate_end = Get_spot_rate(t_end);
 
         return (rate_end * t_end - rate_start * t_start) / (t_end - t_start);
-
-        
-
     } 
 
 };

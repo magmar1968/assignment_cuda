@@ -11,17 +11,7 @@
 class Process
 {
   private:
-    rnd::MyRandom* _gnr; //random number generator
-  protected:
-    HD double Get_random_gaussian()
-    {
-      if(_gnr -> Get_status())
-          return _gnr->genGaussian();
-      else 
-          return -100;
-          // exit(2);
-    }
-
+    rnd::MyRandom * _gnr; //random number generator
   public:
     //default constructor
     HD Process(){};
@@ -30,8 +20,17 @@ class Process
         :_gnr(gnr)
     {}
     HD virtual ~Process(){}
-    //functions
-    HD double Get_random_uniform()
+    //functions 
+
+    HD double Get_random_gaussian()
+    {
+      if(_gnr -> Get_status())
+          return _gnr->genGaussian();
+      else 
+          return -100;
+    }
+
+    HD double Get_random_uniform() //??
     {
         if(_gnr->Get_status())
             return _gnr->genUniform();

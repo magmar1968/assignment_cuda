@@ -8,9 +8,9 @@
 class Schedule {
 
 	private:
-		double* _t;
-		int _dim;
-		bool _ascending;
+		double * _t;         //array of dates 
+		int      _dim;       
+		bool     _ascending;
 	public:
 		HD Schedule(void){};
 		HD Schedule(double t_ref, double delta_t, int dim);

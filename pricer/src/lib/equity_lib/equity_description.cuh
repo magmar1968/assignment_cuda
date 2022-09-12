@@ -57,9 +57,8 @@ class Equity_description
     HD void Set_name(char * name)          {_name = name;}
     HD void Set_currency(char * currency)  {_currency = currency;}
     HD void Set_dividend_yield(double yield){_dividend_yield = yield;}
-    HD void Set_yc(Yield_curve * yc){_yc = yc;}
-    HD void Set_vol_surface(Volatility_surface * vol_surf)
-    {_vol_surf = vol_surf;}
+    HD void Set_yc(Yield_curve * yc)                       {_yc = yc;}
+    HD void Set_vol_surface(Volatility_surface * vol_surf) {_vol_surf = vol_surf;}
 
 
 };
