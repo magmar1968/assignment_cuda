@@ -26,8 +26,8 @@ class Process_eq_lognormal : public Process
               double t_end);
     
     
-    HD virtual Equity_prices* Get_new_prices(
-               Equity_prices  * eq_prices_in,
+    HD virtual Equity_prices * Get_new_prices(
+               Equity_prices * eq_prices_in,
                double w,
                double delta_t
             );

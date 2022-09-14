@@ -17,6 +17,7 @@ class Path {
   private:
 	Equity_prices  * _starting_point;
 	Equity_prices* * _eq_prices_scenario;
+	Schedule       * _schedule; 
 	double         * _random_numbers_scenario;
 	size_t           _dim;  //number of steps
 	size_t           _start_ind;
@@ -43,6 +44,7 @@ class Path {
 	HD Equity_prices * operator[](size_t i) const;
 	HD void regen_path(Schedule  * schedule,
 					   Process_eq_lognormal* process_eq);
+	HD void regen_path(Process_eq_lognormal * process_eq);
 	// HD void destroy ();
 
 };

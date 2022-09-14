@@ -16,7 +16,7 @@ class Option_pricer
 // Constructors & destructors
     HD Option_pricer(void){}
     HD Option_pricer(Contract_option *contract_option,
-                  Process         *process)
+                     Process         *process)
         :_contract_option(contract_option),_process(process)
     {}
     HD virtual ~Option_pricer(void) {};

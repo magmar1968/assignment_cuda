@@ -2,15 +2,15 @@
 
 __host__ __device__
 Path::Path(Equity_prices * starting_point,
-		   Schedule     * schedule,
+		   Schedule      * schedule,
 		   Process_eq_lognormal   * process_eq)
-	:_starting_point(starting_point)
+	:_starting_point(starting_point), _schedule(schedule)
 {
 
-	_dim = schedule -> Get_dim(); // n schedule steps
+	_dim = _schedule -> Get_dim(); // n schedule steps
 	_random_numbers_scenario = new double[_dim];
 	_eq_prices_scenario      = new Equity_prices*[_dim];
-	gen_path(schedule, process_eq);
+	gen_path(_schedule, process_eq);
 }
 
 __host__ __device__
@@ -117,4 +117,9 @@ Path::regen_path(Schedule  * schedule,
 	gen_path(schedule,process_eq);
 }
 
+__host__ __device__ void 
+Path::regen_path(Process_eq_lognormal * process_eq)
+{
+	gen_path(_schedule, process_eq);
+}
 

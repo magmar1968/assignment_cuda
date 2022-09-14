@@ -23,7 +23,7 @@ class Contract_eq_option : public Contract_option
 
     HD virtual ~Contract_eq_option(void){}
     
-    HD virtual double Pay_off(const Path *path){return 0.;} ;
+    HD virtual double Pay_off(const Path *path) = 0 ;
 
     HD Equity_prices * Get_eq_prices() const
     {return _eq_prices;}
