@@ -72,8 +72,6 @@ Option_pricer_montecarlo::simulate_option()
     delete[](pay_off);delete[](pay_off2);
 }
 
-
-
 /**
  * @brief compute the MC error according to the formula:
  * \sigma_{MC} = \sigma/\sqrt(N)         
