@@ -1,7 +1,7 @@
 /*myudouble source file*/
 #include <cassert>
 #include "myudouble.cuh"
-namespace pricer
+namespace prcr
 {
 
     HD myudouble::myudouble(double number)

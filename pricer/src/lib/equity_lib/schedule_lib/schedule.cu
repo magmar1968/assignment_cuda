@@ -1,84 +1,87 @@
 ﻿#include "schedule.cuh"
 
-
-
-HD Schedule::Schedule(double t_ref, double delta_t, int dim)
-    :_dim(dim)
+namespace prcr
 {
-    _t = new double[_dim];
-    if(delta_t<0)
+    HD Schedule::Schedule(double t_ref, double delta_t, int dim)
+        :_dim(dim)
     {
-        for(int i = 0; i < _dim; i++)
+        _t = new double[_dim];
+        if(delta_t<0)
         {
-            _t[_dim -i] = t_ref + delta_t * i;
+            for(int i = 0; i < _dim; i++)
+            {
+                _t[_dim -i] = t_ref + delta_t * i;
+            }
+        }
+        else
+        {
+            for (int i = 0; i < _dim; i++)
+            {
+                _t[i] = t_ref + delta_t * i;
+            }
         }
     }
-    else
+
+
+    HD Schedule::Schedule(double* t_init, int dim)
+        :_dim(dim)
+    {
+        _t = new double[dim];
+        for (int i = 0; i < _dim; i++)
+        {
+            _t[i] = t_init[i];
+        }
+        if(Check_order())
+        {
+            _ascending = true;
+        }
+        else
+        {
+            for (int i = 0; i < _dim; i++)
+            {
+                _t[i] = 0;
+            }
+            _ascending = false;// non bellissimo
+        }
+    }
+
+    HD double Schedule::Get_t(int i) const
+    {
+        if (i < _dim) { return _t[i]; }
+        else { return 0; }
+        
+    }
+
+    HD void Schedule::Get_t_vector(double* ptr) const
     {
         for (int i = 0; i < _dim; i++)
         {
-            _t[i] = t_ref + delta_t * i;
+            ptr[i] = _t[i];
         }
     }
-}
 
+    HD int Schedule::Get_dim(void) const
+    {
+        return _dim;
+    }
 
-HD Schedule::Schedule(double* t_init, int dim)
-    :_dim(dim)
-{
-    _t = new double[dim];
-    for (int i = 0; i < _dim; i++)
+    HD bool Schedule::Check_order() const
     {
-        _t[i] = t_init[i];
-    }
-    if(Check_order())
-    {
-        _ascending = true;
-    }
-    else
-    {
-        for (int i = 0; i < _dim; i++)
+        for (int i = 1; i < _dim; i++)
         {
-            _t[i] = 0;
+            if (_t[i] <= _t[i - 1]) { return false; }
         }
-        _ascending = false;// non bellissimo
+        return true;
     }
-}
 
-HD double Schedule::Get_t(int i) const
-{
-    if (i < _dim) { return _t[i]; }
-    else { return 0; }
-    
-}
-
-HD void Schedule::Get_t_vector(double* ptr) const
-{
-    for (int i = 0; i < _dim; i++)
+    HD bool Schedule::Get_order() const
     {
-        ptr[i] = _t[i];
+        return _ascending;
     }
-}
-
-HD int Schedule::Get_dim(void) const
-{
-    return _dim;
-}
-
-HD bool Schedule::Check_order() const
-{
-    for (int i = 1; i < _dim; i++)
+    HD Schedule::~Schedule()
     {
-        if (_t[i] <= _t[i - 1]) { return false; }
-    }
-    return true;
+        delete[](_t);
+    }	
+
 }
 
-HD bool Schedule::Get_order() const
-{
-    return _ascending;
-}
-HD Schedule::~Schedule()
-{
-	delete[](_t);
-}	

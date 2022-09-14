@@ -3,7 +3,7 @@
 #include <math.h>
 
 /*Classe per i prices, option prices must be >0*/
-namespace pricer
+namespace prcr
 {
 
 
@@ -43,7 +43,7 @@ namespace pricer
     private:
         double  _number;      
     };
-    typedef pricer::myudouble udb;
+    typedef prcr::myudouble udb;
 
 
     HD inline myudouble operator+(myudouble& lhs, const myudouble& rhs)

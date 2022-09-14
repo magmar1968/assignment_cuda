@@ -3,24 +3,27 @@
 
 #include "../equity_lib/schedule_lib/schedule.cuh"
 
-
-#define HD __host__ __device__ 
-
-class Contract_option
+namespace prcr
 {
-  private:
-    Schedule * _schedule ;
+  #define HD __host__ __device__ 
 
-  public:
-    //constructor & destructor 
-    HD Contract_option(void){}
-    HD Contract_option(Schedule *schedule)
-        :_schedule(schedule)
-        {}
-    HD virtual ~Contract_option(void) {}
+  class Contract_option
+  {
+    private:
+      Schedule * _schedule ;
 
-    HD Schedule * Get_schedule()const{return _schedule;}
-};
+    public:
+      //constructor & destructor 
+      HD Contract_option(void){}
+      HD Contract_option(Schedule *schedule)
+          :_schedule(schedule)
+          {}
+      HD virtual ~Contract_option(void) {}
+
+      HD Schedule * Get_schedule()const{return _schedule;}
+  };
+}
+
 
 
 
