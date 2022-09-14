@@ -19,7 +19,7 @@ Option_pricer_montecarlo::Get_price() const
 __host__ __device__ double 
 Option_pricer_montecarlo::Get_MonteCarlo_error() const
 {
-    return _error;
+    return 0.; ///DA IMPLEMENTARE!!!!
 }
 
 __host__ __device__ size_t
@@ -53,20 +53,20 @@ Option_pricer_montecarlo::simulate_option()
     Schedule * schedule = contract.Get_schedule();
     Equity_prices * starting_point = contract.Get_eq_prices();
     Path  path =  Path(starting_point,schedule,
-                        &static_cast<Process_eq&>(*_process));
+                        &static_cast<Process_eq_lognormal&>(*_process));
 
     for(size_t i = 0; i < _N; ++i)
     {
 
         pay_off[i] = contract.Pay_off(&path);
         pay_off2[i] = pay_off[i]*pay_off[i];
-	path.destroy();
-        path.regen_path(schedule,&static_cast<Process_eq&>(*_process));
+	
+        path.regen_path();
     }    
 
     
     _price = prcr::avg(pay_off,_N);
-    _error = prcr::sum_array(pay_off2,_N);  //così è la somma dei quadrati ---> forse meglio cambiargli nome
+    _price_square = prcr::sum_array(pay_off2,_N);  //cos'Ã¨ la somma dei quadrati ---> forse meglio cambiargli nome
 
     delete[](pay_off);delete[](pay_off2);
 }

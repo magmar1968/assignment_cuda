@@ -11,7 +11,7 @@ class Option_pricer_montecarlo : public Option_pricer
 {
   private:
     size_t _N; // number of montecarlo simulations
-    double _error;
+    double _price_square;
     double _price;
   public:
     //constructors & destructors 

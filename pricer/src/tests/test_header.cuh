@@ -19,3 +19,7 @@ struct eq_info
     
 };
 
+int main()
+{
+    return 0;
+}

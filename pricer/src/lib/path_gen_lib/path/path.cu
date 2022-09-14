@@ -10,7 +10,7 @@ Path::Path(Equity_prices * starting_point,
 	_dim = _schedule -> Get_dim(); // n schedule steps
 	_random_numbers_scenario = new double[_dim];
 	_eq_prices_scenario      = new Equity_prices*[_dim];
-	gen_path(_schedule, process_eq);
+	gen_path();
 }
 
 __host__ __device__
@@ -31,35 +31,34 @@ __host__ __device__ Path::~Path()
 }
 
 __host__ __device__ void
-Path::gen_path(Schedule * schedule,
-               Process_eq_lognormal * process_eq)
+Path::gen_path()
 {
 	double start_t = _starting_point -> Get_time();	
 	//check for starting point in the schedule
 	//maybe better in another function
 	for(size_t k = 0; k < _dim; k++)
 	{
-		if(start_t <= schedule->Get_t(k))
+		if(start_t <= _schedule->Get_t(k))
 		{
 			_start_ind = k;
 			break;                                                     //tutto questo pezzo va discusso meglio
 		}
 	}
 
-	double delta_t = schedule->Get_t(_start_ind) - start_t;   //first step, from starting_point
-	_random_numbers_scenario[_start_ind] = process_eq->Get_random_gaussian();
+	double delta_t = _schedule->Get_t(_start_ind) - start_t;   //first step, from starting_point
+	_random_numbers_scenario[_start_ind] = _process_eq_lognormal->Get_random_gaussian();
  
 	
-	_eq_prices_scenario[_start_ind] = process_eq->Get_new_prices(_starting_point, _random_numbers_scenario[_start_ind], delta_t);
+	_eq_prices_scenario[_start_ind] = _process_eq_lognormal->Get_new_prices(_starting_point, _random_numbers_scenario[_start_ind], delta_t);
 
 	for (size_t j =  _start_ind + 1; j < _dim; j++)
 	{
-		delta_t = schedule->Get_t(j) - schedule->Get_t(j-1);
+		delta_t = _schedule->Get_t(j) - _schedule->Get_t(j-1);
 
-		_random_numbers_scenario[j] = process_eq->Get_random_gaussian(); 
+		_random_numbers_scenario[j] = _process_eq_lognormal->Get_random_gaussian(); 
 		// _eq_prices_scenario[j] = NULL;
 		_eq_prices_scenario[j] = 
-			process_eq->Get_new_prices(_eq_prices_scenario[j - 1], _random_numbers_scenario[j],delta_t); 
+			_process_eq_lognormal->Get_new_prices(_eq_prices_scenario[j - 1], _random_numbers_scenario[j],delta_t); 
 		
 	}
 }
@@ -110,16 +109,10 @@ Path::operator[](size_t i)const
 }
 
 
-__host__ __device__ void
-Path::regen_path(Schedule  * schedule,
-				 Process_eq_lognormal* process_eq)
-{
-	gen_path(schedule,process_eq);
-}
 
 __host__ __device__ void 
-Path::regen_path(Process_eq_lognormal * process_eq)
+Path::regen_path()
 {
-	gen_path(_schedule, process_eq);
+	gen_path();
 }
 

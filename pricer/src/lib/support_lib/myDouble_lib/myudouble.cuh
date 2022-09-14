@@ -1,5 +1,6 @@
 #ifndef __MYUDOUBLE__
 #define __MYUDOUBLE__
+#include <math.h>
 
 /*Classe per i prices, option prices must be >0*/
 namespace pricer
@@ -27,9 +28,12 @@ namespace pricer
         HD void operator=(const myudouble& rhs);
         HD void operator=(const double& rhs);
 
+         
+     
         HD myudouble& operator+=(const myudouble& rhs);
         HD myudouble& operator*=(const myudouble& rhs);
 
+        
         // HD double& operator*(const myudouble& rhs)
         // {
         //     return _number;
@@ -40,6 +44,7 @@ namespace pricer
         double  _number;      
     };
     typedef pricer::myudouble udb;
+
 
     HD inline myudouble operator+(myudouble& lhs, const myudouble& rhs)
     {
