@@ -6,7 +6,6 @@ CC          := nvcc
 #The Target Binary Program
 TARGET      := #pricer
 TEST        := $(basename $(notdir $(wildcard ./src/tests/*.cu)))
-#TEST        := $(basename $(notdir $(wildcard ./src/tests/test_file_pars.cu)))
 #The Directories, Source, Includes, Objects, Binary and Resources
 SRCDIR      := src
 INCDIR      := inc
@@ -16,10 +15,10 @@ SRCEXT      := cu
 DEPEXT      := d
 OBJEXT      := o
 #Flags, Libraries and Includes
-LDFLAGS  =  -std=c++11 -Xnvlink --disable-warnings
+LDFLAGS  = -std=c++11 -Xnvlink --disable-warnings
 CCFLAGS := -rdc=true  -std=c++11  -Wno-deprecated-gpu-targets
-# INC         := -I$(INCDIR) -I/usr/local/include
-# INCDEP      := -I$(INCDIR)
+INC         := -I$(INCDIR) -I/usr/local/include
+INCDEP      := -I$(INCDIR)
 
 SOURCES     := $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
 OBJECTS     := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.$(OBJEXT)))

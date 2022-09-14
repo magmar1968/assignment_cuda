@@ -17,9 +17,9 @@ Option_pricer_montecarlo::Get_price() const
 }
 
 __host__ __device__ double 
-Option_pricer_montecarlo::Get_MonteCarlo_error() const
+Option_pricer_montecarlo::Get_MC_error() const
 {
-    return 0.; ///DA IMPLEMENTARE!!!!
+    return _MC_error;
 }
 
 __host__ __device__ size_t
@@ -63,12 +63,27 @@ Option_pricer_montecarlo::simulate_option()
 	
         path.regen_path();
     }    
-
     
     _price = prcr::avg(pay_off,_N);
     _price_square = prcr::sum_array(pay_off2,_N);  //cos'è la somma dei quadrati ---> forse meglio cambiargli nome
 
+    compute_MC_error();
+
     delete[](pay_off);delete[](pay_off2);
+}
+
+
+
+/**
+ * @brief compute the MC error according to the formula:
+ * \sigma_{MC} = \sigma/\sqrt(N)         
+ * \sigma = <f^2> - <f>^2 
+ */
+__host__ __device__ void
+Option_pricer_montecarlo::compute_MC_error()
+{
+    _MC_error =  (_price_square/static_cast<double>(_N) - _price*_price)/ //sigma 
+                                                 sqrt(static_cast<double>(_N));
 }
 
 

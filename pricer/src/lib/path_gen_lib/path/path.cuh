@@ -4,7 +4,6 @@
 #include "../process.cuh"
 #include "../process_eq_imp/process_eq_lognormal.cuh"
 #include "../../equity_lib/equity_prices.cuh"
-#include "../../support_lib/myRandom/random_numbers.cuh"
 #include "../../equity_lib/schedule_lib/schedule.cuh"
 
 
@@ -37,7 +36,7 @@ class Path {
 	//getter & setters
 	HD Equity_prices  * Get_starting_point(void) const;
 	HD Equity_prices  * Get_equity_prices(size_t i) const; //forse togliere il puntatore???
-	HD Random_numbers   Get_random_numbers(size_t i) const;
+	HD double           Get_random_numbers(size_t i) const;
 	HD size_t Get_dim(void) const;
 	HD size_t Get_start_ind() const;
 	//functions
