@@ -2,6 +2,10 @@
 #define __MYTIMER__
 
 #include <chrono>
+#include <iostream>
+namespace prcr
+{
+
 class Timer
 {
 public:
@@ -41,5 +45,6 @@ public:
 private:
     std::chrono::time_point< std::chrono::high_resolution_clock> _StartTimepoint;
 };
+}
 
 #endif
