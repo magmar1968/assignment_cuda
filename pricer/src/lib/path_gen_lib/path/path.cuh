@@ -14,9 +14,9 @@
 
 
 class Path {
-private:
-	Equity_prices    _starting_point;
-	Equity_prices  * _eq_prices_scenario;
+  private:
+	Equity_prices  * _starting_point;
+	Equity_prices* * _eq_prices_scenario;
 	double         * _random_numbers_scenario;
 	size_t           _dim;  //number of steps
 	size_t           _start_ind;
@@ -24,10 +24,10 @@ private:
 
 	HD void gen_path(Schedule  * schedule,
 					 Process_eq_lognormal* process_eq);
-public:
+  public:
 	//constructors & destructors
 	HD Path(void){};
-	HD Path(Equity_prices starting_point,
+	HD Path(Equity_prices* starting_point,
 			Schedule     * schedule,
 			Process_eq_lognormal   * process_eq);
 	HD Path(Path* path);
@@ -36,7 +36,7 @@ public:
 	//getter & setters
 	HD Equity_prices  * Get_starting_point(void) const;
 	HD Equity_prices  * Get_equity_prices(size_t i) const; //forse togliere il puntatore???
-	HD Random_numbers * Get_random_numbers(size_t i) const;
+	HD Random_numbers   Get_random_numbers(size_t i) const;
 	HD size_t Get_dim(void) const;
 	HD size_t Get_start_ind() const;
 	//functions
