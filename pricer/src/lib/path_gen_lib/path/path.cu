@@ -80,13 +80,13 @@ Path::Get_equity_prices(size_t i) const
 		return NULL; //exit(1);// probably it doesn't work on cuda
 }
 
-__host__ __device__ Random_numbers
+__host__ __device__ double
 Path::Get_random_numbers(size_t i) const
 {
 	if(i < _dim)
 		return _random_numbers_scenario[i];
 	else 
-		return NULL; //exit(1);
+		return -100; //exit(1);
 }
 
 __host__ __device__ size_t

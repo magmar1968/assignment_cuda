@@ -24,7 +24,10 @@ class Equity_prices
   
   public:
     //constructors & destructors
-    HD Equity_prices(){} ;
+    HD Equity_prices()
+    {
+        _eq_descr = new Equity_description;
+    }
     HD Equity_prices(double time,
                     pricer::udb  price,                               
                     Equity_description * equity_descriptions)
@@ -33,10 +36,7 @@ class Equity_prices
         _price = price;
         _eq_descr = equity_descriptions; 
     }
-    HD Equity_prices()
-    {
-        _eq_descr = new Equity_description;
-    }
+    
     HD ~Equity_prices()
     {
         delete(_eq_descr); 

@@ -11,8 +11,9 @@ class Option_pricer_montecarlo : public Option_pricer
 {
   private:
     size_t _N; // number of montecarlo simulations
-    double _price_square;
-    double _price;
+    double _price, _price_square;
+    double _MC_error;
+
   public:
     //constructors & destructors 
     HD Option_pricer_montecarlo(){}
@@ -23,8 +24,8 @@ class Option_pricer_montecarlo : public Option_pricer
     HD ~Option_pricer_montecarlo(){}
     //getters & setters
     HD double Get_price() const;
-    HD double Get_MonteCarlo_error() const;
-    HD size_t   Get_N() const;
+    HD double Get_MC_error() const;
+    HD size_t Get_N() const;
 
     HD void Set_N(size_t N);
 
@@ -32,6 +33,7 @@ class Option_pricer_montecarlo : public Option_pricer
     HD void resimulate_option();
   private:
     HD void simulate_option();
+    HD void compute_MC_error();
 
     
 
