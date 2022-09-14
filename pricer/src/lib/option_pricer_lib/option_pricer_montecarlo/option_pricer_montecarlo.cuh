@@ -34,9 +34,6 @@ class Option_pricer_montecarlo : public Option_pricer
   private:
     HD void simulate_option();
     HD void compute_MC_error();
-
-    
-
     
 };
 #endif

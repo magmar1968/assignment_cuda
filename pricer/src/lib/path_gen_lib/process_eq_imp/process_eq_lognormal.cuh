@@ -13,9 +13,11 @@
 
 class Process_eq_lognormal : public Process
 {
+  private:
+    bool _exact_solution;
   public:
     HD Process_eq_lognormal(){};
-    HD Process_eq_lognormal(rnd::MyRandom * gnr);
+    HD Process_eq_lognormal(rnd::MyRandom * gnr, double exact_solution = true);
     HD virtual ~Process_eq_lognormal(){};
     //functions
     HD pricer::udb Get_new_equity_price(
@@ -31,6 +33,27 @@ class Process_eq_lognormal : public Process
                double w,
                double delta_t
             );
+
+  HD void Set_to_approximate_solution(){_exact_solution = false;}
+  HD void Set_to_exact_solution()      {_exact_solution = true; }
+  //functions 
+  private:
+    HD pricer::udb compute_eq_price_exact(
+                    pricer::udb eq_price,
+                    double r,
+                    double div_yield,
+                    double delta_t,
+                    double w,
+                    double sigma);
+    HD pricer::udb compute_eq_price_approximate(
+                    pricer::udb eq_price,
+                    double r,
+                    double div_yield,
+                    double delta_t,
+                    double w,
+                    double sigma);
+
+
 };
 
 

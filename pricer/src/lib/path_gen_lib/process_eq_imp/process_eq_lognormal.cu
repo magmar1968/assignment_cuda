@@ -1,8 +1,8 @@
 #include "process_eq_lognormal.cuh"
 
 __host__ __device__
-Process_eq_lognormal::Process_eq_lognormal(rnd::MyRandom * gnr)
-    :Process(gnr)
+Process_eq_lognormal::Process_eq_lognormal(rnd::MyRandom * gnr,double exact_solution)
+    :Process(gnr),_exact_solution(exact_solution)
 {
 }
 
@@ -22,10 +22,37 @@ Process_eq_lognormal::Get_new_equity_price(
     double sigma = eq_descr -> Get_vol_surface() -> Get_volatility(t_start,t_end);
     double delta_t = t_end - t_start;
 
+    if ( _exact_solution)
+        return compute_eq_price_exact(eq_price,r,div_yield,delta_t,w,sigma);
+    else 
+        return compute_eq_price_approximate(eq_price,r,div_yield,delta_t,w,sigma);
+
+}
+
+__host__ __device__ pricer::udb
+Process_eq_lognormal::compute_eq_price_exact(
+                    pricer::udb eq_price,
+                    double r,
+                    double div_yield,
+                    double delta_t,
+                    double w,
+                    double sigma)
+{
     return eq_price * exp( (r - div_yield - 0.5*sigma*sigma) *
            delta_t + sigma * sqrt(delta_t) * w ) ;
 }
 
+__host__ __device__ pricer::udb
+Process_eq_lognormal::compute_eq_price_approximate(
+                    pricer::udb eq_price,
+                    double r,
+                    double div_yield,
+                    double delta_t,
+                    double w,
+                    double sigma)
+{
+    return eq_price*(1 + (r - div_yield)*delta_t + sigma* sqrt(delta_t)*w); //should be right, but not totally sure
+}
 
 __host__ __device__ Equity_prices * 
 Process_eq_lognormal::Get_new_prices(
