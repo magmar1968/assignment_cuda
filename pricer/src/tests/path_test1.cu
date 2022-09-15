@@ -122,6 +122,7 @@ H void simulate_host(uint* seeds,
 {
     for (size_t index = 0; index < NBLOCKS * TPB; index++)
     {
+        results[index] = 0;
         simulate_generic(seeds, index, contr_opt, results, host_bool);
     }
 }
@@ -138,11 +139,9 @@ HD void simulate_generic(uint* seeds,
     uint seed2 = seeds[2 + index * 4];
     uint seed3 = seeds[3 + index * 4];
 
-    results[index] = 0;
     rnd::GenCombined* gnr_in = new rnd::GenCombined(seed0, seed1, seed2, seed3);
     Process_eq_lognormal* process = new Process_eq_lognormal(gnr_in);
     
-    //results[index] = 1;
     Path* cammino = new Path(contr_opt->Get_eq_prices(), contr_opt->Get_schedule(), &static_cast<Process_eq_lognormal&>(*process));
     results[index] += cammino->Get_equity_prices(STEPS - 1)->Get_eq_price().get_number();
     delete(cammino);
