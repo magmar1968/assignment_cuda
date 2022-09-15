@@ -22,7 +22,7 @@ INCDEP      := -I$(INCDIR)
 
 SOURCES     := $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
 OBJECTS     := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.$(OBJEXT)))
-# FILTER_OBJ  := $(call FILTER_OUT,test, $(OBJECTS))
+FILTER_OBJ  := $(call FILTER_OUT,test, $(OBJECTS))
 
 #Defauilt Make
 all: resources $(TEST) #$(TARGET) #compile all

@@ -16,6 +16,7 @@
 #include "../lib/support_lib/statistic_lib/statistic_lib.cuh"
 #include "../lib/support_lib/myDouble_lib/myudouble.cuh"
 
+using namespace prcr;
 
 //in questo test creiamo path e memorizziamo last step, poi mediamo (no calcolo payoff ecc)
 
@@ -49,7 +50,7 @@ struct Eq_description_data
 
 struct Eq_prices_data
 {
-    pricer::udb start_prices;
+    udb start_prices;
     double start_time;
 };
 
@@ -90,7 +91,7 @@ __global__ void kernel_mc(uint* dev_seeds,
 
 
         double start_time = dev_prices->start_time;
-        pricer::udb start_prices;
+        udb start_prices;
         start_prices = dev_prices->start_prices;
     Equity_prices* starting_point_in = new Equity_prices(start_time, start_prices, descr);
 
@@ -100,16 +101,6 @@ __global__ void kernel_mc(uint* dev_seeds,
         dev_vnl_args->strike_price, dev_vnl_args->contract_type);
     simulate_device(dev_seeds, contr_opt, dev_results, cuda_bool);
     
-    //delete(descr);
-    
-
-    //delete[] (start_prices);
-    //delete[] (descr);
-    /*delete(vol);
-    delete(yc);
-    delete(starting_point_in);
-    delete(calen);
-    delete(contr_opt);*/
 
 
 
@@ -146,13 +137,15 @@ HD void simulate_generic(uint* seeds,
     uint seed1 = seeds[1 + index * 4];
     uint seed2 = seeds[2 + index * 4];
     uint seed3 = seeds[3 + index * 4];
-    
+
+    results[index] = 0;
     rnd::GenCombined* gnr_in = new rnd::GenCombined(seed0, seed1, seed2, seed3);
     Process_eq_lognormal* process = new Process_eq_lognormal(gnr_in);
     
+    //results[index] = 1;
     Path* cammino = new Path(contr_opt->Get_eq_prices(), contr_opt->Get_schedule(), &static_cast<Process_eq_lognormal&>(*process));
     results[index] += cammino->Get_equity_prices(STEPS - 1)->Get_eq_price().get_number();
-    //delete(cammino);
+    delete(cammino);
     delete(gnr_in);
     delete(process);
 }
@@ -247,6 +240,14 @@ int main(int argc, char** argv)
 
 
         simulate_host(seeds, contr_opt, host_results, host_cuda_bool);
+
+        delete(descr);
+        delete(yc);
+        delete(vol);
+        delete(starting_point_in);
+        delete(calen);
+        delete(contr_opt);
+
     }
 
 

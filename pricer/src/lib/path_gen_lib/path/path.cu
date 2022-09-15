@@ -27,7 +27,7 @@ namespace prcr
 	__host__ __device__ Path::~Path()
 	{
 		for(int i = 0; i < _dim; i++)
-			delete _eq_prices_scenario[i]; //rimozione dei singoli eq prices
+			delete (_eq_prices_scenario[i]); //rimozione dei singoli eq prices
 
 		delete[](_eq_prices_scenario);
 		delete[](_random_numbers_scenario);

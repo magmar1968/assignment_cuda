@@ -26,22 +26,20 @@ namespace prcr
     
     public:
         //constructors & destructors
-        HD Equity_prices()
-        {
-            _eq_descr = new Equity_description;
-        }
+        HD Equity_prices() {};
         HD Equity_prices(double time,
                         udb  price,                               
                         Equity_description * equity_descriptions)
             :_time(time)
         {
             _price = price;
+            //_eq_descr = new Equity_description;
+            //*_eq_descr = *equity_descriptions;
             _eq_descr = equity_descriptions; 
         }
         
         HD ~Equity_prices()
         {
-            delete(_eq_descr); 
         }
 
         // getter & setter
