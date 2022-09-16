@@ -1,6 +1,4 @@
 ﻿#include <iostream>
-#include "include/cuda_runtime.h"
-#include "include/device_launch_parameters.h"
 #include "../lib/path_gen_lib/path/path.cuh"
 #include "../lib/support_lib/myRandom/myRandom.cuh"
 #include "../lib/support_lib/myRandom/myRandom_gnr/combined.cuh"
@@ -334,12 +332,12 @@ int main(int argc, char** argv)
         if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMemcpy back2 failed!\n"); }
 
 
+        
 
+        cudaFree(dev_res);
+        cudaFree(dev_cuda_bool);
 
-
-
-
-
+        
 
 
 
@@ -361,6 +359,19 @@ int main(int argc, char** argv)
 
     std::cout << "\n" << final_res << std::endl;
     //std::cout << final_res.error << std::endl;
+
+    
+
+    //all delete
+    delete(host_cuda_bool);
+    delete(host_results);
+    delete(vnl_args);
+    delete(sch_args);
+    delete(dscrp_args);
+    delete(prices_args);
+    delete[](seeds);
+
+
     return 0;
 
 }
