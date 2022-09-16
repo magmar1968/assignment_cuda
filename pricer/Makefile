@@ -15,7 +15,7 @@ SRCEXT      := cu
 DEPEXT      := d
 OBJEXT      := o
 #Flags, Libraries and Includes
-LDFLAGS  = -std=c++11 -Xnvlink --disable-warnings
+LDFLAGS  = -std=c++11 -Xnvlink --disable-warnings -Wno-deprecated-gpu-targetsgiy
 CCFLAGS := -rdc=true  -std=c++11  -Wno-deprecated-gpu-targets
 INC         := -I$(INCDIR) -I/usr/local/include
 INCDEP      := -I$(INCDIR)
