@@ -21,7 +21,7 @@
 #define STEPS 5  // number of steps
 #define NBLOCKS 128  //cuda blocks
 #define TPB 512  //threads per block
-#define PPT 2000
+#define PPT 100
 
 using namespace prcr;
 

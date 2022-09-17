@@ -4,7 +4,7 @@ FILTER_IN  = $(foreach v,$(2),$(if $(findstring $(1),$(v)),$(v),))
 CC          := nvcc
 
 #The Target Binary Program
-TARGET      := #pricer
+TARGET      := $(basename $(notdir $(wildcard ./src/exam/*.cu )))
 TEST        := $(basename $(notdir $(wildcard ./src/tests/*.cu)))
 #The Directories, Source, Includes, Objects, Binary and Resources
 SRCDIR      := src
@@ -15,7 +15,7 @@ SRCEXT      := cu
 DEPEXT      := d
 OBJEXT      := o
 #Flags, Libraries and Includes
-LDFLAGS  = -std=c++11 -Xnvlink --disable-warnings -Wno-deprecated-gpu-targetsgiy
+LDFLAGS  = -std=c++11 -Xnvlink --disable-warnings -Wno-deprecated-gpu-targets
 CCFLAGS := -rdc=true  -std=c++11  -Wno-deprecated-gpu-targets
 INC         := -I$(INCDIR) -I/usr/local/include
 INCDEP      := -I$(INCDIR)
@@ -24,11 +24,14 @@ SOURCES     := $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
 OBJECTS     := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.$(OBJEXT)))
 FILTER_OBJ  := $(call FILTER_OUT,test, $(OBJECTS))
 
-#Defauilt Make
-all: resources $(TEST) #$(TARGET) #compile all
+#Default Make
+all: resources $(TEST) $(TARGET) #compile all
 
 #Remake
 remake: cleaner all
+
+#exam 
+exam: resources $(TARGET)
 
 #Copy Resources from Resources Directory to Target Directory
 resources: directories
@@ -52,7 +55,7 @@ cleaner: clean
 
 #Link
 $(TARGET): $(OBJECTS)
-	$(CC) $(LDFLAGS) -o $(TARGETDIR)/$@ $^ $(LIB)
+	@$(CC) $(LDFLAGS) -o $(TARGETDIR)/$@ $(FILTER_OBJ) $(call FILTER_IN,$(basename $@),$(OBJECTS)) 
 
 $(TEST): $(OBJECTS)
 	@printf "\n"

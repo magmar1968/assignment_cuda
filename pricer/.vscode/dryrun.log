@@ -2,5 +2,137 @@ make --dry-run --always-make --keep-going --print-directory
 make: Entering directory '/home/magmar68/Documents/Unimi/Metodi_comp/assignment_cuda/pricer'
 mkdir -p bin
 mkdir -p obj
+mkdir -p obj/lib/option_pricer_lib/option_pricer_montecarlo/
+nvcc -rdc=true  -std=c++11  -Wno-deprecated-gpu-targets -c -o obj/lib/option_pricer_lib/option_pricer_montecarlo/option_pricer_montecarlo.o src/lib/option_pricer_lib/option_pricer_montecarlo/option_pricer_montecarlo.cu
+nvcc -rdc=true  -std=c++11  -Wno-deprecated-gpu-targets -M src/lib/option_pricer_lib/option_pricer_montecarlo/option_pricer_montecarlo.cu > obj/lib/option_pricer_lib/option_pricer_montecarlo/option_pricer_montecarlo.d
+cp -f obj/lib/option_pricer_lib/option_pricer_montecarlo/option_pricer_montecarlo.d obj/lib/option_pricer_lib/option_pricer_montecarlo/option_pricer_montecarlo.d.tmp
+sed -e 's|.*:|obj/lib/option_pricer_lib/option_pricer_montecarlo/option_pricer_montecarlo.o:|' < obj/lib/option_pricer_lib/option_pricer_montecarlo/option_pricer_montecarlo.d.tmp > obj/lib/option_pricer_lib/option_pricer_montecarlo/option_pricer_montecarlo.d
+sed -e 's/.*://' -e 's/\\$//' < obj/lib/option_pricer_lib/option_pricer_montecarlo/option_pricer_montecarlo.d.tmp | fmt -1 | sed -e 's/^ *//' -e 's/$/:/' >> obj/lib/option_pricer_lib/option_pricer_montecarlo/option_pricer_montecarlo.d
+rm -f obj/lib/option_pricer_lib/option_pricer_montecarlo/option_pricer_montecarlo.d.tmp
+mkdir -p obj/lib/equity_lib/schedule_lib/
+nvcc -rdc=true  -std=c++11  -Wno-deprecated-gpu-targets -c -o obj/lib/equity_lib/schedule_lib/schedule.o src/lib/equity_lib/schedule_lib/schedule.cu
+nvcc -rdc=true  -std=c++11  -Wno-deprecated-gpu-targets -M src/lib/equity_lib/schedule_lib/schedule.cu > obj/lib/equity_lib/schedule_lib/schedule.d
+cp -f obj/lib/equity_lib/schedule_lib/schedule.d obj/lib/equity_lib/schedule_lib/schedule.d.tmp
+sed -e 's|.*:|obj/lib/equity_lib/schedule_lib/schedule.o:|' < obj/lib/equity_lib/schedule_lib/schedule.d.tmp > obj/lib/equity_lib/schedule_lib/schedule.d
+sed -e 's/.*://' -e 's/\\$//' < obj/lib/equity_lib/schedule_lib/schedule.d.tmp | fmt -1 | sed -e 's/^ *//' -e 's/$/:/' >> obj/lib/equity_lib/schedule_lib/schedule.d
+rm -f obj/lib/equity_lib/schedule_lib/schedule.d.tmp
+mkdir -p obj/lib/contract_option_lib/contract_eq_option_vanilla/
+nvcc -rdc=true  -std=c++11  -Wno-deprecated-gpu-targets -c -o obj/lib/contract_option_lib/contract_eq_option_vanilla/contract_eq_option_vanilla.o src/lib/contract_option_lib/contract_eq_option_vanilla/contract_eq_option_vanilla.cu
+nvcc -rdc=true  -std=c++11  -Wno-deprecated-gpu-targets -M src/lib/contract_option_lib/contract_eq_option_vanilla/contract_eq_option_vanilla.cu > obj/lib/contract_option_lib/contract_eq_option_vanilla/contract_eq_option_vanilla.d
+cp -f obj/lib/contract_option_lib/contract_eq_option_vanilla/contract_eq_option_vanilla.d obj/lib/contract_option_lib/contract_eq_option_vanilla/contract_eq_option_vanilla.d.tmp
+sed -e 's|.*:|obj/lib/contract_option_lib/contract_eq_option_vanilla/contract_eq_option_vanilla.o:|' < obj/lib/contract_option_lib/contract_eq_option_vanilla/contract_eq_option_vanilla.d.tmp > obj/lib/contract_option_lib/contract_eq_option_vanilla/contract_eq_option_vanilla.d
+sed -e 's/.*://' -e 's/\\$//' < obj/lib/contract_option_lib/contract_eq_option_vanilla/contract_eq_option_vanilla.d.tmp | fmt -1 | sed -e 's/^ *//' -e 's/$/:/' >> obj/lib/contract_option_lib/contract_eq_option_vanilla/contract_eq_option_vanilla.d
+rm -f obj/lib/contract_option_lib/contract_eq_option_vanilla/contract_eq_option_vanilla.d.tmp
+mkdir -p obj/lib/path_gen_lib/path/
+nvcc -rdc=true  -std=c++11  -Wno-deprecated-gpu-targets -c -o obj/lib/path_gen_lib/path/path.o src/lib/path_gen_lib/path/path.cu
+nvcc -rdc=true  -std=c++11  -Wno-deprecated-gpu-targets -M src/lib/path_gen_lib/path/path.cu > obj/lib/path_gen_lib/path/path.d
+cp -f obj/lib/path_gen_lib/path/path.d obj/lib/path_gen_lib/path/path.d.tmp
+sed -e 's|.*:|obj/lib/path_gen_lib/path/path.o:|' < obj/lib/path_gen_lib/path/path.d.tmp > obj/lib/path_gen_lib/path/path.d
+sed -e 's/.*://' -e 's/\\$//' < obj/lib/path_gen_lib/path/path.d.tmp | fmt -1 | sed -e 's/^ *//' -e 's/$/:/' >> obj/lib/path_gen_lib/path/path.d
+rm -f obj/lib/path_gen_lib/path/path.d.tmp
+mkdir -p obj/lib/path_gen_lib/process_eq_imp/
+nvcc -rdc=true  -std=c++11  -Wno-deprecated-gpu-targets -c -o obj/lib/path_gen_lib/process_eq_imp/process_eq_lognormal.o src/lib/path_gen_lib/process_eq_imp/process_eq_lognormal.cu
+nvcc -rdc=true  -std=c++11  -Wno-deprecated-gpu-targets -M src/lib/path_gen_lib/process_eq_imp/process_eq_lognormal.cu > obj/lib/path_gen_lib/process_eq_imp/process_eq_lognormal.d
+cp -f obj/lib/path_gen_lib/process_eq_imp/process_eq_lognormal.d obj/lib/path_gen_lib/process_eq_imp/process_eq_lognormal.d.tmp
+sed -e 's|.*:|obj/lib/path_gen_lib/process_eq_imp/process_eq_lognormal.o:|' < obj/lib/path_gen_lib/process_eq_imp/process_eq_lognormal.d.tmp > obj/lib/path_gen_lib/process_eq_imp/process_eq_lognormal.d
+sed -e 's/.*://' -e 's/\\$//' < obj/lib/path_gen_lib/process_eq_imp/process_eq_lognormal.d.tmp | fmt -1 | sed -e 's/^ *//' -e 's/$/:/' >> obj/lib/path_gen_lib/process_eq_imp/process_eq_lognormal.d
+rm -f obj/lib/path_gen_lib/process_eq_imp/process_eq_lognormal.d.tmp
+mkdir -p obj/lib/support_lib/myDouble_lib/
+nvcc -rdc=true  -std=c++11  -Wno-deprecated-gpu-targets -c -o obj/lib/support_lib/myDouble_lib/myudouble.o src/lib/support_lib/myDouble_lib/myudouble.cu
+nvcc -rdc=true  -std=c++11  -Wno-deprecated-gpu-targets -M src/lib/support_lib/myDouble_lib/myudouble.cu > obj/lib/support_lib/myDouble_lib/myudouble.d
+cp -f obj/lib/support_lib/myDouble_lib/myudouble.d obj/lib/support_lib/myDouble_lib/myudouble.d.tmp
+sed -e 's|.*:|obj/lib/support_lib/myDouble_lib/myudouble.o:|' < obj/lib/support_lib/myDouble_lib/myudouble.d.tmp > obj/lib/support_lib/myDouble_lib/myudouble.d
+sed -e 's/.*://' -e 's/\\$//' < obj/lib/support_lib/myDouble_lib/myudouble.d.tmp | fmt -1 | sed -e 's/^ *//' -e 's/$/:/' >> obj/lib/support_lib/myDouble_lib/myudouble.d
+rm -f obj/lib/support_lib/myDouble_lib/myudouble.d.tmp
+mkdir -p obj/lib/support_lib/parse_lib/
+nvcc -rdc=true  -std=c++11  -Wno-deprecated-gpu-targets -c -o obj/lib/support_lib/parse_lib/parse_lib.o src/lib/support_lib/parse_lib/parse_lib.cu
+nvcc -rdc=true  -std=c++11  -Wno-deprecated-gpu-targets -M src/lib/support_lib/parse_lib/parse_lib.cu > obj/lib/support_lib/parse_lib/parse_lib.d
+cp -f obj/lib/support_lib/parse_lib/parse_lib.d obj/lib/support_lib/parse_lib/parse_lib.d.tmp
+sed -e 's|.*:|obj/lib/support_lib/parse_lib/parse_lib.o:|' < obj/lib/support_lib/parse_lib/parse_lib.d.tmp > obj/lib/support_lib/parse_lib/parse_lib.d
+sed -e 's/.*://' -e 's/\\$//' < obj/lib/support_lib/parse_lib/parse_lib.d.tmp | fmt -1 | sed -e 's/^ *//' -e 's/$/:/' >> obj/lib/support_lib/parse_lib/parse_lib.d
+rm -f obj/lib/support_lib/parse_lib/parse_lib.d.tmp
+mkdir -p obj/lib/support_lib/statistic_lib/
+nvcc -rdc=true  -std=c++11  -Wno-deprecated-gpu-targets -c -o obj/lib/support_lib/statistic_lib/statistic_lib.o src/lib/support_lib/statistic_lib/statistic_lib.cu
+nvcc -rdc=true  -std=c++11  -Wno-deprecated-gpu-targets -M src/lib/support_lib/statistic_lib/statistic_lib.cu > obj/lib/support_lib/statistic_lib/statistic_lib.d
+cp -f obj/lib/support_lib/statistic_lib/statistic_lib.d obj/lib/support_lib/statistic_lib/statistic_lib.d.tmp
+sed -e 's|.*:|obj/lib/support_lib/statistic_lib/statistic_lib.o:|' < obj/lib/support_lib/statistic_lib/statistic_lib.d.tmp > obj/lib/support_lib/statistic_lib/statistic_lib.d
+sed -e 's/.*://' -e 's/\\$//' < obj/lib/support_lib/statistic_lib/statistic_lib.d.tmp | fmt -1 | sed -e 's/^ *//' -e 's/$/:/' >> obj/lib/support_lib/statistic_lib/statistic_lib.d
+rm -f obj/lib/support_lib/statistic_lib/statistic_lib.d.tmp
+mkdir -p obj/lib/support_lib/lib_lib/
+nvcc -rdc=true  -std=c++11  -Wno-deprecated-gpu-targets -c -o obj/lib/support_lib/lib_lib/lib.o src/lib/support_lib/lib_lib/lib.cu
+nvcc -rdc=true  -std=c++11  -Wno-deprecated-gpu-targets -M src/lib/support_lib/lib_lib/lib.cu > obj/lib/support_lib/lib_lib/lib.d
+cp -f obj/lib/support_lib/lib_lib/lib.d obj/lib/support_lib/lib_lib/lib.d.tmp
+sed -e 's|.*:|obj/lib/support_lib/lib_lib/lib.o:|' < obj/lib/support_lib/lib_lib/lib.d.tmp > obj/lib/support_lib/lib_lib/lib.d
+sed -e 's/.*://' -e 's/\\$//' < obj/lib/support_lib/lib_lib/lib.d.tmp | fmt -1 | sed -e 's/^ *//' -e 's/$/:/' >> obj/lib/support_lib/lib_lib/lib.d
+rm -f obj/lib/support_lib/lib_lib/lib.d.tmp
+mkdir -p obj/lib/support_lib/myRandom/
+nvcc -rdc=true  -std=c++11  -Wno-deprecated-gpu-targets -c -o obj/lib/support_lib/myRandom/myRandom.o src/lib/support_lib/myRandom/myRandom.cu
+nvcc -rdc=true  -std=c++11  -Wno-deprecated-gpu-targets -M src/lib/support_lib/myRandom/myRandom.cu > obj/lib/support_lib/myRandom/myRandom.d
+cp -f obj/lib/support_lib/myRandom/myRandom.d obj/lib/support_lib/myRandom/myRandom.d.tmp
+sed -e 's|.*:|obj/lib/support_lib/myRandom/myRandom.o:|' < obj/lib/support_lib/myRandom/myRandom.d.tmp > obj/lib/support_lib/myRandom/myRandom.d
+sed -e 's/.*://' -e 's/\\$//' < obj/lib/support_lib/myRandom/myRandom.d.tmp | fmt -1 | sed -e 's/^ *//' -e 's/$/:/' >> obj/lib/support_lib/myRandom/myRandom.d
+rm -f obj/lib/support_lib/myRandom/myRandom.d.tmp
+mkdir -p obj/lib/support_lib/myRandom/myRandom_gnr/
+nvcc -rdc=true  -std=c++11  -Wno-deprecated-gpu-targets -c -o obj/lib/support_lib/myRandom/myRandom_gnr/combined.o src/lib/support_lib/myRandom/myRandom_gnr/combined.cu
+nvcc -rdc=true  -std=c++11  -Wno-deprecated-gpu-targets -M src/lib/support_lib/myRandom/myRandom_gnr/combined.cu > obj/lib/support_lib/myRandom/myRandom_gnr/combined.d
+cp -f obj/lib/support_lib/myRandom/myRandom_gnr/combined.d obj/lib/support_lib/myRandom/myRandom_gnr/combined.d.tmp
+sed -e 's|.*:|obj/lib/support_lib/myRandom/myRandom_gnr/combined.o:|' < obj/lib/support_lib/myRandom/myRandom_gnr/combined.d.tmp > obj/lib/support_lib/myRandom/myRandom_gnr/combined.d
+sed -e 's/.*://' -e 's/\\$//' < obj/lib/support_lib/myRandom/myRandom_gnr/combined.d.tmp | fmt -1 | sed -e 's/^ *//' -e 's/$/:/' >> obj/lib/support_lib/myRandom/myRandom_gnr/combined.d
+rm -f obj/lib/support_lib/myRandom/myRandom_gnr/combined.d.tmp
+mkdir -p obj/lib/support_lib/myRandom/myRandom_gnr/
+nvcc -rdc=true  -std=c++11  -Wno-deprecated-gpu-targets -c -o obj/lib/support_lib/myRandom/myRandom_gnr/linCongruential.o src/lib/support_lib/myRandom/myRandom_gnr/linCongruential.cu
+nvcc -rdc=true  -std=c++11  -Wno-deprecated-gpu-targets -M src/lib/support_lib/myRandom/myRandom_gnr/linCongruential.cu > obj/lib/support_lib/myRandom/myRandom_gnr/linCongruential.d
+cp -f obj/lib/support_lib/myRandom/myRandom_gnr/linCongruential.d obj/lib/support_lib/myRandom/myRandom_gnr/linCongruential.d.tmp
+sed -e 's|.*:|obj/lib/support_lib/myRandom/myRandom_gnr/linCongruential.o:|' < obj/lib/support_lib/myRandom/myRandom_gnr/linCongruential.d.tmp > obj/lib/support_lib/myRandom/myRandom_gnr/linCongruential.d
+sed -e 's/.*://' -e 's/\\$//' < obj/lib/support_lib/myRandom/myRandom_gnr/linCongruential.d.tmp | fmt -1 | sed -e 's/^ *//' -e 's/$/:/' >> obj/lib/support_lib/myRandom/myRandom_gnr/linCongruential.d
+rm -f obj/lib/support_lib/myRandom/myRandom_gnr/linCongruential.d.tmp
+mkdir -p obj/lib/support_lib/myRandom/myRandom_gnr/
+nvcc -rdc=true  -std=c++11  -Wno-deprecated-gpu-targets -c -o obj/lib/support_lib/myRandom/myRandom_gnr/tausworth.o src/lib/support_lib/myRandom/myRandom_gnr/tausworth.cu
+nvcc -rdc=true  -std=c++11  -Wno-deprecated-gpu-targets -M src/lib/support_lib/myRandom/myRandom_gnr/tausworth.cu > obj/lib/support_lib/myRandom/myRandom_gnr/tausworth.d
+cp -f obj/lib/support_lib/myRandom/myRandom_gnr/tausworth.d obj/lib/support_lib/myRandom/myRandom_gnr/tausworth.d.tmp
+sed -e 's|.*:|obj/lib/support_lib/myRandom/myRandom_gnr/tausworth.o:|' < obj/lib/support_lib/myRandom/myRandom_gnr/tausworth.d.tmp > obj/lib/support_lib/myRandom/myRandom_gnr/tausworth.d
+sed -e 's/.*://' -e 's/\\$//' < obj/lib/support_lib/myRandom/myRandom_gnr/tausworth.d.tmp | fmt -1 | sed -e 's/^ *//' -e 's/$/:/' >> obj/lib/support_lib/myRandom/myRandom_gnr/tausworth.d
+rm -f obj/lib/support_lib/myRandom/myRandom_gnr/tausworth.d.tmp
+mkdir -p obj/tests/
+nvcc -rdc=true  -std=c++11  -Wno-deprecated-gpu-targets -c -o obj/tests/test_header.o src/tests/test_header.cu
+nvcc -rdc=true  -std=c++11  -Wno-deprecated-gpu-targets -M src/tests/test_header.cu > obj/tests/test_header.d
+cp -f obj/tests/test_header.d obj/tests/test_header.d.tmp
+sed -e 's|.*:|obj/tests/test_header.o:|' < obj/tests/test_header.d.tmp > obj/tests/test_header.d
+sed -e 's/.*://' -e 's/\\$//' < obj/tests/test_header.d.tmp | fmt -1 | sed -e 's/^ *//' -e 's/$/:/' >> obj/tests/test_header.d
+rm -f obj/tests/test_header.d.tmp
+mkdir -p obj/tests/
+nvcc -rdc=true  -std=c++11  -Wno-deprecated-gpu-targets -c -o obj/tests/path_test1.o src/tests/path_test1.cu
+nvcc -rdc=true  -std=c++11  -Wno-deprecated-gpu-targets -M src/tests/path_test1.cu > obj/tests/path_test1.d
+cp -f obj/tests/path_test1.d obj/tests/path_test1.d.tmp
+sed -e 's|.*:|obj/tests/path_test1.o:|' < obj/tests/path_test1.d.tmp > obj/tests/path_test1.d
+sed -e 's/.*://' -e 's/\\$//' < obj/tests/path_test1.d.tmp | fmt -1 | sed -e 's/^ *//' -e 's/$/:/' >> obj/tests/path_test1.d
+rm -f obj/tests/path_test1.d.tmp
+mkdir -p obj/tests/
+nvcc -rdc=true  -std=c++11  -Wno-deprecated-gpu-targets -c -o obj/tests/montecarlo_test1.o src/tests/montecarlo_test1.cu
+nvcc -rdc=true  -std=c++11  -Wno-deprecated-gpu-targets -M src/tests/montecarlo_test1.cu > obj/tests/montecarlo_test1.d
+cp -f obj/tests/montecarlo_test1.d obj/tests/montecarlo_test1.d.tmp
+sed -e 's|.*:|obj/tests/montecarlo_test1.o:|' < obj/tests/montecarlo_test1.d.tmp > obj/tests/montecarlo_test1.d
+sed -e 's/.*://' -e 's/\\$//' < obj/tests/montecarlo_test1.d.tmp | fmt -1 | sed -e 's/^ *//' -e 's/$/:/' >> obj/tests/montecarlo_test1.d
+rm -f obj/tests/montecarlo_test1.d.tmp
+mkdir -p obj/exam/
+nvcc -rdc=true  -std=c++11  -Wno-deprecated-gpu-targets -c -o obj/exam/B2_test_generator.o src/exam/B2_test_generator.cu
+nvcc -rdc=true  -std=c++11  -Wno-deprecated-gpu-targets -M src/exam/B2_test_generator.cu > obj/exam/B2_test_generator.d
+cp -f obj/exam/B2_test_generator.d obj/exam/B2_test_generator.d.tmp
+sed -e 's|.*:|obj/exam/B2_test_generator.o:|' < obj/exam/B2_test_generator.d.tmp > obj/exam/B2_test_generator.d
+sed -e 's/.*://' -e 's/\\$//' < obj/exam/B2_test_generator.d.tmp | fmt -1 | sed -e 's/^ *//' -e 's/$/:/' >> obj/exam/B2_test_generator.d
+rm -f obj/exam/B2_test_generator.d.tmp
+printf "\n"
+nvcc -std=c++11 -Xnvlink --disable-warnings -Wno-deprecated-gpu-targets -o bin/path_test1 obj/lib/option_pricer_lib/option_pricer_montecarlo/option_pricer_montecarlo.o obj/lib/equity_lib/schedule_lib/schedule.o obj/lib/contract_option_lib/contract_eq_option_vanilla/contract_eq_option_vanilla.o obj/lib/path_gen_lib/path/path.o obj/lib/path_gen_lib/process_eq_imp/process_eq_lognormal.o obj/lib/support_lib/myDouble_lib/myudouble.o obj/lib/support_lib/parse_lib/parse_lib.o obj/lib/support_lib/statistic_lib/statistic_lib.o obj/lib/support_lib/lib_lib/lib.o obj/lib/support_lib/myRandom/myRandom.o obj/lib/support_lib/myRandom/myRandom_gnr/combined.o obj/lib/support_lib/myRandom/myRandom_gnr/linCongruential.o obj/lib/support_lib/myRandom/myRandom_gnr/tausworth.o                   obj/tests/path_test1.o  
+./bin/path_test1 -cpu 
+./bin/path_test1 -gpu
+printf "\n"
+nvcc -std=c++11 -Xnvlink --disable-warnings -Wno-deprecated-gpu-targets -o bin/montecarlo_test1 obj/lib/option_pricer_lib/option_pricer_montecarlo/option_pricer_montecarlo.o obj/lib/equity_lib/schedule_lib/schedule.o obj/lib/contract_option_lib/contract_eq_option_vanilla/contract_eq_option_vanilla.o obj/lib/path_gen_lib/path/path.o obj/lib/path_gen_lib/process_eq_imp/process_eq_lognormal.o obj/lib/support_lib/myDouble_lib/myudouble.o obj/lib/support_lib/parse_lib/parse_lib.o obj/lib/support_lib/statistic_lib/statistic_lib.o obj/lib/support_lib/lib_lib/lib.o obj/lib/support_lib/myRandom/myRandom.o obj/lib/support_lib/myRandom/myRandom_gnr/combined.o obj/lib/support_lib/myRandom/myRandom_gnr/linCongruential.o obj/lib/support_lib/myRandom/myRandom_gnr/tausworth.o                    obj/tests/montecarlo_test1.o 
+./bin/montecarlo_test1 -cpu 
+./bin/montecarlo_test1 -gpu
+printf "\n"
+nvcc -std=c++11 -Xnvlink --disable-warnings -Wno-deprecated-gpu-targets -o bin/test_header obj/lib/option_pricer_lib/option_pricer_montecarlo/option_pricer_montecarlo.o obj/lib/equity_lib/schedule_lib/schedule.o obj/lib/contract_option_lib/contract_eq_option_vanilla/contract_eq_option_vanilla.o obj/lib/path_gen_lib/path/path.o obj/lib/path_gen_lib/process_eq_imp/process_eq_lognormal.o obj/lib/support_lib/myDouble_lib/myudouble.o obj/lib/support_lib/parse_lib/parse_lib.o obj/lib/support_lib/statistic_lib/statistic_lib.o obj/lib/support_lib/lib_lib/lib.o obj/lib/support_lib/myRandom/myRandom.o obj/lib/support_lib/myRandom/myRandom_gnr/combined.o obj/lib/support_lib/myRandom/myRandom_gnr/linCongruential.o obj/lib/support_lib/myRandom/myRandom_gnr/tausworth.o                  obj/tests/test_header.o   
+./bin/test_header -cpu 
+./bin/test_header -gpu
+nvcc -std=c++11 -Xnvlink --disable-warnings -Wno-deprecated-gpu-targets -o bin/B2_test_generator obj/lib/option_pricer_lib/option_pricer_montecarlo/option_pricer_montecarlo.o obj/lib/equity_lib/schedule_lib/schedule.o obj/lib/contract_option_lib/contract_eq_option_vanilla/contract_eq_option_vanilla.o obj/lib/path_gen_lib/path/path.o obj/lib/path_gen_lib/process_eq_imp/process_eq_lognormal.o obj/lib/support_lib/myDouble_lib/myudouble.o obj/lib/support_lib/parse_lib/parse_lib.o obj/lib/support_lib/statistic_lib/statistic_lib.o obj/lib/support_lib/lib_lib/lib.o obj/lib/support_lib/myRandom/myRandom.o obj/lib/support_lib/myRandom/myRandom_gnr/combined.o obj/lib/support_lib/myRandom/myRandom_gnr/linCongruential.o obj/lib/support_lib/myRandom/myRandom_gnr/tausworth.o                     obj/exam/B2_test_generator.o 
 make: Leaving directory '/home/magmar68/Documents/Unimi/Metodi_comp/assignment_cuda/pricer'
  

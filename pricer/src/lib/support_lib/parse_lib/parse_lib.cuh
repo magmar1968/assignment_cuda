@@ -69,12 +69,72 @@ namespace prcr
         }
     }
     
+
+
+    struct Device_options
+    {
+        bool   cpu;
+        bool   gpu;
+        size_t N_block; // # blocks
+        size_t N_thread;// # threads
+
+    };
+
+    struct Yield_curve_args
+    {
+        bool   flat;       // true if flat yield curve
+        double rate;       // rate for flat yield curve
+
+        bool    structured;// true if structured yield curve
+        double* rates;     // pointer to rates array
+        double* times;     // pointer to times array
+        size_t  dim;       // array dimension         
+    };
+
+    struct Volatility_args
+    {
+        double vol;    //volatility 
+    };
+
+    struct Schedule_args
+    {
+        double t_ref;
+        double deltat;
+        double dim;
+    };
     
+    struct Eq_descr_args
+    {
+        char   isin_code[10];
+        char   name[15];
+        char   currency[10];
+        double dividend_yield;
+    };
+    
+    struct Eq_price_args
+    {
+        double time;
+        double price;
+    };
+
+
+    H bool ReadInputOption(std::string filename);
+
+
+
+
+
+
+
+
     struct Device
     {
         bool GPU = 0;
         bool CPU = 0;
     };
+
+
+
 
 
 }
