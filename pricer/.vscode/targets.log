@@ -6,7 +6,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Thu Jun  9 10:25:12 2022
+# Make data base, printed on Sat Sep 17 09:56:15 2022
 
 # Variables
 
@@ -26,10 +26,8 @@ INCDIR := inc
 XDG_SESSION_CLASS = user
 # environment
 XDG_SESSION_TYPE = x11
-# environment
-VSCODE_LOG_NATIVE = false
 # makefile (from 'Makefile', line 7)
-TARGET := 
+TARGET := B2_test_generator
 # automatic
 ?D = $(patsubst %/,%,$(dir $?))
 # environment
@@ -51,7 +49,7 @@ VSCODE_NLS_CONFIG = {"locale":"en-us","availableLanguages":{},"_languagePackSupp
 # environment
 _ = /usr/share/code/code
 # environment
-JOURNAL_STREAM = 8:56588
+JOURNAL_STREAM = 8:52638
 # environment
 XDG_CONFIG_DIRS = /etc/xdg/xdg-ubuntu:/etc/xdg
 # makefile (from 'Makefile', line 1)
@@ -62,8 +60,8 @@ MAKEFILE_LIST :=  Makefile
 GIO_LAUNCHED_DESKTOP_FILE = /usr/share/applications/code.desktop
 # environment
 USERNAME = magmar68
-# makefile (from 'Makefile', line 27)
-SOURCES := 
+# makefile (from 'Makefile', line 23)
+SOURCES := src/lib/option_pricer_lib/option_pricer_montecarlo/option_pricer_montecarlo.cu src/lib/equity_lib/schedule_lib/schedule.cu src/lib/contract_option_lib/contract_eq_option_vanilla/contract_eq_option_vanilla.cu src/lib/path_gen_lib/path/path.cu src/lib/path_gen_lib/process_eq_imp/process_eq_lognormal.cu src/lib/support_lib/myDouble_lib/myudouble.cu src/lib/support_lib/parse_lib/parse_lib.cu src/lib/support_lib/statistic_lib/statistic_lib.cu src/lib/support_lib/lib_lib/lib.cu src/lib/support_lib/myRandom/myRandom.cu src/lib/support_lib/myRandom/myRandom_gnr/combined.cu src/lib/support_lib/myRandom/myRandom_gnr/linCongruential.cu src/lib/support_lib/myRandom/myRandom_gnr/tausworth.cu src/tests/test_header.cu src/tests/path_test1.cu src/tests/montecarlo_test1.cu src/exam/B2_test_generator.cu
 # environment
 MAKELEVEL := 0
 # environment
@@ -72,12 +70,10 @@ MANDATORY_PATH = /usr/share/gconf/ubuntu.mandatory.path
 XDG_DATA_DIRS = /usr/share/ubuntu:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop
 # environment
 DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/1000/bus
-# environment
-VSCODE_VERBOSE_LOGGING = true
 # makefile (from 'Makefile', line 12)
 BUILDDIR := obj
 # environment
-MANAGERPID = 1626
+MANAGERPID = 1677
 # environment
 LESSOPEN = | /usr/bin/lesspipe %s
 # environment
@@ -93,23 +89,21 @@ GPG_AGENT_INFO = /run/user/1000/gnupg/S.gpg-agent:0:1
 # environment
 GJS_DEBUG_OUTPUT = stderr
 # environment
-SESSION_MANAGER = local/magmar68:@/tmp/.ICE-unix/1884,unix/magmar68:/tmp/.ICE-unix/1884
+SESSION_MANAGER = local/magmar68:@/tmp/.ICE-unix/1935,unix/magmar68:/tmp/.ICE-unix/1935
 # environment
 XDG_RUNTIME_DIR = /run/user/1000
 # makefile (from 'Makefile', line 16)
 OBJEXT := o
-# makefile (from 'Makefile', line 20)
-CCFLAGS := -rdc=true --gpu-architecture=sm_50
+# makefile (from 'Makefile', line 19)
+CCFLAGS := -rdc=true  -std=c++11  -Wno-deprecated-gpu-targets
 # environment
 XDG_MENU_PREFIX = gnome-
 # environment
-VSCODE_LOG_STACK = false
-# environment
 ELECTRON_RUN_AS_NODE = 1
 # environment
-INVOCATION_ID = 241c29d6118c4eb78c2ad3b94768aed2
-# makefile (from 'Makefile', line 19)
-LDFLAGS = --gpu-architecture=sm_50
+INVOCATION_ID = 8419b9089a2145f984c4b713f2f70199
+# makefile (from 'Makefile', line 18)
+LDFLAGS = -std=c++11 -Xnvlink --disable-warnings -Wno-deprecated-gpu-targets
 # default
 .FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell archives jobserver output-sync check-symlink load
 # environment
@@ -119,7 +113,7 @@ XDG_SESSION_DESKTOP = ubuntu
 # environment
 SSH_AUTH_SOCK = /run/user/1000/keyring/ssh
 # environment
-GIO_LAUNCHED_DESKTOP_FILE_PID = 13613
+GIO_LAUNCHED_DESKTOP_FILE_PID = 92156
 # automatic
 %F = $(notdir $%)
 # environment
@@ -129,17 +123,15 @@ SRCDIR := src
 # makefile (from 'Makefile', line 15)
 DEPEXT := d
 # environment
-VSCODE_PIPE_LOGGING = true
-# environment
 PWD = /home/magmar68/Documents/Unimi/Metodi_comp/assignment_cuda/pricer
 # default
 .LOADED := 
 # environment
-SSH_AGENT_PID = 1818
+SSH_AGENT_PID = 1869
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = ubuntu:GNOME
-# makefile (from 'Makefile', line 29)
-FILTER_OBJ := 
+# makefile (from 'Makefile', line 25)
+FILTER_OBJ := obj/lib/option_pricer_lib/option_pricer_montecarlo/option_pricer_montecarlo.o obj/lib/equity_lib/schedule_lib/schedule.o obj/lib/contract_option_lib/contract_eq_option_vanilla/contract_eq_option_vanilla.o obj/lib/path_gen_lib/path/path.o obj/lib/path_gen_lib/process_eq_imp/process_eq_lognormal.o obj/lib/support_lib/myDouble_lib/myudouble.o obj/lib/support_lib/parse_lib/parse_lib.o obj/lib/support_lib/statistic_lib/statistic_lib.o obj/lib/support_lib/lib_lib/lib.o obj/lib/support_lib/myRandom/myRandom.o obj/lib/support_lib/myRandom/myRandom_gnr/combined.o obj/lib/support_lib/myRandom/myRandom_gnr/linCongruential.o obj/lib/support_lib/myRandom/myRandom_gnr/tausworth.o    
 # environment
 GTK_MODULES = gail:atk-bridge
 # environment
@@ -149,7 +141,7 @@ HOME = /home/magmar68
 # environment
 LESSCLOSE = /usr/bin/lesspipe %s %s
 # environment
-VSCODE_CODE_CACHE_PATH = /home/magmar68/.config/Code/CachedData/c3511e6c69bb39013c4a4b7b9566ec1ca73fc4d5
+VSCODE_CODE_CACHE_PATH = /home/magmar68/.config/Code/CachedData/784b0177c56c607789f9638da7b6bf3230d47a8c
 # environment
 LOGNAME = magmar68
 # environment
@@ -163,7 +155,7 @@ GNOME_DESKTOP_SESSION_ID = this-is-deprecated
 # automatic
 ^D = $(patsubst %/,%,$(dir $^))
 # makefile (from 'Makefile', line 8)
-TEST := 
+TEST := path_test1 montecarlo_test1 test_header
 # environment
 LC_TIME = it_IT.UTF-8
 # default
@@ -178,8 +170,6 @@ SHLVL = 0
 CC := nvcc
 # environment
 GNOME_SHELL_SESSION_MODE = ubuntu
-# environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-1216411e-5261-476b-84e0-ecbf7c412375.sock
 # default
 MAKE_VERSION := 4.2.1
 # environment
@@ -200,12 +190,14 @@ LC_TELEPHONE = it_IT.UTF-8
 FILTER_IN = $(foreach v,$(2),$(if $(findstring $(1),$(v)),$(v),))
 # default
 MAKE_COMMAND := make
+# makefile (from 'Makefile', line 20)
+INC := -Iinc -I/usr/local/include
 # default
 .VARIABLES := 
 # automatic
 *F = $(notdir $*)
 # environment
-VSCODE_IPC_HOOK = /run/user/1000/vscode-53ec6e89-1.67.2-main.sock
+VSCODE_IPC_HOOK = /run/user/1000/vscode-53ec6e89-1.71.0-main.sock
 # makefile
 MAKEFLAGS = pqrR
 # environment
@@ -218,6 +210,8 @@ MFLAGS = -pqrR
 GDK_BACKEND = x11
 # environment
 LC_PAPER = it_IT.UTF-8
+# environment
+NO_AT_BRIDGE = 1
 # makefile (from 'Makefile', line 14)
 SRCEXT := cu
 # environment
@@ -246,14 +240,16 @@ SUFFIXES :=
 CHROME_DESKTOP = code-url-handler.desktop
 # environment
 WINDOWPATH = 2
+# makefile (from 'Makefile', line 21)
+INCDEP := -Iinc
 # default
 .INCLUDE_DIRS = /usr/include /usr/local/include /usr/include
 # environment
 LC_IDENTIFICATION = it_IT.UTF-8
 # default
 .RECIPEPREFIX := 
-# makefile (from 'Makefile', line 28)
-OBJECTS := 
+# makefile (from 'Makefile', line 24)
+OBJECTS := obj/lib/option_pricer_lib/option_pricer_montecarlo/option_pricer_montecarlo.o obj/lib/equity_lib/schedule_lib/schedule.o obj/lib/contract_option_lib/contract_eq_option_vanilla/contract_eq_option_vanilla.o obj/lib/path_gen_lib/path/path.o obj/lib/path_gen_lib/process_eq_imp/process_eq_lognormal.o obj/lib/support_lib/myDouble_lib/myudouble.o obj/lib/support_lib/parse_lib/parse_lib.o obj/lib/support_lib/statistic_lib/statistic_lib.o obj/lib/support_lib/lib_lib/lib.o obj/lib/support_lib/myRandom/myRandom.o obj/lib/support_lib/myRandom/myRandom_gnr/combined.o obj/lib/support_lib/myRandom/myRandom_gnr/linCongruential.o obj/lib/support_lib/myRandom/myRandom_gnr/tausworth.o obj/tests/test_header.o obj/tests/path_test1.o obj/tests/montecarlo_test1.o obj/exam/B2_test_generator.o
 # environment
 LC_ADDRESS = it_IT.UTF-8
 # makefile (from 'Makefile', line 1)
@@ -261,9 +257,9 @@ FILTER_OUT = $(foreach v,$(2),$(if $(findstring $(1),$(v)),,$(v)))
 # environment
 LANG = C
 # environment
-VSCODE_PID = 13613
+VSCODE_PID = 92156
 # variable set hash-table stats:
-# Load=126/1024=12%, Rehash=0, Collisions=27/179=15%
+# Load=124/1024=12%, Rehash=0, Collisions=26/183=14%
 
 # Pattern-specific Variable Values
 
@@ -271,20 +267,21 @@ VSCODE_PID = 13613
 
 # Directories
 
-# . (device 66311, inode 13784124): 5 files, no impossibilities.
-# ./src/tests: could not be stat'd.
+# ./src/exam (device 66311, inode 13652745): 3 files, no impossibilities.
+# . (device 66311, inode 13784124): 7 files, no impossibilities.
+# ./src/tests (device 66311, inode 17305518): 5 files, no impossibilities.
 # src (device 66311, inode 13784143): No files, no impossibilities so far.
 
-# 5 files, no impossibilities in 3 directories.
+# 15 files, no impossibilities in 4 directories.
 
 # Implicit Rules
 
 obj/%.o: src/%.cu
-#  recipe to execute (from 'Makefile', line 70):
+#  recipe to execute (from 'Makefile', line 71):
 	@mkdir -p $(dir $@)
- 
 	$(CC) $(CCFLAGS) -c -o $@ $<
-	@$(CC) $(CCFLAGS) -MM $(SRCDIR)/$*.$(SRCEXT) > $(BUILDDIR)/$*.$(DEPEXT)
+	@$(CC) $(CCFLAGS) -M $(SRCDIR)/$*.$(SRCEXT) > $(BUILDDIR)/$*.$(DEPEXT)
+ 
 	@cp -f $(BUILDDIR)/$*.$(DEPEXT) $(BUILDDIR)/$*.$(DEPEXT).tmp
 	@sed -e 's|.*:|$(BUILDDIR)/$*.$(OBJEXT):|' < $(BUILDDIR)/$*.$(DEPEXT).tmp > $(BUILDDIR)/$*.$(DEPEXT)
 	@sed -e 's/.*://' -e 's/\\$$//' < $(BUILDDIR)/$*.$(DEPEXT).tmp | fmt -1 | sed -e 's/^ *//' -e 's/$$/:/' >> $(BUILDDIR)/$*.$(DEPEXT)
@@ -294,7 +291,19 @@ obj/%.o: src/%.cu
 
 # Files
 
-all: resources
+# Not a target:
+obj/tests/montecarlo_test1.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+obj/tests/path_test1.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+all: resources path_test1 montecarlo_test1 test_header B2_test_generator
 #  Phony target (prerequisite of .PHONY).
 #  Command line target.
 #  Implicit rule search has not been done.
@@ -308,8 +317,13 @@ all: resources
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 156):
-	
+
+B2_test_generator: obj/lib/option_pricer_lib/option_pricer_montecarlo/option_pricer_montecarlo.o obj/lib/equity_lib/schedule_lib/schedule.o obj/lib/contract_option_lib/contract_eq_option_vanilla/contract_eq_option_vanilla.o obj/lib/path_gen_lib/path/path.o obj/lib/path_gen_lib/process_eq_imp/process_eq_lognormal.o obj/lib/support_lib/myDouble_lib/myudouble.o obj/lib/support_lib/parse_lib/parse_lib.o obj/lib/support_lib/statistic_lib/statistic_lib.o obj/lib/support_lib/lib_lib/lib.o obj/lib/support_lib/myRandom/myRandom.o obj/lib/support_lib/myRandom/myRandom_gnr/combined.o obj/lib/support_lib/myRandom/myRandom_gnr/linCongruential.o obj/lib/support_lib/myRandom/myRandom_gnr/tausworth.o obj/tests/test_header.o obj/tests/path_test1.o obj/tests/montecarlo_test1.o obj/exam/B2_test_generator.o
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 58):
+	@$(CC) $(LDFLAGS) -o $(TARGETDIR)/$@ $(FILTER_OBJ) $(call FILTER_IN,$(basename $@),$(OBJECTS)) 
 
 resources: directories
 #  Phony target (prerequisite of .PHONY).
@@ -320,10 +334,23 @@ resources: directories
 # variable set hash-table stats:
 # Load=0/32=0%, Rehash=0, Collisions=0/5=0%
 
+# Not a target:
+obj/lib/support_lib/myRandom/myRandom.d:
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
+
 remake: cleaner all
 #  Phony target (prerequisite of .PHONY).
 #  Implicit rule search has not been done.
 #  File does not exist.
+#  File has not been updated.
+
+# Not a target:
+obj/lib/contract_option_lib/contract_eq_option_vanilla/contract_eq_option_vanilla.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
 #  File has not been updated.
 
 # Not a target:
@@ -333,19 +360,119 @@ remake: cleaner all
 #  File has not been updated.
 
 # Not a target:
+obj/lib/support_lib/myRandom/myRandom_gnr/tausworth.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+obj/lib/support_lib/statistic_lib/statistic_lib.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+obj/lib/support_lib/myDouble_lib/myudouble.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+obj/tests/test_header.d:
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
+
+# Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-06-09 10:24:48.177195297
+#  Last modified 2022-09-16 15:55:47.05664235
 #  File has been updated.
 #  Successfully updated.
+
+# Not a target:
+obj/lib/support_lib/myRandom/myRandom_gnr/combined.d:
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
+
+# Not a target:
+obj/exam/B2_test_generator.d:
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
+
+# Not a target:
+obj/lib/support_lib/myRandom/myRandom.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+obj/lib/path_gen_lib/path/path.d:
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
+
+# Not a target:
+obj/lib/equity_lib/schedule_lib/schedule.d:
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
 
 cleaner: clean
 #  Phony target (prerequisite of .PHONY).
 #  Implicit rule search has not been done.
 #  File does not exist.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 52):
+#  recipe to execute (from 'Makefile', line 51):
 	@$(RM) -r $(TARGETDIR)
+
+# Not a target:
+obj/lib/support_lib/parse_lib/parse_lib.d:
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
+
+test_header: obj/lib/option_pricer_lib/option_pricer_montecarlo/option_pricer_montecarlo.o obj/lib/equity_lib/schedule_lib/schedule.o obj/lib/contract_option_lib/contract_eq_option_vanilla/contract_eq_option_vanilla.o obj/lib/path_gen_lib/path/path.o obj/lib/path_gen_lib/process_eq_imp/process_eq_lognormal.o obj/lib/support_lib/myDouble_lib/myudouble.o obj/lib/support_lib/parse_lib/parse_lib.o obj/lib/support_lib/statistic_lib/statistic_lib.o obj/lib/support_lib/lib_lib/lib.o obj/lib/support_lib/myRandom/myRandom.o obj/lib/support_lib/myRandom/myRandom_gnr/combined.o obj/lib/support_lib/myRandom/myRandom_gnr/linCongruential.o obj/lib/support_lib/myRandom/myRandom_gnr/tausworth.o obj/tests/test_header.o obj/tests/path_test1.o obj/tests/montecarlo_test1.o obj/exam/B2_test_generator.o
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 61):
+	@printf "\n"
+	@$(CC) $(LDFLAGS) -o $(TARGETDIR)/$@ $(FILTER_OBJ) $(call FILTER_IN,$(basename $@),$(OBJECTS))
+	./$(TARGETDIR)/$@ -cpu 
+	./$(TARGETDIR)/$@ -gpu
+
+# Not a target:
+obj/tests/test_header.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+obj/lib/option_pricer_lib/option_pricer_montecarlo/option_pricer_montecarlo.d:
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
+
+# Not a target:
+obj/lib/support_lib/myRandom/myRandom_gnr/combined.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+exam: resources B2_test_generator
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
 
 # Not a target:
 .DEFAULT:
@@ -353,13 +480,105 @@ cleaner: clean
 #  Modification time never checked.
 #  File has not been updated.
 
+# Not a target:
+obj/lib/support_lib/myRandom/myRandom_gnr/linCongruential.d:
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
+
+# Not a target:
+obj/lib/path_gen_lib/process_eq_imp/process_eq_lognormal.d:
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
+
+montecarlo_test1: obj/lib/option_pricer_lib/option_pricer_montecarlo/option_pricer_montecarlo.o obj/lib/equity_lib/schedule_lib/schedule.o obj/lib/contract_option_lib/contract_eq_option_vanilla/contract_eq_option_vanilla.o obj/lib/path_gen_lib/path/path.o obj/lib/path_gen_lib/process_eq_imp/process_eq_lognormal.o obj/lib/support_lib/myDouble_lib/myudouble.o obj/lib/support_lib/parse_lib/parse_lib.o obj/lib/support_lib/statistic_lib/statistic_lib.o obj/lib/support_lib/lib_lib/lib.o obj/lib/support_lib/myRandom/myRandom.o obj/lib/support_lib/myRandom/myRandom_gnr/combined.o obj/lib/support_lib/myRandom/myRandom_gnr/linCongruential.o obj/lib/support_lib/myRandom/myRandom_gnr/tausworth.o obj/tests/test_header.o obj/tests/path_test1.o obj/tests/montecarlo_test1.o obj/exam/B2_test_generator.o
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 61):
+	@printf "\n"
+	@$(CC) $(LDFLAGS) -o $(TARGETDIR)/$@ $(FILTER_OBJ) $(call FILTER_IN,$(basename $@),$(OBJECTS))
+	./$(TARGETDIR)/$@ -cpu 
+	./$(TARGETDIR)/$@ -gpu
+
 clean:
 #  Phony target (prerequisite of .PHONY).
 #  Implicit rule search has not been done.
 #  File does not exist.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 48):
+#  recipe to execute (from 'Makefile', line 47):
 	@$(RM) -r $(BUILDDIR)
+
+# Not a target:
+obj/lib/support_lib/lib_lib/lib.d:
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
+
+path_test1: obj/lib/option_pricer_lib/option_pricer_montecarlo/option_pricer_montecarlo.o obj/lib/equity_lib/schedule_lib/schedule.o obj/lib/contract_option_lib/contract_eq_option_vanilla/contract_eq_option_vanilla.o obj/lib/path_gen_lib/path/path.o obj/lib/path_gen_lib/process_eq_imp/process_eq_lognormal.o obj/lib/support_lib/myDouble_lib/myudouble.o obj/lib/support_lib/parse_lib/parse_lib.o obj/lib/support_lib/statistic_lib/statistic_lib.o obj/lib/support_lib/lib_lib/lib.o obj/lib/support_lib/myRandom/myRandom.o obj/lib/support_lib/myRandom/myRandom_gnr/combined.o obj/lib/support_lib/myRandom/myRandom_gnr/linCongruential.o obj/lib/support_lib/myRandom/myRandom_gnr/tausworth.o obj/tests/test_header.o obj/tests/path_test1.o obj/tests/montecarlo_test1.o obj/exam/B2_test_generator.o
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 61):
+	@printf "\n"
+	@$(CC) $(LDFLAGS) -o $(TARGETDIR)/$@ $(FILTER_OBJ) $(call FILTER_IN,$(basename $@),$(OBJECTS))
+	./$(TARGETDIR)/$@ -cpu 
+	./$(TARGETDIR)/$@ -gpu
+
+# Not a target:
+obj/tests/montecarlo_test1.d:
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
+
+# Not a target:
+obj/exam/B2_test_generator.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+obj/lib/path_gen_lib/path/path.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+obj/lib/equity_lib/schedule_lib/schedule.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+obj/tests/path_test1.d:
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
+
+# Not a target:
+obj/lib/support_lib/parse_lib/parse_lib.o:
+ 
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+obj/lib/option_pricer_lib/option_pricer_montecarlo/option_pricer_montecarlo.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+obj/lib/support_lib/myRandom/myRandom_gnr/linCongruential.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
 
 directories:
 #  Implicit rule search has not been done.
@@ -385,24 +604,64 @@ directories:
 # ? := 
 # variable set hash-table stats:
 # Load=8/32=25%, Rehash=0, Collisions=1/13=8%
-#  recipe to execute (from 'Makefile', line 43):
+#  recipe to execute (from 'Makefile', line 42):
 	@mkdir -p $(TARGETDIR)
 	@mkdir -p $(BUILDDIR)
 
+# Not a target:
+obj/lib/contract_option_lib/contract_eq_option_vanilla/contract_eq_option_vanilla.d:
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
+
+# Not a target:
+obj/lib/path_gen_lib/process_eq_imp/process_eq_lognormal.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+obj/lib/support_lib/myRandom/myRandom_gnr/tausworth.d:
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
+
+# Not a target:
+obj/lib/support_lib/statistic_lib/statistic_lib.d:
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
+
+# Not a target:
+obj/lib/support_lib/myDouble_lib/myudouble.d:
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
+
+# Not a target:
+obj/lib/support_lib/lib_lib/lib.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
 # files hash-table stats:
-# Load=10/1024=1%, Rehash=0, Collisions=0/35=0%
+# Load=49/1024=5%, Rehash=0, Collisions=1/135=1%
 # VPATH Search Paths
 
 # No 'vpath' search paths.
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 19 / storage = 160 B / avg = 8 B
-# current buf: size = 8162 B / used = 160 B / count = 19 / avg = 8 B
+# strcache buffers: 1 (0) / strings = 65 / storage = 1875 B / avg = 28 B
+# current buf: size = 8162 B / used = 1875 B / count = 65 / avg = 28 B
 
-# strcache performance: lookups = 43 / hit rate = 55%
+# strcache performance: lookups = 138 / hit rate = 52%
 # hash-table stats:
-# Load=19/8192=0%, Rehash=0, Collisions=1/43=2%
-# Finished Make data base on Thu Jun  9 10:25:12 2022
+# Load=65/8192=1%, Rehash=0, Collisions=3/138=2%
+# Finished Make data base on Sat Sep 17 09:56:15 2022
 
  

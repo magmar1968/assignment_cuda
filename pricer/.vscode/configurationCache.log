@@ -1,1 +1,1 @@
-{"buildTargets":["all","clean","cleaner","directories","remake","resources"],"launchTargets":[],"customConfigurationProvider":{"workspaceBrowse":{"browsePath":[],"compilerArgs":[]},"fileIndex":[]}}
+{"buildTargets":["B2_test_generator","all","clean","cleaner","directories","exam","montecarlo_test1","path_test1","remake","resources","test_header"],"launchTargets":[],"customConfigurationProvider":{"workspaceBrowse":{"browsePath":[],"compilerArgs":[]},"fileIndex":[]}}
