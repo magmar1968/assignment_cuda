@@ -154,6 +154,27 @@ namespace prcr
         status = status && fileGetOptionValue<double>(filename, "#eq_price_time",  &prcr_args->eq_price_args.time);
         status = status && fileGetOptionValue<double>(filename, "#eq_price_price", &prcr_args->eq_price_args.price);
 
+        //-----------------------------------------------------------------------------------------------------
+        //contract options 
+        std::string option_type;
+        status = status && fileGetOptionValue<std::string>(filename, "#option_type", &option_type);
+        status = status && fileGetOptionValue<char>(filename, "#contract_type", &prcr_args->contract_args.contract_type);
+        strcpy(prcr_args->contract_args.option_type, option_type.c_str());
+        
+        if(option_type == "vanilla"){
+            status = status && fileGetOptionValue<double>(filename, "#strike_price", &prcr_args->contract_args.strike_price);
+        }
+        // else if
+        else{
+            std::cerr << "INPUT ERROR: the contract option doesn't exist. Please check the input\n"
+                      << "             file and retry.                                          \n";
+        }        
+        
+
+
+
+
+
 
         return status;
     }

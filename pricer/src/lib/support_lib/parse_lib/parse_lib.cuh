@@ -114,6 +114,15 @@ namespace prcr
         double deltat;
         double dim;
     };
+
+    struct Contract_args
+    {
+        char   option_type[15]; //vanilla ecc.       
+        char   contract_type;   //call or put 
+        
+        double strike_price;
+        //add more stuff for different type of contracts 
+    };
     
     struct Eq_descr_args
     {
@@ -141,6 +150,7 @@ namespace prcr
         MC_args       mc_args;
         Yc_args       yc_args;
         Vol_args      vol_args;
+        Contract_args contract_args;
         Schedule_args schedule_args;
         Eq_descr_args eq_descr_args;
         Eq_price_args eq_price_args;
