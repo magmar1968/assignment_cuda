@@ -123,16 +123,21 @@ namespace prcr
         bool GPU;
         bool CPU;
     };
+
+    struct Pricer_args
+    {
+        Dev_opts dev_opts;
+        Yc_args yc_args;
+        Vol_args vol_args;
+        Schedule_args schedule_args;
+        Eq_descr_args eq_descr_args;
+        Eq_price_args eq_price_args;
+    };
     
 
 
     H bool ReadInputOption(std::string filename, 
-                           Dev_opts * dev_opts,
-                           Yc_args  * yc_args,
-                           Vol_args * vol_args,
-                           Schedule_args * schedule_args,
-                           Eq_descr_args * eq_descr_args,
-                           Eq_price_args * Eq_price_args);
+                           Pricer_args * pricer_args);
 
 
 
