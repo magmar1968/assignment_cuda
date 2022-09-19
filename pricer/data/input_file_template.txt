@@ -2,36 +2,38 @@
 !the input file for the pricer should be. Please follow it
 !precisely. The order of the key-words doesn't matter but 
 !the keyword must be identical (the parser is case sensitive).
+!Also remember that all teh kwywords must start with an "#".
 
 
 !insert comments with the "!" all the following text on 
 !the line will be skipped 
 
-CPU 1   !set to 1 to use the CPU for computing, 0 otherwise
-GPU 0   !both option can be enabled at the same time but at least one must be true
+#CPU 1   !set to 1 to use the CPU for computing, 0 otherwise
+#GPU 0   !both option can be enabled at the same time but at least one must be true
 
 
 !both the following option must be filled even if the CPU option is the only one
 !setted to true
-N_blocks 128 !# of blocks to use for the computation. 
-N_thread 512 !# of thread per block. 
+#N_blocks 128 !N of blocks to use for the computation. 
+#N_threads 512 !N of thread per block. 
 
+#N_simulations 100 
 
 !yc_structured !decomment if you'd like to introduce a structured yield curve
 !yc_rates
 !yc_times 
 
-yc_rate  1.0
+#yc_rate  1.0
 
-volatility 1.0 !volatility of the pricer
+#volatility 1.0 !volatility of the pricer
 
 
-eq_descr_isin_code  code
-eq_descr_name       name
-eq_descr_currency   €
-eq_descr_dy         1.0
+#eq_descr_isin_code  code
+#eq_descr_name       name
+#eq_descr_currency   €
+#eq_descr_dy         1.0
 
 
 !starting conditions
-eq_price_time  0
-eq_price_price 100
+#eq_price_time  0
+#eq_price_price 100

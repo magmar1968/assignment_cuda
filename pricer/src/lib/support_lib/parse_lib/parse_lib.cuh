@@ -8,6 +8,7 @@
 #include <iostream>
 #include <vector>
 
+
 #include "../lib_lib/lib.cuh" //countWords
 
 namespace prcr
@@ -17,6 +18,11 @@ namespace prcr
     #define HD __host__ __device__ 
     
     
+
+    H inline bool file_exists (const std::string& name) {
+        std::ifstream f(name.c_str());
+        return f.good();
+    }
    
     H bool cmdOptionExists(char** begin, char** end, const std::string& option);
     H std::string getCmdOption(char ** begin, char ** end, const std::string & option);
@@ -82,6 +88,11 @@ namespace prcr
 
     };
 
+    struct MC_args
+    {
+        size_t N_simulations;
+    };
+
     struct Yc_args
     {
         double rate;       // rate for flat yield curve
@@ -126,13 +137,15 @@ namespace prcr
 
     struct Pricer_args
     {
-        Dev_opts dev_opts;
-        Yc_args yc_args;
-        Vol_args vol_args;
+        Dev_opts      dev_opts;
+        MC_args       mc_args;
+        Yc_args       yc_args;
+        Vol_args      vol_args;
         Schedule_args schedule_args;
         Eq_descr_args eq_descr_args;
         Eq_price_args eq_price_args;
     };
+    
     
 
 
