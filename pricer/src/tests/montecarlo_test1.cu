@@ -210,10 +210,14 @@ int main(int argc, char** argv)
     prices_args->start_price =  100;
     
 
+    struct Device
+    {
+        bool CPU;
+        bool GPU;
+    };
 
 
-
-    prcr::Device dev;
+    Device dev;
     dev.CPU = false;
     dev.GPU = false;
 

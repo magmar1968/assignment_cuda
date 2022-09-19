@@ -205,7 +205,7 @@ int main(int argc, char** argv)
     prices_args->start_prices = 125.;
 
 
-    prcr::Device dev;
+    Device dev;
     //dev.CPU = false;
     //dev.GPU = false;
 

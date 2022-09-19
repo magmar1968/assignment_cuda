@@ -27,7 +27,7 @@ namespace prcr
 
     
     template<typename T>
-    H void fileGetOptionValue(std::string fileName, 
+    H bool fileGetOptionValue(std::string fileName, 
                               std::string option,
                               T           *out_value)
     {
@@ -35,7 +35,7 @@ namespace prcr
         if(fileOptionExist(fileName,option,&line) == false)
         {
             std::cerr << "ERROR: option "<< option << " doesn't exist\n";
-            exit(-1);
+            return false;
             
         }
         
@@ -43,11 +43,12 @@ namespace prcr
         std::string option_value;
         ss >> option_value;//option name
         ss >> *out_value;
+        return true; 
     }    
     
     
     template<typename T> 
-    H void fileGetOptionVectorVal(std::string  fileName,
+    H bool fileGetOptionVectorVal(std::string  fileName,
                                  std::string   option,
                                  std::vector<T> *out_values)
     {    
@@ -55,7 +56,7 @@ namespace prcr
         if(fileOptionExist(fileName,option,&line) == false)
         {
             std::cerr << "ERROR: option "<< option << " doesn't exist\n";
-            exit(-1);
+            return false;
         }
 
         std::stringstream ss(line);
@@ -64,34 +65,34 @@ namespace prcr
         
         T value;
         while(ss >> value)
-        {       
+        {
             out_values->push_back(value);
         }
+        return true;
     }
     
 
 
-    struct Device_options
+    struct Dev_opts
     {
-        bool   cpu;
-        bool   gpu;
-        size_t N_block; // # blocks
-        size_t N_thread;// # threads
+        bool   CPU;
+        bool   GPU;
+        size_t N_blocks; // # blocks
+        size_t N_threads;// # threads
 
     };
 
-    struct Yield_curve_args
+    struct Yc_args
     {
-        bool   flat;       // true if flat yield curve
         double rate;       // rate for flat yield curve
 
-        bool    structured;// true if structured yield curve
+        bool    structured;// true if structured yield curve false if is false
         double* rates;     // pointer to rates array
         double* times;     // pointer to times array
         size_t  dim;       // array dimension         
     };
 
-    struct Volatility_args
+    struct Vol_args
     {
         double vol;    //volatility 
     };
@@ -117,21 +118,22 @@ namespace prcr
         double price;
     };
 
-
-    H bool ReadInputOption(std::string filename);
-
-
-
-
-
-
-
-
     struct Device
     {
-        bool GPU = 0;
-        bool CPU = 0;
+        bool GPU;
+        bool CPU;
     };
+    
+
+
+    H bool ReadInputOption(std::string filename, 
+                           Dev_opts * dev_opts,
+                           Yc_args  * yc_args,
+                           Vol_args * vol_args,
+                           Schedule_args * schedule_args,
+                           Eq_descr_args * eq_descr_args,
+                           Eq_price_args * Eq_price_args);
+
 
 
 
