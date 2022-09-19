@@ -74,12 +74,18 @@ namespace prcr
                     Pricer_args * prcr_args)
     {
 
+        if(file_exists(filename) == false){
+            std::cerr << "INPUT ERROR: the input file doesn't exist. Please check the\n"
+                      << "              filname and retry.                           \n";
+        }
+
+
         bool status = true;
         
         
         //dev options input
-        status = status && fileGetOptionValue<bool>(filename,"CPU",&prcr_args->dev_opts.CPU);
-        status = status && fileGetOptionValue<bool>(filename,"GPU",&prcr_args->dev_opts.GPU);
+        status = status && fileGetOptionValue<bool>(filename,"#CPU",&prcr_args->dev_opts.CPU);
+        status = status && fileGetOptionValue<bool>(filename,"#GPU",&prcr_args->dev_opts.GPU);
         if(prcr_args->dev_opts.CPU == false and prcr_args->dev_opts.GPU == false)
         {
             std::cerr << "INPUT ERROR: at least one between CPU and GPU must be set to true.\n"
@@ -88,17 +94,23 @@ namespace prcr
         }
 
 
-        status = status && fileGetOptionValue<size_t>(filename, "N_blocks",  &prcr_args->dev_opts.N_blocks);
-        status = status && fileGetOptionValue<size_t>(filename, "N_threads", &prcr_args->dev_opts.N_threads);
+        status = status && fileGetOptionValue<size_t>(filename, "#N_blocks",  &prcr_args->dev_opts.N_blocks);
+        status = status && fileGetOptionValue<size_t>(filename, "#N_threads", &prcr_args->dev_opts.N_threads);
+
+        //-----------------------------------------------------------------------------------------------------
+        //MC options 
+        status = status && fileGetOptionValue<size_t>(filename,"#N_simulations",&prcr_args->mc_args.N_simulations);
+
+
 
         //-----------------------------------------------------------------------------------------------------
         //yield curve options 
-        if (fileOptionExist(filename, "yc_structured"))
+        if (fileOptionExist(filename, "#yc_structured"))
         {
             prcr_args->yc_args.structured = true;
             std::vector<double> vec_rates,vec_times;
-            status = status && fileGetOptionVectorVal<double>(filename, "yc_rates", &vec_rates);
-            status = status && fileGetOptionVectorVal<double>(filename, "yc_times", &vec_times);
+            status = status && fileGetOptionVectorVal<double>(filename, "#yc_rates", &vec_rates);
+            status = status && fileGetOptionVectorVal<double>(filename, "#yc_times", &vec_times);
             if(vec_rates.size() != vec_times.size())
             {
                 std::cerr << "INPUT ERROR: the size of times's and rates's array of the yield must\n"
@@ -117,21 +129,21 @@ namespace prcr
         }
         else{
             prcr_args->yc_args.structured = false;
-            status = status && fileGetOptionValue<double>(filename, "yc_rate",&prcr_args->yc_args.rate);
+            status = status && fileGetOptionValue<double>(filename, "#yc_rate",&prcr_args->yc_args.rate);
         }
         
         //-----------------------------------------------------------------------------------------------------
         //volatility
-        status = status && fileGetOptionValue<double>(filename, "volatility", &prcr_args->vol_args.vol);
+        status = status && fileGetOptionValue<double>(filename, "#volatility", &prcr_args->vol_args.vol);
 
 
         //-----------------------------------------------------------------------------------------------------
         //equity description arguments
         std::string isin_code,name,currency;
-        status = status && fileGetOptionValue<std::string>(filename,"eq_descr_isin_code",&isin_code);
-        status = status && fileGetOptionValue<std::string>(filename,"eq_descr_name", &name);
-        status = status && fileGetOptionValue<std::string>(filename,"eq_descr_currency",&currency);
-        status = status && fileGetOptionValue<double>(filename,"eq_decr_dy",&prcr_args->eq_descr_args.dividend_yield);
+        status = status && fileGetOptionValue<std::string>(filename,"#eq_descr_isin_code",&isin_code);
+        status = status && fileGetOptionValue<std::string>(filename,"#eq_descr_name", &name);
+        status = status && fileGetOptionValue<std::string>(filename,"#eq_descr_currency",&currency);
+        status = status && fileGetOptionValue<double>     (filename,"#eq_descr_dy",&prcr_args->eq_descr_args.dividend_yield);
 
         strcpy(prcr_args->eq_descr_args.isin_code,isin_code.c_str());
         strcpy(prcr_args->eq_descr_args.name,name.c_str());
@@ -139,8 +151,8 @@ namespace prcr
 
         //-----------------------------------------------------------------------------------------------------
         //equity price arguments 
-        status = status && fileGetOptionValue<double>(filename, "eq_price_time",  &prcr_args->eq_price_args.time);
-        status = status && fileGetOptionValue<double>(filename, "eq_price_price", &prcr_args->eq_price_args.price);
+        status = status && fileGetOptionValue<double>(filename, "#eq_price_time",  &prcr_args->eq_price_args.time);
+        status = status && fileGetOptionValue<double>(filename, "#eq_price_price", &prcr_args->eq_price_args.price);
 
 
         return status;
