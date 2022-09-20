@@ -164,45 +164,19 @@ namespace prcr
         if(option_type == "vanilla"){
             status = status && fileGetOptionValue<double>(filename, "#strike_price", &prcr_args->contract_args.strike_price);
         }
-        // else if
+        else if(option_type == "esotic_corridor"){
+            status = status && fileGetOptionValue<double>(filename, "#strike_price", &prcr_args->contract_args.strike_price);
+            status = status && fileGetOptionValue<double>(filename, "#B", &prcr_args->contract_args.B );
+            status = status && fileGetOptionValue<double>(filename, "#N", &prcr_args->contract_args.N );
+            status = status && fileGetOptionValue<double>(filename, "#K", &prcr_args->contract_args.K );    
+        }
         else{
             std::cerr << "INPUT ERROR: the contract option doesn't exist. Please check the input\n"
                       << "             file and retry.                                          \n";
         }        
         
-
-
-
-
-
-
         return status;
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 }

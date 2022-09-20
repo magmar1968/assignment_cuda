@@ -42,5 +42,5 @@
 !contract option input
 #option_type vanilla
 #contract_type C  !put C for a call contract or P for a pull contract
-#strike price 120 
+#strike_price 120 
 

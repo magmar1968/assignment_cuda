@@ -121,6 +121,11 @@ namespace prcr
         char   contract_type;   //call or put 
         
         double strike_price;
+
+        //esotic corridor contract arguments
+        double B;   
+        double N;
+        double K;
         //add more stuff for different type of contracts 
     };
     
