@@ -110,9 +110,9 @@ namespace prcr
 
     struct Schedule_args
     {
-        double t_ref;
-        double deltat;
-        double dim;
+        double t_ref;   //initial time
+        double deltat;  //time step size
+        size_t dim;     //time steps
     };
 
     struct Contract_args
