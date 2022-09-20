@@ -17,9 +17,12 @@ namespace prcr
   {
     private:
       bool _exact_solution;
+      size_t _l;
     public:
       HD Process_eq_lognormal(){};
-      HD Process_eq_lognormal(rnd::MyRandom * gnr, double exact_solution = true);
+      HD Process_eq_lognormal(rnd::MyRandom * gnr, 
+                              bool exact_solution = true,
+                              size_t l = 1); //n extra step for the euler scheme);
       HD virtual ~Process_eq_lognormal(){};
       //functions
       HD udb Get_new_equity_price(

@@ -3,8 +3,8 @@ namespace prcr
 {
     
     __host__ __device__
-    Process_eq_lognormal::Process_eq_lognormal(rnd::MyRandom * gnr,double exact_solution)
-        :Process(gnr),_exact_solution(exact_solution)
+    Process_eq_lognormal::Process_eq_lognormal(rnd::MyRandom * gnr,bool exact_solution,size_t l)
+        :Process(gnr),_exact_solution(exact_solution),_l(l)
     {
     }
 
@@ -52,8 +52,13 @@ namespace prcr
                         double delta_t,
                         double w,
                         double sigma)
-    {
-        return eq_price*(1 + (r - div_yield)*delta_t + sigma* sqrt(delta_t)*w); //should be right, but not totally sure
+    {//sarebbe stra figo renderlo ricorsivo, ma non so come fare
+        double new_delta_t = delta_t/static_cast<double>(_l);
+        for( int i = 0; i < _l; ++i)
+        {
+            eq_price*= (1 + (r - div_yield)*new_delta_t + sigma* sqrt(delta_t)*w);
+        }
+        return eq_price;
     }
 
     __host__ __device__ Equity_prices * 
