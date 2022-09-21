@@ -310,7 +310,7 @@ int main(int argc, char** argv)
         fprintf(stderr, "%s\n", cudaGetErrorString(cudaStatus));
 
         cudaStatus = cudaMemcpy(dev_res, host_results, NBLOCKS*TPB*sizeof(Result), cudaMemcpyHostToDevice);
-	if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMemcpy6 failed!\n"); }
+    	if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMemcpy6 failed!\n"); }
         fprintf(stderr, "%s\n", cudaGetErrorString(cudaStatus));
 
         kernel_mc << < NBLOCKS, TPB >> > (dev_seeds, dev_sched, dev_descr, dev_prices, dev_vnl_args, dev_res);
