@@ -140,11 +140,11 @@ int main(int argc, char ** argv)
     for (size_t inc = 0; inc < 4 * NBLOCKS * TPB; inc++)
         seeds[inc] = rnd::genSeed(true);
     //results
-    Result* host_results = new Result[NBLOCKS * TPB];
+    Result* host_res = new Result[NBLOCKS * TPB];
     for(size_t inc = 0; inc < NBLOCKS*TPB; inc ++)
     {
-	    host_results[inc].opt_price = 0;
-        host_results[inc].error = 0;
+	    host_res[inc].opt_price = 0;
+        host_res[inc].error = 0;
     }
 
     bool GPU = prcr_args->dev_opts.GPU;
@@ -178,14 +178,14 @@ int main(int argc, char ** argv)
         if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMemcpy2 failed!\n"); }
         fprintf(stderr, "%s\n", cudaGetErrorString(cudaStatus));
 
-        cudaStatus = cudaMemcpy(dev_res, host_results, NBLOCKS*TPB*sizeof(Result), cudaMemcpyHostToDevice);
+        cudaStatus = cudaMemcpy(dev_res, host_res, NBLOCKS*TPB*sizeof(Result), cudaMemcpyHostToDevice);
     	if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMemcpy3 failed!\n"); }
         fprintf(stderr, "%s\n", cudaGetErrorString(cudaStatus));
 
 
         kernel <<< NBLOCKS, TPB>>>(dev_seeds,dev_prcr_args,dev_res);
 
-        cudaStatus = cudaMemcpy(dev_res, host_results, NBLOCKS*TPB*sizeof(Result), cudaMemcpyDeviceToHost);
+        cudaStatus = cudaMemcpy(host_res, dev_res, NBLOCKS*TPB*sizeof(Result), cudaMemcpyDeviceToHost);
     	if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMemcpy4 failed!\n"); }
         fprintf(stderr, "%s\n", cudaGetErrorString(cudaStatus));
 
@@ -196,7 +196,7 @@ int main(int argc, char ** argv)
     }
     else return 0;
 
-    delete[](host_results);
+    delete[](host_res);
     delete[](seeds);
     delete(prcr_args);
 }
