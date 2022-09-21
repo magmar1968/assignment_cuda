@@ -5,8 +5,8 @@ namespace prcr
 
     __host__ __device__
     Option_pricer_montecarlo::Option_pricer_montecarlo(
-                    Contract_option *contract_option,
-                    Process         *process,
+                    Contract_option      *contract_option,
+                    Process_eq_lognormal *process,
                     size_t             N)
             :Option_pricer(contract_option,process),_N(N)
     {
@@ -55,8 +55,7 @@ namespace prcr
                 static_cast<Contract_eq_option&>(*_contract_option);
         Schedule * schedule = contract.Get_schedule();
         Equity_prices * starting_point = contract.Get_eq_prices();
-        Path  path =  Path(starting_point,schedule,
-                            &static_cast<Process_eq_lognormal&>(*_process));
+        Path  path =  Path(starting_point,schedule, _process);
 
         for(size_t i = 0; i < _N; ++i)
         {

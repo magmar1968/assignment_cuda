@@ -21,8 +21,8 @@ namespace prcr
       //constructors & destructors 
       HD Option_pricer_montecarlo(){}
       HD Option_pricer_montecarlo(
-                  Contract_option *contract_option,
-                  Process         *process,
+                  Contract_option      *contract_option,
+                  Process_eq_lognormal *process,
                   size_t             N);
       HD ~Option_pricer_montecarlo(){}
       //getters & setters

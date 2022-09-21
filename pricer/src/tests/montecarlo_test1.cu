@@ -158,7 +158,7 @@ int main(int argc, char** argv)
     Result* host_results = new Result[NBLOCKS * TPB];
     for(size_t inc = 0; inc < NBLOCKS*TPB; inc ++)
     {
-	host_results[inc].opt_price = 0;
+	    host_results[inc].opt_price = 0;
         host_results[inc].error = 0;
     }
 
