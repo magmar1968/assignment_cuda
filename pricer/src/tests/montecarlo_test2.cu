@@ -158,7 +158,7 @@ simulate_host(uint* seeds, prcr::Pricer_args* prcr_args, Result* host_res)
         volatility_surface);
 
     Equity_prices* starting_point = new Equity_prices(
-        prcr_args->eq_price_args.price,
+        prcr_args->eq_price_args.time,
         prcr_args->eq_price_args.price,
         descr);
 
