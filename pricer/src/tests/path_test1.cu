@@ -355,7 +355,6 @@ int main(int argc, char** argv)
         final_res += host_results[i];
     }
     final_res /= double(NBLOCKS * TPB);
-    //final_res.error = sqrt(final_res.error / double(NBLOCKS * TPB * PPT) - final_res.opt_price * final_res.opt_price);
 
     std::cout << "\n" << final_res << std::endl;
     //std::cout << final_res.error << std::endl;

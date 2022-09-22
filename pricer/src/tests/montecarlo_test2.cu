@@ -28,7 +28,7 @@ struct Result
 
 
 void __global__ kernel(uint * seeds, prcr::Pricer_args * prcr_args,Result * dev_results);
-void __host__   simulate_host();
+void __host__   simulate_host  (uint* seeds, prcr::Pricer_args* prcr_args, Result* dev_res);
 void __device__ simulate_device(uint* seeds, prcr::Contract_eq_option_vanilla * contr_opt, 
                                 prcr::Pricer_args * prcr_args, Result * dev_res); 
 void __host__ __device__ 
@@ -74,6 +74,52 @@ __global__ void kernel(uint * seeds, prcr::Pricer_args * prcr_args,Result * dev_
 
 
     simulate_device(seeds,eq_option,prcr_args, dev_results);
+
+    delete(volatility_surface);
+    delete(yield_curve);
+    delete(descr);
+    delete(starting_point);
+    delete(schedule);
+    delete(eq_option);
+}
+
+
+__host__ void simulate_host(uint* seeds, prcr::Pricer_args* prcr_args, Result* dev_res)
+{
+    using namespace prcr;
+
+    Volatility_surface* volatility_surface = new Volatility_surface(prcr_args->vol_args.vol);
+
+    Yield_curve_flat* yield_curve = new Yield_curve_flat(
+        prcr_args->eq_descr_args.currency,
+        prcr_args->yc_args.rate);
+
+    Equity_description* descr = new Equity_description(
+        prcr_args->eq_descr_args.isin_code,
+        prcr_args->eq_descr_args.name,
+        prcr_args->eq_descr_args.currency,
+        prcr_args->eq_descr_args.dividend_yield,
+        yield_curve,
+        volatility_surface);
+
+    Equity_prices* starting_point = new Equity_prices(
+        prcr_args->eq_price_args.price,
+        prcr_args->eq_price_args.price,
+        descr);
+
+    Schedule* schedule = new Schedule(
+        prcr_args->schedule_args.t_ref,
+        prcr_args->schedule_args.deltat,
+        prcr_args->schedule_args.dim);
+
+    Contract_eq_option_vanilla* eq_option = new Contract_eq_option_vanilla(
+        starting_point,
+        schedule,
+        prcr_args->contract_args.strike_price,
+        prcr_args->contract_args.contract_type);
+
+    for()
+    simulate_generic(seeds, index, contr_opt, prcr_args, results);
 
     delete(volatility_surface);
     delete(yield_curve);
@@ -195,6 +241,8 @@ int main(int argc, char ** argv)
         cudaFree(dev_prcr_args);
     }
     else return 0;
+
+
 
     delete[](host_res);
     delete[](seeds);
