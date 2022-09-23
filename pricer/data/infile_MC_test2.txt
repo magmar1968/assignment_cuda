@@ -1,10 +1,13 @@
-#CPU 0   !set to 1 to use the CPU for computing, 0 otherwise
-#GPU 1   !both option can be enabled at the same time but at least one must be true
+#CPU 1   !set to 1 to use the CPU for computing, 0 otherwise
+#GPU 0   !both option can be enabled at the same time but at least one must be true
 
 
 #T 1     ! simulation time range in years
 #m 5   ! number of time steps 
-#l 1     ! extra time step for the euler scheme
+
+
+#pr_exact 0  
+#l 1        ! extra time step for the euler scheme
 
 
 !both the following option must be filled even if the CPU option is the only one

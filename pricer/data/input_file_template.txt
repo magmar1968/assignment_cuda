@@ -14,7 +14,10 @@
 
 #T 1     ! simulation time range in years
 #m 100   ! number of time steps 
-#l 1     ! extra time step for the euler scheme
+
+
+#pr_exact 1 ! true if you like to simulate the process exactly 
+#l 1        ! extra time step for the euler scheme (if exact then l = 1)
 
 
 !both the following option must be filled even if the CPU option is the only one

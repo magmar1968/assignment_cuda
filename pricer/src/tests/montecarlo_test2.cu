@@ -260,8 +260,7 @@ int main(int argc, char ** argv)
         status = status && run_device(seeds,prcr_args,host_res);
     }
     
-    if(CPU == true)
-    {
+    if(CPU == true){
         status = status && simulate_host(seeds,prcr_args,host_res);
 
         double final_error = 0;

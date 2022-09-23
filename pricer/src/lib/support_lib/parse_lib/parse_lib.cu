@@ -183,7 +183,13 @@ namespace prcr
         else{
             std::cerr << "INPUT ERROR: the contract option doesn't exist. Please check the input\n"
                       << "             file and retry.                                          \n";
-        }        
+        }
+
+        //-----------------------------------------------------------------------------------------------------
+        // stocastic process options 
+        status = status && fileGetOptionValue<bool>(filename, "#exact",&prcr_args->stc_pr_args.exact);
+        status = status && fileGetOptionValue<size_t>(filename,"#l",&prcr_args->stc_pr_args.l);
+                
         return status;
     }
 }

@@ -149,6 +149,12 @@ namespace prcr
         bool CPU;
     };
 
+    struct Stc_pr_args
+    {
+        bool exact;
+        size_t l;
+    };
+
     struct Pricer_args
     {
         Dev_opts      dev_opts;
@@ -159,6 +165,7 @@ namespace prcr
         Schedule_args schedule_args;
         Eq_descr_args eq_descr_args;
         Eq_price_args eq_price_args;
+        Stc_pr_args   stc_pr_args;
     };
     
     
