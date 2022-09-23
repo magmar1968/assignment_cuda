@@ -37,6 +37,13 @@ namespace prcr
             //*_eq_descr = *equity_descriptions;
             _eq_descr = equity_descriptions; 
         }
+
+        HD Equity_prices(const Equity_prices& in_eq_price)
+        {
+            _price = in_eq_price.Get_eq_price();
+            _time  = in_eq_price.Get_time();
+            _eq_descr = in_eq_price.Get_eq_description(); 
+        }
         
         HD ~Equity_prices()
         {

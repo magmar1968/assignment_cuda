@@ -33,7 +33,7 @@ namespace prcr
                 double t_end);
       
       
-      HD virtual Equity_prices * Get_new_prices(
+      HD virtual Equity_prices Get_new_prices(
                 Equity_prices * eq_prices_in,
                 double w,
                 double delta_t

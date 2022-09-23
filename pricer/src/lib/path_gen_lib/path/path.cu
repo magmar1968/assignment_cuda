@@ -13,6 +13,9 @@ namespace prcr
 		_dim = _schedule -> Get_dim(); // n schedule steps
 		_random_numbers_scenario = new double[_dim];
 		_eq_prices_scenario = new Equity_prices * [_dim];
+		for(int i = 0; i < _dim; ++i)
+			_eq_prices_scenario[i] = new Equity_prices;
+
 		gen_path();
 	}
 
@@ -50,7 +53,7 @@ namespace prcr
 		
 		double delta_t = _schedule->Get_t(_start_ind) - start_t;   //first step, from starting_point
 		_random_numbers_scenario[_start_ind] = _process_eq_lognormal->Get_random_gaussian();
-		_eq_prices_scenario[_start_ind] = _process_eq_lognormal->Get_new_prices(_starting_point, _random_numbers_scenario[_start_ind], delta_t);
+		*_eq_prices_scenario[_start_ind] = _process_eq_lognormal->Get_new_prices(_starting_point, _random_numbers_scenario[_start_ind], delta_t);
 
 		for (size_t j =  _start_ind + 1; j < _dim; j++)
 		{
@@ -58,7 +61,7 @@ namespace prcr
 
 			_random_numbers_scenario[j] = _process_eq_lognormal->Get_random_gaussian(); 
 			// _eq_prices_scenario[j] = NULL;
-			_eq_prices_scenario[j] = 
+			*_eq_prices_scenario[j] = 
 				_process_eq_lognormal->Get_new_prices(_eq_prices_scenario[j - 1], _random_numbers_scenario[j],delta_t); 
 			
 		}
