@@ -17,7 +17,7 @@
 #include "../lib/support_lib/statistic_lib/statistic_lib.cuh"
 #include "../lib/support_lib/myDouble_lib/myudouble.cuh"
 #include "../lib/support_lib/parse_lib/parse_lib.cuh"
-
+#include "../lib/support_lib/timer_lib/myTimer.cuh"
 
 struct Result
 {
@@ -214,10 +214,10 @@ simulate_generic(uint * seeds, size_t index,
     size_t PPT = prcr_args->mc_args.N_simulations;
 
     rnd::GenCombined               * gnr_in  = new rnd::GenCombined(seed0, seed1, seed2, seed3);
-    prcr::Process_eq_lognormal     * process = new prcr::Process_eq_lognormal(gnr_in);
+    prcr::Process_eq_lognormal     * process = new prcr::Process_eq_lognormal(gnr_in,false,1);
     prcr::Option_pricer_montecarlo * pric    = new prcr::Option_pricer_montecarlo(contr_opt,process,PPT);
     results[index].opt_price = pric->Get_price();
-    results[index].error     = pric->Get_MC_error();
+    results[index].error     = pric->Get_price_square();//MC_error();
 
     delete(gnr_in);
     delete(process);
@@ -239,7 +239,7 @@ int main(int argc, char ** argv)
     
     size_t NBLOCKS = prcr_args->dev_opts.N_blocks;
     size_t TPB    = prcr_args->dev_opts.N_threads;
-
+    size_t PPT = prcr_args->mc_args.N_simulations;
     //seeeds generation
     uint* seeds = new uint[4 * NBLOCKS * TPB];
     for (size_t inc = 0; inc < 4 * NBLOCKS * TPB; inc++)
@@ -248,7 +248,7 @@ int main(int argc, char ** argv)
     Result* host_res = new Result[NBLOCKS * TPB];
     for(size_t inc = 0; inc < NBLOCKS*TPB; inc ++)
     {
-	    host_res[inc].opt_price = 0;
+        host_res[inc].opt_price = 0;
         host_res[inc].error = 0;
     }
 
@@ -256,22 +256,28 @@ int main(int argc, char ** argv)
     bool CPU = prcr_args->dev_opts.CPU;
     bool status = true;
 
-    if(GPU == true){
+    if(GPU == true){ 
+	Timer gpu_timer;
         status = status && run_device(seeds,prcr_args,host_res);
+	gpu_timer.Stop();
     }
     
     if(CPU == true){
         status = status && simulate_host(seeds,prcr_args,host_res);
 
         double final_error = 0;
+	double squares_sum = 0;
         double final_price = 0;
         for( int i = 0 ; i < NBLOCKS* TPB; ++i)
         {
-            final_error += host_res[i].error;
+            //final_error += host_res[i].error;
             final_price += host_res[i].opt_price; 
+	    squares_sum += host_res[i].error;
+	    
         }
         final_price /= static_cast<double>(NBLOCKS*TPB);
-        final_error /= static_cast<double>(NBLOCKS*TPB);
+        //final_error /= static_cast<double>(NBLOCKS*TPB);
+	final_error = compute_final_error(squares_sum, final_price, NBLOCKS*TPB*PPT);
         std::cout << " CPU simulation final results:         \n"
                   << "         - price: " << final_price << "\n"
                   << "         - error: " << final_error << "\n";

@@ -24,6 +24,12 @@ namespace prcr
     {
         return _MC_error;
     }
+    
+    __host__ __device__ double
+    Option_pricer_montecarlo::Get_price_square() const
+    {
+        return _price_square;
+    }
 
     __host__ __device__ size_t
     Option_pricer_montecarlo::Get_N() const
@@ -69,7 +75,7 @@ namespace prcr
         _price = prcr::avg(pay_off,_N);
         _price_square = prcr::sum_array(pay_off2,_N);  //cos'è la somma dei quadrati ---> forse meglio cambiargli nome
 
-        compute_MC_error();
+        //compute_MC_error();
 
         delete[](pay_off);delete[](pay_off2);
     }
