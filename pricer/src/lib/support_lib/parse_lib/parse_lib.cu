@@ -187,7 +187,7 @@ namespace prcr
 
         //-----------------------------------------------------------------------------------------------------
         // stocastic process options 
-        status = status && fileGetOptionValue<bool>(filename, "#exact",&prcr_args->stc_pr_args.exact);
+        status = status && fileGetOptionValue<bool>(filename, "#pr_exact",&prcr_args->stc_pr_args.exact);
         status = status && fileGetOptionValue<size_t>(filename,"#l",&prcr_args->stc_pr_args.l);
                 
         return status;
