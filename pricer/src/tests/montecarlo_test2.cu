@@ -19,6 +19,12 @@
 #include "../lib/support_lib/parse_lib/parse_lib.cuh"
 #include "../lib/support_lib/timer_lib/myTimer.cuh"
 
+    struct Sanity_check
+    {
+        bool obj_instact = false;
+        bool simulation  = false;
+    };
+
 struct Result
 {
     double opt_price;
@@ -26,7 +32,7 @@ struct Result
 };
 
 __host__ bool run_device(uint * seeds, prcr::Pricer_args * prcr_args,Result * host_results);
-void __global__ kernel(uint * seeds, prcr::Pricer_args * prcr_args,Result * dev_results);
+void __global__ kernel(uint * seeds, prcr::Pricer_args * prcr_args,Result * dev_results, Sanity_check * san_check);
 bool __host__   simulate_host  (uint* seeds, prcr::Pricer_args* prcr_args, Result* dev_res);
 void __device__ simulate_device(uint* seeds, prcr::Contract_eq_option_vanilla * contr_opt, 
                                 prcr::Pricer_args * prcr_args, Result * dev_res); 
@@ -48,6 +54,12 @@ run_device(uint * seeds, prcr::Pricer_args * prcr_args,Result * host_res)
     size_t NBLOCKS = prcr_args->dev_opts.N_blocks;
     size_t TPB    = prcr_args->dev_opts.N_threads;
 
+    Sanity_check * dev_sanity_check;
+    Sanity_check * host_sanity_check = new Sanity_check;
+
+
+
+
     cudaStatus = cudaMalloc((void**)&dev_seeds, NBLOCKS * TPB * 4 * sizeof(uint));
     if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMalloc1 failed!\n"); }
 
@@ -57,6 +69,8 @@ run_device(uint * seeds, prcr::Pricer_args * prcr_args,Result * host_res)
     cudaStatus = cudaMalloc((void**)&dev_res, NBLOCKS * TPB * sizeof(Result));
     if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMalloc3 failed!\n"); }
 
+    cudaStatus = cudaMalloc((void**)&dev_sanity_check,sizeof(Sanity_check));
+    if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMalloc3 failed!\n"); }
 
 
     cudaStatus = cudaMemcpy(dev_seeds, seeds, NBLOCKS * TPB * 4 * sizeof(uint), cudaMemcpyHostToDevice);
@@ -72,10 +86,14 @@ run_device(uint * seeds, prcr::Pricer_args * prcr_args,Result * host_res)
     fprintf(stderr, "%s\n", cudaGetErrorString(cudaStatus));
 
 
-    kernel <<< NBLOCKS, TPB>>>(dev_seeds,dev_prcr_args,dev_res);
+    kernel <<< NBLOCKS, TPB>>>(dev_seeds,dev_prcr_args,dev_res,dev_sanity_check);
 
     cudaStatus = cudaMemcpy(host_res, dev_res, NBLOCKS*TPB*sizeof(Result), cudaMemcpyDeviceToHost);
     if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMemcpy4 failed!\n"); }
+    fprintf(stderr, "%s\n", cudaGetErrorString(cudaStatus));
+
+    cudaStatus = cudaMemcpy(host_sanity_check,dev_sanity_check,sizeof(Sanity_check),cudaMemcpyHostToDevice);
+    if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMemcpy5 failed!\n"); }
     fprintf(stderr, "%s\n", cudaGetErrorString(cudaStatus));
 
 
@@ -83,6 +101,11 @@ run_device(uint * seeds, prcr::Pricer_args * prcr_args,Result * host_res)
     cudaFree(dev_res);
     cudaFree(dev_prcr_args);
 
+
+    std::cerr << "instanctation: " << host_sanity_check->obj_instact << std::endl
+              << "simulation:    " << host_sanity_check->simulation  << std::endl;
+
+    delete(host_sanity_check);
     return cudaStatus;
 }
 
@@ -90,7 +113,7 @@ run_device(uint * seeds, prcr::Pricer_args * prcr_args,Result * host_res)
 
 
 __global__ void 
-kernel(uint * seeds, prcr::Pricer_args * prcr_args,Result * dev_results)
+kernel(uint * seeds, prcr::Pricer_args * prcr_args,Result * dev_results, Sanity_check * dev_san_check)
 {
     using namespace prcr;
 
@@ -124,9 +147,12 @@ kernel(uint * seeds, prcr::Pricer_args * prcr_args,Result * dev_results)
                                     prcr_args->contract_args.strike_price,
                                     prcr_args->contract_args.contract_type);
 
+    dev_san_check->obj_instact = true;
+
 
     simulate_device(seeds,eq_option,prcr_args, dev_results);
 
+    dev_san_check->simulation = true;
     delete(volatility_surface);
     delete(yield_curve);
     delete(descr);
