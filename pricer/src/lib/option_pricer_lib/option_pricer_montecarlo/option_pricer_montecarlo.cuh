@@ -27,6 +27,7 @@ namespace prcr
       HD ~Option_pricer_montecarlo(){}
       //getters & setters
       HD double Get_price() const;
+      HD double Get_price_square() const;
       HD double Get_MC_error() const;
       HD size_t Get_N() const;
 
