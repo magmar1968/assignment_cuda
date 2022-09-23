@@ -52,12 +52,4 @@ compute_final_error(const double sq_sum, const double mean, const size_t N_tot)
 {
     return (sqrt((sq_sum/static_cast<double>(N_tot)-mean*mean)/N_tot));
 }
-
-
-
-
-
-
-
-
 }

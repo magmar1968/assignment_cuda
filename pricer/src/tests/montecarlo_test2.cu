@@ -266,18 +266,18 @@ int main(int argc, char ** argv)
         status = status && simulate_host(seeds,prcr_args,host_res);
 
         double final_error = 0;
-	double squares_sum = 0;
+	    double squares_sum = 0;
         double final_price = 0;
         for( int i = 0 ; i < NBLOCKS* TPB; ++i)
         {
             //final_error += host_res[i].error;
             final_price += host_res[i].opt_price; 
-	    squares_sum += host_res[i].error;
+    	    squares_sum += host_res[i].error;
 	    
         }
         final_price /= static_cast<double>(NBLOCKS*TPB);
         //final_error /= static_cast<double>(NBLOCKS*TPB);
-	final_error = compute_final_error(squares_sum, final_price, NBLOCKS*TPB*PPT);
+	    final_error = compute_final_error(squares_sum, final_price, NBLOCKS*TPB*PPT);
         std::cout << " CPU simulation final results:         \n"
                   << "         - price: " << final_price << "\n"
                   << "         - error: " << final_error << "\n";
