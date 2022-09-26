@@ -61,22 +61,22 @@ namespace prcr
                 static_cast<Contract_eq_option&>(*_contract_option);
         Schedule * schedule = contract.Get_schedule();
         Equity_prices * starting_point = contract.Get_eq_prices();
-        Path  path =  Path(starting_point,schedule, _process);
+        Path * path = new Path(starting_point,schedule, _process);
 
         for(size_t i = 0; i < _N; ++i)
         {
 
-            pay_off[i] = contract.Pay_off(&path);
+            pay_off[i] = contract.Pay_off(path);
             pay_off2[i] = pay_off[i]*pay_off[i];
         
-            path.regen_path();
+            path->regen_path();
         }    
         
         _price = prcr::avg(pay_off,_N);
         _price_square = prcr::sum_array(pay_off2,_N);  //cos'è la somma dei quadrati ---> forse meglio cambiargli nome
 
         //compute_MC_error();
-
+        delete(path);
         delete[](pay_off);delete[](pay_off2);
     }
 
