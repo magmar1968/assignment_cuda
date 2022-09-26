@@ -92,7 +92,7 @@ run_device(uint * seeds, prcr::Pricer_args * prcr_args,Result * host_res)
     if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMemcpy4 failed!\n"); }
     fprintf(stderr, "%s\n", cudaGetErrorString(cudaStatus));
 
-    cudaStatus = cudaMemcpy(host_sanity_check,dev_sanity_check,sizeof(Sanity_check),cudaMemcpyHostToDevice);
+    cudaStatus = cudaMemcpy(host_sanity_check,dev_sanity_check,sizeof(Sanity_check),cudaMemcpyDeviceToHost);
     if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMemcpy5 failed!\n"); }
     fprintf(stderr, "%s\n", cudaGetErrorString(cudaStatus));
 
