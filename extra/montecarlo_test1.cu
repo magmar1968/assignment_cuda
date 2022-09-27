@@ -21,7 +21,7 @@
 #define STEPS 5  // number of steps
 #define NBLOCKS 128  //cuda blocks
 #define TPB 512  //threads per block
-#define PPT 2000
+#define PPT 100
 
 using namespace prcr;
 
@@ -158,7 +158,7 @@ int main(int argc, char** argv)
     Result* host_results = new Result[NBLOCKS * TPB];
     for(size_t inc = 0; inc < NBLOCKS*TPB; inc ++)
     {
-	host_results[inc].opt_price = 0;
+	    host_results[inc].opt_price = 0;
         host_results[inc].error = 0;
     }
 
@@ -210,10 +210,14 @@ int main(int argc, char** argv)
     prices_args->start_price =  100;
     
 
+    struct Device
+    {
+        bool CPU;
+        bool GPU;
+    };
 
 
-
-    prcr::Device dev;
+    Device dev;
     dev.CPU = false;
     dev.GPU = false;
 
@@ -306,7 +310,7 @@ int main(int argc, char** argv)
         fprintf(stderr, "%s\n", cudaGetErrorString(cudaStatus));
 
         cudaStatus = cudaMemcpy(dev_res, host_results, NBLOCKS*TPB*sizeof(Result), cudaMemcpyHostToDevice);
-	if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMemcpy6 failed!\n"); }
+    	if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMemcpy6 failed!\n"); }
         fprintf(stderr, "%s\n", cudaGetErrorString(cudaStatus));
 
         kernel_mc << < NBLOCKS, TPB >> > (dev_seeds, dev_sched, dev_descr, dev_prices, dev_vnl_args, dev_res);
