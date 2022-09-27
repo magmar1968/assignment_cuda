@@ -55,7 +55,7 @@ run_device(prcr::Pricer_args * prcr_args, prcr::Yc_args * host_yc_args)
     cudaFree(dev_prcr_args);
     cudaFree(dev_yc_args);
 
-    return cudaStatus && (!kernel_error_check);
+    return ((cudaStatus==cudaSuccess) && (kernel_error_check));
 }
 
 __global__ void 
@@ -123,7 +123,7 @@ int main(int argc, char ** argv)
 
     if(GPU == true)
         for(int i = 0; i < 10000; ++i)
-            status = status && (run_device(prcr_args, host_yc_args) == 0); // cudaStatus is 0 if no errors occur
+            status = status && (run_device(prcr_args, host_yc_args) == true); //run device returns true if everything is fine
     
     if(CPU == true)
         for(int i = 0; i < 10000; ++i) 
