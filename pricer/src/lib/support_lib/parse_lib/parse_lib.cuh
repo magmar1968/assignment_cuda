@@ -93,20 +93,6 @@ namespace prcr
         size_t N_simulations;
     };
 
-    struct Yc_args
-    {
-        double rate;       // rate for flat yield curve
-
-        bool    structured;// true if structured yield curve false if is false
-        double* rates;     // pointer to rates array
-        double* times;     // pointer to times array
-        size_t  dim;       // array dimension         
-    };
-
-    struct Vol_args
-    {
-        double vol;    //volatility 
-    };
 
     struct Schedule_args
     {
@@ -131,9 +117,8 @@ namespace prcr
     
     struct Eq_descr_args
     {
-        char   isin_code[10];
-        char   name[15];
-        char   currency[10];
+        double rate;
+        double vol;
         double dividend_yield;
     };
     
@@ -159,8 +144,6 @@ namespace prcr
     {
         Dev_opts      dev_opts;
         MC_args       mc_args;
-        Yc_args       yc_args;
-        Vol_args      vol_args;
         Contract_args contract_args;
         Schedule_args schedule_args;
         Eq_descr_args eq_descr_args;

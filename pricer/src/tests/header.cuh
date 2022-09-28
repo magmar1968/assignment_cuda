@@ -34,7 +34,7 @@
 
 
 
-#define N_TEST_SIM 1000
+#define N_TEST_SIM 10
 
 
 

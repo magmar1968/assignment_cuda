@@ -6,10 +6,9 @@ namespace prcr
     __host__ __device__ double
     Contract_eq_option_vanilla::Pay_off(const Path *path)
     {
-        size_t last_step = path -> Get_dim();
-        Equity_prices * final_price = path -> Get_equity_prices(last_step-1);
+        Equity_prices * final_price = path -> Get_last_eq_prices();
 
-        double S_f =  final_price->Get_eq_price().get_number();
+        double S_f =  final_price->Get_price().get_number();
             
         return Pay_off_vanilla(S_f);
     }

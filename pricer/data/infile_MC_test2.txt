@@ -1,12 +1,12 @@
 #CPU 1   !set to 1 to use the CPU for computing, 0 otherwise
-#GPU 1   !both option can be enabled at the same time but at least one must be true
+#GPU 0   !both option can be enabled at the same time but at least one must be true
 
 
 #T 1     ! simulation time range in years
 #m 10   ! number of time steps 
 
 
-#pr_exact 0  
+#pr_exact 1  
 #l 1        ! extra time step for the euler scheme
 
 
@@ -21,14 +21,11 @@
 !#yc_rates
 !#yc_times 
 
-#yc_rate  0.0
 
-#volatility 0.05 !volatility of the pricer
 
-#eq_descr_isin_code  code
-#eq_descr_name       name
-#eq_descr_currency   EUR
 #eq_descr_dy         0.
+#yc_rate             0.01
+#volatility          0.05 !volatility of the pricer
 
 
 !starting conditions

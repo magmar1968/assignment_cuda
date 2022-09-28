@@ -44,7 +44,7 @@ namespace prcr
 
         // getter & setter
         HD double      Get_time()     const{ return _time;}
-        HD udb Get_eq_price() const{ return _price;}
+        HD udb         Get_price() const{ return _price;}
         HD Equity_description * Get_eq_description() const // ha senso?
         {
             return _eq_descr;

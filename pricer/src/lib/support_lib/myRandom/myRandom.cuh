@@ -113,7 +113,7 @@ namespace rnd
       HD ~MyRandomDummy(){};
       HD uint genUniformInt() {return 1;}
       HD double genUniform(const double min = 0., const double max = 1.) { return 2.; }
-      HD double genGaussian(const double mean = 0., const double dev_std = 1.) { return 3.; }
+      HD double genGaussian(const double mean = 0., const double dev_std = 1.) { return 0.5; }
   };
       
 
