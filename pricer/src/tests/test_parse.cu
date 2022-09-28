@@ -7,14 +7,12 @@ int main()
     Pricer_args * prcr_args = new Pricer_args;
 
     bool status = ReadInputOption("./data/input_file_template.txt",prcr_args);
-    if( status == false){
-        delete(prcr_args);
-        return -1;
-    }
-    else{
-        delete(prcr_args);
-        return 0;
-    }
+    
+
+    if (status == true)
+        std::cout << "No errors encountered" << std::endl;
+    if (status == false)
+        std::cout << "An error was encountered" << std::endl;
         
 
 }

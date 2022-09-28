@@ -27,22 +27,20 @@ run_device(prcr::Pricer_args * prcr_args, prcr::Vol_args * host_vol_args)
 
     cudaStatus = cudaMalloc((void**)&dev_vol_args, NBLOCKS * TPB * sizeof(Vol_args));
     if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMalloc2 failed!\n"); }
-
     
     cudaStatus = cudaMemcpy(dev_prcr_args,prcr_args, sizeof(prcr_args),cudaMemcpyHostToDevice);
     if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMemcpy1 failed!\n"); }
-    fprintf(stderr, "%s\n", cudaGetErrorString(cudaStatus));
+    
 
     cudaStatus = cudaMemcpy(dev_vol_args,host_vol_args,  NBLOCKS*TPB*sizeof(Vol_args),cudaMemcpyHostToDevice);
     if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMemcpy2 failed!\n"); }
-    fprintf(stderr, "%s\n", cudaGetErrorString(cudaStatus));
+    
 
     
     kernel <<< NBLOCKS, TPB>>>(dev_prcr_args,dev_vol_args);
 
     cudaStatus = cudaMemcpy(host_vol_args, dev_vol_args, NBLOCKS*TPB*sizeof(Vol_args), cudaMemcpyDeviceToHost);
     if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMemcpy3 failed!\n"); }
-    fprintf(stderr, "%s\n", cudaGetErrorString(cudaStatus));
 
     bool kernel_error_check = true;
     for (int i = 0; i < NBLOCKS*TPB; i++)
@@ -136,7 +134,13 @@ int main(int argc, char ** argv)
     if(CPU == true)
         for(int i = 0; i < N_TEST_SIM; ++i)
             status = status && simulate_host(prcr_args,host_vol_args);
-    
+
+
+    if (status == true)
+        std::cout << "No errors encountered" << std::endl;
+    if (status == false)
+        std::cout << "An error was encountered" << std::endl;
+
         
     delete(prcr_args);
     return status;
