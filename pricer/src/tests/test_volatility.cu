@@ -46,6 +46,10 @@ run_device(prcr::Pricer_args * prcr_args, prcr::Vol_args * host_vol_args)
     for (int i = 0; i < NBLOCKS*TPB; i++)
     {
 	    kernel_error_check = kernel_error_check && (host_vol_args[i].vol == prcr_args->vol_args.vol);  //controlla che simulate_generic abbia 										  //agito correttamente
+        if(!kernel_error_check)
+        {
+            std::cerr << "something is going wrong\n";
+        }
     }
 
     cudaFree(dev_prcr_args);
