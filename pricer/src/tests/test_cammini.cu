@@ -21,7 +21,7 @@ run_device(prcr::Pricer_args* prcr_args, double* host_last_steps)
     size_t NBLOCKS = prcr_args->dev_opts.N_blocks;
     size_t TPB = prcr_args->dev_opts.N_threads;
 
-    cudaStatus = cudaMalloc((void**)&dev_prcr_args, sizeof(dev_prcr_args));
+    cudaStatus = cudaMalloc((void**)&dev_prcr_args, sizeof(Pricer_args));
     if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMalloc2 failed!\n"); }
 
     cudaStatus = cudaMalloc((void**)&dev_last_steps, NBLOCKS * TPB * sizeof(double));
@@ -29,16 +29,16 @@ run_device(prcr::Pricer_args* prcr_args, double* host_last_steps)
 
 
 
-    cudaStatus = cudaMemcpy(dev_prcr_args, prcr_args, sizeof(prcr_args), cudaMemcpyHostToDevice);
+    cudaStatus = cudaMemcpy(dev_prcr_args, prcr_args, sizeof(Pricer_args), cudaMemcpyHostToDevice);
     if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMemcpy2 failed!\n"); }
     fprintf(stderr, "%s\n", cudaGetErrorString(cudaStatus));
-
     cudaStatus = cudaMemcpy(dev_last_steps, host_last_steps, NBLOCKS * TPB * sizeof(double), cudaMemcpyHostToDevice);
     if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMemcpy3 failed!\n"); }
     fprintf(stderr, "%s\n", cudaGetErrorString(cudaStatus));
 
 
     kernel << < NBLOCKS, TPB >> > (dev_prcr_args, dev_last_steps);
+    dev_last_steps[0] = 3;
 
     cudaStatus = cudaMemcpy(host_last_steps, dev_last_steps, NBLOCKS * TPB * sizeof(double), cudaMemcpyDeviceToHost);
     if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMemcpy4 failed!\n"); }
