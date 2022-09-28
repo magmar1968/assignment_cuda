@@ -1,5 +1,5 @@
 #CPU 1   !set to 1 to use the CPU for computing, 0 otherwise
-#GPU 0   !both option can be enabled at the same time but at least one must be true
+#GPU 1   !both option can be enabled at the same time but at least one must be true
 
 
 #T 1     ! simulation time range in years

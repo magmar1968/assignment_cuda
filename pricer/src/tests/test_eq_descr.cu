@@ -133,11 +133,11 @@ int main(int argc, char ** argv)
     }
 
     if(GPU == true)
-        for(int i = 0; i < 10000; ++i)
+        for(int i = 0; i < N_TEST_SIM; ++i)
             status = status && (run_device(prcr_args, host_eq_descr_args) == true); //run device returns true if everything is fine
-    
+        
     if(CPU == true)
-        for(int i = 0; i < 10000; ++i) 
+        for(int i = 0; i < N_TEST_SIM; ++i) 
             status = status && simulate_host(prcr_args, host_eq_descr_args);
     
     if (status == true)

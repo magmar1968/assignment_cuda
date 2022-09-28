@@ -31,3 +31,13 @@
 #include "../lib/support_lib/myDouble_lib/myudouble.cuh"
 #include "../lib/support_lib/parse_lib/parse_lib.cuh"
 #include "../lib/support_lib/timer_lib/myTimer.cuh"
+
+
+
+#define N_TEST_SIM 1
+
+
+
+
+
+

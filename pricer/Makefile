@@ -5,8 +5,8 @@ CC          := nvcc
 
 #The Target Binary Program
 TARGET      := $(basename $(notdir $(wildcard ./src/exam/*.cu )))
-#TEST        := $(basename $(notdir $(wildcard ./src/tests/*.cu)))
-TEST        := $(basename $(notdir $(wildcard ./src/tests/montecarlo_test2.cu)))
+TEST        := $(basename $(notdir $(wildcard ./src/tests/*.cu)))
+#TEST        := $(basename $(notdir $(wildcard ./src/tests/montecarlo_test2.cu)))
 #The Directories, Source, Includes, Objects, Binary and Resources
 SRCDIR      := src
 INCDIR      := inc
@@ -61,8 +61,7 @@ $(TARGET): $(OBJECTS)
 $(TEST): $(OBJECTS)
 	@printf "\n"
 	@$(CC) $(LDFLAGS) -o $(TARGETDIR)/$@ $(FILTER_OBJ) $(call FILTER_IN,$(basename $@),$(OBJECTS))
-	./$(TARGETDIR)/$@ -cpu 
-	./$(TARGETDIR)/$@ -gpu
+	./$(TARGETDIR)/$@ 
 
 
 
