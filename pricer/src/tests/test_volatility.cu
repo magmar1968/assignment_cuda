@@ -48,7 +48,9 @@ run_device(prcr::Pricer_args * prcr_args, prcr::Vol_args * host_vol_args)
 	    kernel_error_check = kernel_error_check && (host_vol_args[i].vol == prcr_args->vol_args.vol);  //controlla che simulate_generic abbia 										  //agito correttamente
         if(!kernel_error_check)
         {
-            std::cerr << "ERROR: something is going wrong the volatility read is: " << host_vol_args[i].vol << "\n";
+            std::cerr << "ERROR: something is going wrong!\n" 
+                      << "       the volatility read is [" << i <<"]: " 
+                      << host_vol_args[i].vol << "\n";
         }
     }
 
