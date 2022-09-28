@@ -187,7 +187,8 @@ int main(int argc, char** argv)
     if (GPU == true) 
     {
         Timer gpu_timer;
-        status = status && run_device(prcr_args, last_steps);
+        for(int i = 0; i < N_TEST_SIM; ++i)
+            status = status && run_device(prcr_args, last_steps);
         gpu_timer.Stop();
     }
 
