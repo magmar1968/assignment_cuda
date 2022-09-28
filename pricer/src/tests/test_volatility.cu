@@ -115,7 +115,6 @@ int main(int argc, char ** argv)
 
     bool GPU = prcr_args->dev_opts.GPU;
     bool CPU = prcr_args->dev_opts.CPU;
-    bool status = true;
 
     size_t NBLOCKS = prcr_args->dev_opts.N_blocks;
     size_t TPB    = prcr_args->dev_opts.N_threads;
@@ -126,22 +125,34 @@ int main(int argc, char ** argv)
     {
         host_vol_args[inc].vol = 0.;
     }
-
+    bool status_gpu = true, status_cpu = true;
+    
     if(GPU == true)
         for(int i = 0; i < N_TEST_SIM; ++i)
-            status = status && run_device(prcr_args,host_vol_args);
+            status_gpu = status_gpu && run_device(prcr_args,host_vol_args);
     
     if(CPU == true)
         for(int i = 0; i < N_TEST_SIM; ++i)
-            status = status && simulate_host(prcr_args,host_vol_args);
+            status_cpu = status_cpu && simulate_host(prcr_args,host_vol_args);
 
+    delete(prcr_args);
 
-    if (status == true)
+    if ( (status_gpu && status_cpu) == true){
         std::cout << "No errors encountered" << std::endl;
-    if (status == false)
-        std::cout << "An error was encountered" << std::endl;
+        return 0;
+    }
+    else if(status_gpu == false && status_cpu == false)    {
+        std::cerr << "ERROR: gpu and cpu simulations didn't work properly\n";
+        return -1;
+    }
+    else if(status_gpu == false && status_cpu == true ){
+        std::cerr << "ERROR: gpu simulation didn't work properly\n";
+        return -2;
+    }
+    else{
+        std::cerr << "ERROR: cpu simulation didn't work properly\n";
+        return -3;
+    }
 
         
-    delete(prcr_args);
-    return status;
 }
