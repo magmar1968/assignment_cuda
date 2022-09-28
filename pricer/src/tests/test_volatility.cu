@@ -28,10 +28,10 @@ run_device(prcr::Pricer_args * prcr_args, prcr::Vol_args * host_vol_args)
     cudaStatus = cudaMalloc((void**)&dev_vol_args, NBLOCKS * TPB * sizeof(Vol_args));
     if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMalloc2 failed!\n"); }
     
+    
     cudaStatus = cudaMemcpy(dev_prcr_args,prcr_args, sizeof(prcr_args),cudaMemcpyHostToDevice);
     if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMemcpy1 failed!\n"); }
     
-
     cudaStatus = cudaMemcpy(dev_vol_args,host_vol_args,  NBLOCKS*TPB*sizeof(Vol_args),cudaMemcpyHostToDevice);
     if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMemcpy2 failed!\n"); }
     
@@ -135,6 +135,11 @@ int main(int argc, char ** argv)
         for(int i = 0; i < N_TEST_SIM; ++i)
             status_gpu = status_gpu && run_device(prcr_args,host_vol_args);
     
+    for(size_t inc = 0; inc < NBLOCKS*TPB; inc ++)
+    {
+        host_vol_args[inc].vol = 0.;
+    }
+
     if(CPU == true)
         for(int i = 0; i < N_TEST_SIM; ++i)
             status_cpu = status_cpu && simulate_host(prcr_args,host_vol_args);
