@@ -1,5 +1,5 @@
-#CPU 0   !set to 1 to use the CPU for computing, 0 otherwise
-#GPU 1   !both option can be enabled at the same time but at least one must be true
+#CPU 1   !set to 1 to use the CPU for computing, 0 otherwise
+#GPU 0   !both option can be enabled at the same time but at least one must be true
 
 
 #T 1     ! simulation time range in years
@@ -13,7 +13,7 @@
 !both the following option must be filled even if the CPU option is the only one
 !setted to true
 #N_blocks  128 !N of blocks to use for the computation. 
-#N_threads 128 !N of thread per block. 
+#N_threads 512 !N of thread per block. 
 
 #N_simulations 1600 
 

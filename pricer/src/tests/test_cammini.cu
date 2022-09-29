@@ -160,7 +160,7 @@ simulate_generic(size_t index,
 int main(int argc, char** argv)
 {
     using namespace prcr;
-    double exact_value = 100;   //capire da dove lo vogliamo ricavare
+
 
     srand(time(NULL));
 
@@ -179,6 +179,15 @@ int main(int argc, char** argv)
         last_steps[inc] = 0;
     }
 
+    bool last_step_check_cpu = true;
+    bool last_step_check_gpu = true;
+    double exact_value = 0.;
+
+    if(prcr_args->stc_pr_args.exact == true){
+        exact_value = 108.223272744281;
+    }else
+        exact_value = 108.306658813969;
+
     bool GPU = prcr_args->dev_opts.GPU;
     bool CPU = prcr_args->dev_opts.CPU;
     bool status = true;
@@ -189,6 +198,11 @@ int main(int argc, char** argv)
         for(int i = 0; i < N_TEST_SIM; ++i)
             status = status && run_device(prcr_args, last_steps);
         gpu_timer.Stop();
+        for (int j = 0; j < NBLOCKS * TPB; j++)
+        {
+            double delta = abs(last_steps[j] - exact_value);
+            last_step_check_gpu = last_step_check_gpu && (delta < std::pow(10, -12));
+        }
     }
 
     if (CPU == true) 
@@ -197,29 +211,29 @@ int main(int argc, char** argv)
         for(int i = 0; i < N_TEST_SIM; ++i)
             status = status && simulate_host(prcr_args, last_steps);
         cpu_timer.Stop();
+        for (int j = 0; j < NBLOCKS * TPB; j++)
+        {
+            double delta = abs(last_steps[j] - exact_value);
+            last_step_check_cpu = last_step_check_cpu && (delta < std::pow(10, -12));
+        }
     }
-    
-    bool last_step_check = true;
-
-    for (int j = 0; j < NBLOCKS * TPB; j++)
-    {
-        double delta = abs(last_steps[j] - exact_value);
-        last_step_check = last_step_check && (delta < std::pow(10, -12));
-    }
-    std::cout << std::setprecision(12)<< "last step: " << last_steps[0] << "\n";
     delete[](last_steps);
     delete(prcr_args);
     
-    return 0;    
+    if(last_step_check_cpu && last_step_check_gpu){
+        std::cout << "no error encountered" << std::endl;
+        return 0;
+    }
+    else if (last_step_check_cpu == false and last_step_check_gpu == true){
+        std::cerr << "ERROR: cpu simulation failed!" << std::endl;
+        return 1;
+    }
+    else if (last_step_check_cpu == true and last_step_check_gpu == false){
+        std::cerr << "ERROR: gpu simulation failed!" << std::endl;
+        return 2;
+    }
+    else{
+        std::cerr << "ERROR: both cpu and gpu simulations failed! " << std::endl;
+        return 3;
+    }
 }
-
-
-
-
-
-
-
-
-
-
-

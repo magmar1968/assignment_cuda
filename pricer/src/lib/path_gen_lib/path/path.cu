@@ -74,7 +74,7 @@ namespace prcr
 		if(i < _dim)
 			return _eq_prices_scenario[i];
 		else 
-			return NULL; //exit(1);// probably it doesn't work on cuda
+			return -100; //exit(1);// probably it doesn't work on cuda
 	}
 
 	__host__ __device__ double 
