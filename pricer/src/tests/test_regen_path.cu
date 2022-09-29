@@ -212,8 +212,8 @@ int main(int argc, char** argv)
         for (int j = 0; j < NBLOCKS * TPB; j++)
         {   
             double delta = abs(last_steps_gpu[j] - exact_value);
-            if( delta < std::pow(10,-12)){
-                std::cerr << "ERROR: thread " << j << "failed to regen path."
+            if( delta > std::pow(10,-12)){
+                std::cerr << "ERROR: thread " << j << " failed to regen path. "
                           << "Value: " << last_steps_gpu[j] << std::endl;
                 last_step_check_gpu = false;
             }
@@ -226,10 +226,10 @@ int main(int argc, char** argv)
             status = status && simulate_host(prcr_args, last_steps_cpu);
         for (int j = 0; j < NBLOCKS * TPB; j++)
         {
-            double delta = abs(last_steps_gpu[j] - exact_value);
-            if(delta < std::pow(10,-12)){
-                std::cerr << "ERROR: thread " << j << " failed to regen path."
-                          << "Value: " << last_steps_cpu[j] << "\n";
+            double delta = abs(last_steps_cpu[j] - exact_value);
+            if(delta > std::pow(10,-12)){
+                std::cerr << "ERROR: thread " << j << " failed to regen path. "
+                          << "Value: " << last_steps_cpu[j] << std::endl;
                 last_step_check_cpu = false;
             }
         }
