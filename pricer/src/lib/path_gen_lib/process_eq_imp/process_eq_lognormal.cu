@@ -8,10 +8,10 @@ namespace prcr
     {
     }
 
-    __host__ __device__ udb
+    __host__ __device__ double
     Process_eq_lognormal::Get_new_equity_price(
                         Equity_description * eq_descr,
-                        udb eq_price,
+                        double eq_price,
                         double w,
                         double t_start,
                         double t_end)
@@ -33,7 +33,7 @@ namespace prcr
 
     __host__ __device__ udb
     Process_eq_lognormal::compute_eq_price_exact(
-                        udb eq_price,
+                        double eq_price,
                         double r,
                         double div_yield,
                         double delta_t,
@@ -46,7 +46,7 @@ namespace prcr
 
     __host__ __device__ udb
     Process_eq_lognormal::compute_eq_price_approximate(
-                        udb eq_price,
+                        double eq_price,
                         double r,
                         double div_yield,
                         double delta_t,
@@ -61,27 +61,23 @@ namespace prcr
         return eq_price;
     }
 
-    __host__ __device__ Equity_prices * 
+    /*__host__ __device__ Equity_prices*
     Process_eq_lognormal::Get_new_prices(
-                            Equity_prices  * eq_prices_in,
+                            double  * eq_prices_in,
                             double           w,
                             double           delta_t)
     {
-        Equity_prices* eq_prices_out = new Equity_prices;
+        double* eq_prices_out = new double;
 
-        udb new_eq_price = Get_new_equity_price(
+        double new_eq_price = Get_new_equity_price(
                             eq_prices_in -> Get_eq_description(),
                             eq_prices_in -> Get_price(),
                             w ,
                             eq_prices_in -> Get_time(),
                             eq_prices_in -> Get_time() + delta_t); 
 
-        eq_prices_out -> Set_eq_price(new_eq_price);
-        eq_prices_out -> Set_time(eq_prices_in->Get_time() + delta_t);
-        eq_prices_out -> Set_eq_description(eq_prices_in -> Get_eq_description());
-
         return eq_prices_out;
-    }
+    }*/
 
 }
 

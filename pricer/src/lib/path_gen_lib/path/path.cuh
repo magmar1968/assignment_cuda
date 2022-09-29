@@ -17,7 +17,7 @@ namespace prcr
 	class Path {
 	private:
 		Equity_prices  * _starting_point;
-		Equity_prices* * _eq_prices_scenario;
+		double         * _eq_prices_scenario;
 		Schedule       * _schedule; 
 		Process_eq_lognormal * _process_eq_lognormal;
 		double         * _random_numbers_scenario;
@@ -37,13 +37,13 @@ namespace prcr
 		
 		//getter & setters
 		HD Equity_prices  * Get_starting_point(void) const;
-		HD Equity_prices  * Get_equity_prices(size_t i) const; //forse togliere il puntatore???
-		HD Equity_prices  * Get_last_eq_prices() const;
-		HD double           Get_random_numbers(size_t i) const;
+		HD double  * Get_equity_prices(size_t i) const; 
+		HD double  * Get_last_eq_price() const;
+		HD double    Get_random_numbers(size_t i) const;
 		HD size_t Get_dim(void) const;
 		HD size_t Get_start_ind() const;
 		//functions
-		HD Equity_prices * operator[](size_t i) const;
+		HD double * operator[](size_t i) const;
 		HD void regen_path();
 		// HD void destroy ();
 
