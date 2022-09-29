@@ -30,19 +30,23 @@ run_device(prcr::Pricer_args* prcr_args, double* host_last_steps)
 
 
     cudaStatus = cudaMemcpy(dev_prcr_args, prcr_args, sizeof(Pricer_args), cudaMemcpyHostToDevice);
-    if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMemcpy2 failed!\n"); }
-    fprintf(stderr, "%s\n", cudaGetErrorString(cudaStatus));
+    if (cudaStatus != cudaSuccess){ 
+        fprintf(stderr, "cudaMemcpy2 failed!\n"); 
+        fprintf(stderr, "%s\n", cudaGetErrorString(cudaStatus));
+    }
     cudaStatus = cudaMemcpy(dev_last_steps, host_last_steps, NBLOCKS * TPB * sizeof(double), cudaMemcpyHostToDevice);
-    if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMemcpy3 failed!\n"); }
-    fprintf(stderr, "%s\n", cudaGetErrorString(cudaStatus));
-
+    if (cudaStatus != cudaSuccess){ 
+        fprintf(stderr, "cudaMemcpy2 failed!\n"); 
+        fprintf(stderr, "%s\n", cudaGetErrorString(cudaStatus));
+    }
 
     kernel << < NBLOCKS, TPB >> > (dev_prcr_args, dev_last_steps);
 
     cudaStatus = cudaMemcpy(host_last_steps, dev_last_steps, NBLOCKS * TPB * sizeof(double), cudaMemcpyDeviceToHost);
-    if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMemcpy4 failed!\n"); }
-    fprintf(stderr, "%s\n", cudaGetErrorString(cudaStatus));
-
+    if (cudaStatus != cudaSuccess){ 
+        fprintf(stderr, "cudaMemcpy2 failed!\n"); 
+        fprintf(stderr, "%s\n", cudaGetErrorString(cudaStatus));
+    }
 
     cudaFree(dev_last_steps);
     cudaFree(dev_prcr_args);
@@ -202,6 +206,7 @@ int main(int argc, char** argv)
         {
             double delta = abs(last_steps[j] - exact_value);
             last_step_check_gpu = last_step_check_gpu && (delta < std::pow(10, -12));
+            last_steps[j] = 0.; //reset to 0 in case we want to simulate also on gpu
         }
     }
 
