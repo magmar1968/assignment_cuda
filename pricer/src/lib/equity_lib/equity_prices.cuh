@@ -28,7 +28,7 @@ namespace prcr
         //constructors & destructors
         HD Equity_prices() {};
         HD Equity_prices(double time,
-                        udb  price,                               
+                        double  price,                               
                         Equity_description * equity_descriptions)
             :_time(time)
         {
@@ -50,7 +50,7 @@ namespace prcr
 
         //setters
         HD void Set_time(double t)             { _time  = t;}
-        HD void Set_eq_price(udb price){ _price = price;}
+        HD void Set_eq_price(double price){ _price = price;}
         HD void Set_eq_description( Equity_description * eq_description)
         {
             _eq_descr = eq_description; 

@@ -9,12 +9,11 @@ namespace prcr
     }
 
     __host__ __device__ double
-    Process_eq_lognormal::Get_new_equity_price(
+    Process_eq_lognormal::Get_new_eq_price(
                         Equity_description * eq_descr,
                         double eq_price,
                         double w,
-                        double t_start,
-                        double t_end)
+                        double delta_t)
     {
         double r = eq_descr -> Get_yc();
         
@@ -22,7 +21,7 @@ namespace prcr
         double div_yield = eq_descr -> Get_dividend_yield();
 
         double sigma = eq_descr -> Get_vol_surface();
-        double delta_t = t_end - t_start;
+       // double delta_t = t_end - t_start;
 
         if ( _exact_solution)
             return compute_eq_price_exact(eq_price,r,div_yield,delta_t,w,sigma);
@@ -31,7 +30,7 @@ namespace prcr
 
     }
 
-    __host__ __device__ udb
+    __host__ __device__ double
     Process_eq_lognormal::compute_eq_price_exact(
                         double eq_price,
                         double r,
@@ -44,7 +43,7 @@ namespace prcr
             delta_t + sigma * sqrt(delta_t) * w ) ;
     }
 
-    __host__ __device__ udb
+    __host__ __device__ double
     Process_eq_lognormal::compute_eq_price_approximate(
                         double eq_price,
                         double r,

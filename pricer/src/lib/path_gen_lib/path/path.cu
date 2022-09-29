@@ -47,7 +47,7 @@ namespace prcr
 		
 		double delta_t = _schedule->Get_t(_start_ind) - start_t;   //first step, from starting_point
 		_random_numbers_scenario[_start_ind] = _process_eq_lognormal->Get_random_gaussian();
-		_eq_prices_scenario[_start_ind] = _process_eq_lognormal->Get_new_prices(_starting_point->Get_price(), _random_numbers_scenario[_start_ind], delta_t);
+		_eq_prices_scenario[_start_ind] = _process_eq_lognormal->Get_new_eq_price(_starting_point->Get_eq_description(), _starting_point->Get_price(), _random_numbers_scenario[_start_ind], delta_t);
 
 		for (size_t j =  _start_ind + 1; j < _dim; j++)
 		{
@@ -55,7 +55,7 @@ namespace prcr
 
 			_random_numbers_scenario[j] = _process_eq_lognormal->Get_random_gaussian(); 
 			_eq_prices_scenario[j] = 
-				_process_eq_lognormal->Get_new_prices(_eq_prices_scenario[j - 1], _random_numbers_scenario[j],delta_t); 
+				_process_eq_lognormal->Get_new_eq_price(_starting_point->Get_eq_description(), _eq_prices_scenario[j - 1], _random_numbers_scenario[j],delta_t); 
 			
 		}
 	}
@@ -77,8 +77,8 @@ namespace prcr
 			return NULL; //exit(1);// probably it doesn't work on cuda
 	}
 
-	__host__ __device__ double *
-	Path::Get_last_eq_prices() const
+	__host__ __device__ double 
+	Path::Get_last_eq_price() const
 	{
 		return _eq_prices_scenario[_dim -1];
 	}
@@ -105,7 +105,7 @@ namespace prcr
 	}
 
 
-	__host__ __device__ double * 
+	__host__ __device__ double  
 	Path::operator[](size_t i)const
 	{
 		return Get_equity_prices(i);

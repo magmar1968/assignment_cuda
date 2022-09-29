@@ -24,9 +24,9 @@
 #include "../lib/equity_lib/yield_curve_lib/yield_curve_flat.cuh"
 #include "../lib/equity_lib/yield_curve_lib/yield_curve_term_structure.cuh"
 #include "../lib/support_lib/parse_lib/parse_lib.cuh"
-#include "../lib/option_pricer_lib/option_pricer.cuh"
+/*#include "../lib/option_pricer_lib/option_pricer.cuh"
 #include "../lib/option_pricer_lib/option_pricer_montecarlo/option_pricer_montecarlo.cuh"
-#include "../lib/contract_option_lib/contract_eq_option_vanilla/contract_eq_option_vanilla.cuh"
+#include "../lib/contract_option_lib/contract_eq_option_vanilla/contract_eq_option_vanilla.cuh"*/
 #include "../lib/support_lib/statistic_lib/statistic_lib.cuh"
 #include "../lib/support_lib/myDouble_lib/myudouble.cuh"
 #include "../lib/support_lib/parse_lib/parse_lib.cuh"

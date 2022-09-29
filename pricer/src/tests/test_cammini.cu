@@ -38,7 +38,6 @@ run_device(prcr::Pricer_args* prcr_args, double* host_last_steps)
 
 
     kernel << < NBLOCKS, TPB >> > (dev_prcr_args, dev_last_steps);
-    dev_last_steps[0] = 3;
 
     cudaStatus = cudaMemcpy(host_last_steps, dev_last_steps, NBLOCKS * TPB * sizeof(double), cudaMemcpyDeviceToHost);
     if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMemcpy4 failed!\n"); }
@@ -148,7 +147,7 @@ simulate_generic(size_t index,
 
                 
     prcr::Path* path = new prcr::Path(starting_point,schedule,process);
-    last_steps[index] = path->Get_last_eq_prices()->Get_price().get_number();
+    last_steps[index] = path->Get_last_eq_price();
 
     delete(path);
     delete(process);

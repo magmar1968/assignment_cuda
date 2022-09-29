@@ -25,12 +25,11 @@ namespace prcr
                               size_t l = 1); //n extra step for the euler scheme);
       HD virtual ~Process_eq_lognormal(){};
       //functions
-      HD double Get_new_equity_price(
+      HD double Get_new_eq_price(
                 Equity_description * eq_descr,
-                udb eq_price,
+                double eq_price,
                 double w, //random number
-                double t_start,
-                double t_end);
+                double delta_t);
       
       
       /*HD virtual Equity_prices* Get_new_prices(
@@ -43,14 +42,14 @@ namespace prcr
     HD void Set_to_exact_solution()      {_exact_solution = true; }
     //functions 
     private:
-      HD udb compute_eq_price_exact(
+      HD double compute_eq_price_exact(
                       double eq_price,
                       double r,
                       double div_yield,
                       double delta_t,
                       double w,
                       double sigma);
-      HD udb compute_eq_price_approximate(
+      HD double compute_eq_price_approximate(
                       double eq_price,
                       double r,
                       double div_yield,

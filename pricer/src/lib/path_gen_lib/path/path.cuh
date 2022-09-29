@@ -37,13 +37,13 @@ namespace prcr
 		
 		//getter & setters
 		HD Equity_prices  * Get_starting_point(void) const;
-		HD double  * Get_equity_prices(size_t i) const; 
-		HD double  * Get_last_eq_price() const;
+		HD double   Get_equity_prices(size_t i) const; 
+		HD double   Get_last_eq_price() const;
 		HD double    Get_random_numbers(size_t i) const;
 		HD size_t Get_dim(void) const;
 		HD size_t Get_start_ind() const;
 		//functions
-		HD double * operator[](size_t i) const;
+		HD double  operator[](size_t i) const;
 		HD void regen_path();
 		// HD void destroy ();
 
