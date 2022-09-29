@@ -31,7 +31,7 @@ run_device(prcr::Pricer_args* prcr_args, double* host_last_steps)
 
     cudaStatus = cudaMemcpy(dev_prcr_args, prcr_args, sizeof(Pricer_args), cudaMemcpyHostToDevice);
     if (cudaStatus != cudaSuccess){ 
-        fprintf(stderr, "cudaMemcpy2 failed!\n"); 
+        fprintf(stderr, "cudaMemcpy1 failed!\n"); 
         fprintf(stderr, "%s\n", cudaGetErrorString(cudaStatus));
     }
     cudaStatus = cudaMemcpy(dev_last_steps, host_last_steps, NBLOCKS * TPB * sizeof(double), cudaMemcpyHostToDevice);
@@ -44,7 +44,7 @@ run_device(prcr::Pricer_args* prcr_args, double* host_last_steps)
 
     cudaStatus = cudaMemcpy(host_last_steps, dev_last_steps, NBLOCKS * TPB * sizeof(double), cudaMemcpyDeviceToHost);
     if (cudaStatus != cudaSuccess){ 
-        fprintf(stderr, "cudaMemcpy2 failed!\n"); 
+        fprintf(stderr, "cudaMemcpy3 failed!\n"); 
         fprintf(stderr, "%s\n", cudaGetErrorString(cudaStatus));
     }
 
@@ -207,13 +207,11 @@ int main(int argc, char** argv)
 
     if (GPU == true) 
     {
-        Timer gpu_timer;
         for(int i = 0; i < N_TEST_SIM; ++i)
             status = status && run_device(prcr_args, last_steps_gpu);
-        gpu_timer.Stop();
         for (int j = 0; j < NBLOCKS * TPB; j++)
         {
-            if(last_steps_gpu[j] == -1000){
+            if( abs(last_steps_gpu[j]-exact_value) < std::pow(10,-12)){
                 std::cerr << "ERROR: thread " << j << "failed to regen path."
                           << "Value: " << last_steps_gpu[j] << "\n";
                 last_step_check_gpu = false;
@@ -223,13 +221,11 @@ int main(int argc, char** argv)
 
     if (CPU == true) 
     {
-        Timer cpu_timer;
         for(int i = 0; i < N_TEST_SIM; ++i)
             status = status && simulate_host(prcr_args, last_steps_cpu);
-        cpu_timer.Stop();
         for (int j = 0; j < NBLOCKS * TPB; j++)
         {
-            if(last_steps_cpu[j] == -1000.0){
+            if(abs(last_steps_gpu[j]-exact_value) < std::pow(10,-12)){
                 std::cerr << "ERROR: thread " << j << " failed to regen path."
                           << "Value: " << last_steps_cpu[j] << "\n";
                 last_step_check_cpu = false;
