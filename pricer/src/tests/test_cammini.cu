@@ -177,10 +177,12 @@ int main(int argc, char** argv)
     size_t TPB = prcr_args->dev_opts.N_threads;
 
     //last_steps
-    double* last_steps = new double[NBLOCKS * TPB];   //array che contiene i valori del prezzo all'ultimo step, per ogni thread
+    double * last_steps_gpu = new double[NBLOCKS * TPB];   //array che contiene i valori del prezzo all'ultimo step, per ogni thread
+    double * last_steps_cpu = new double[NBLOCKS * TPB];
     for (size_t inc = 0; inc < NBLOCKS * TPB; inc++)
     {
-        last_steps[inc] = 0;
+        last_steps_gpu[inc] = 0;
+        last_steps_cpu[inc] = 0;
     }
 
     bool last_step_check_cpu = true;
@@ -200,13 +202,12 @@ int main(int argc, char** argv)
     {
         Timer gpu_timer;
         for(int i = 0; i < N_TEST_SIM; ++i)
-            status = status && run_device(prcr_args, last_steps);
+            status = status && run_device(prcr_args, last_steps_gpu);
         gpu_timer.Stop();
         for (int j = 0; j < NBLOCKS * TPB; j++)
         {
-            double delta = abs(last_steps[j] - exact_value);
+            double delta = abs(last_steps_gpu[j] - exact_value);
             last_step_check_gpu = last_step_check_gpu && (delta < std::pow(10, -12));
-            last_steps[j] = 0.; //reset to 0 in case we want to simulate also on gpu
         }
     }
 
@@ -214,15 +215,18 @@ int main(int argc, char** argv)
     {
         Timer cpu_timer;
         for(int i = 0; i < N_TEST_SIM; ++i)
-            status = status && simulate_host(prcr_args, last_steps);
+            status = status && simulate_host(prcr_args, last_steps_cpu);
         cpu_timer.Stop();
         for (int j = 0; j < NBLOCKS * TPB; j++)
         {
-            double delta = abs(last_steps[j] - exact_value);
+            double delta = abs(last_steps_cpu[j] - exact_value);
             last_step_check_cpu = last_step_check_cpu && (delta < std::pow(10, -12));
         }
     }
-    delete[](last_steps);
+
+
+    delete[](last_steps_cpu);
+    delete[](last_steps_gpu);
     delete(prcr_args);
     
     if(last_step_check_cpu && last_step_check_gpu){
