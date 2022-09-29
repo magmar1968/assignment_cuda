@@ -225,7 +225,7 @@ int main(int argc, char** argv)
             status = status && simulate_host(prcr_args, last_steps_cpu);
         for (int j = 0; j < NBLOCKS * TPB; j++)
         {
-            if(abs(last_steps_gpu[j]-exact_value) < std::pow(10,-12)){
+            if(abs(last_steps_cpu[j]-exact_value) < std::pow(10,-12)){
                 std::cerr << "ERROR: thread " << j << " failed to regen path."
                           << "Value: " << last_steps_cpu[j] << "\n";
                 last_step_check_cpu = false;
