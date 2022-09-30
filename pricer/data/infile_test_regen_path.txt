@@ -1,5 +1,5 @@
-#CPU 0   !set to 1 to use the CPU for computing, 0 otherwise
-#GPU 1   !both option can be enabled at the same time but at least one must be true
+#CPU 1   !set to 1 to use the CPU for computing, 0 otherwise
+#GPU 0   !both option can be enabled at the same time but at least one must be true
 
 
 #T 1     ! simulation time range in years
@@ -15,7 +15,7 @@
 #N_blocks  128 !N of blocks to use for the computation. 
 #N_threads 512 !N of thread per block. 
 
-#N_simulations 100000 
+#N_simulations 100 
 
 !#yc_structured !decomment if you'd like to introduce a structured yield curve
 !#yc_rates
