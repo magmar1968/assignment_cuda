@@ -6,7 +6,7 @@ CC          := nvcc
 #The Target Binary Program
 TARGET      := $(basename $(notdir $(wildcard ./src/exam/*.cu )))
 TEST        := $(basename $(notdir $(wildcard ./src/tests/*.cu)))
-#TEST        := $(basename $(notdir $(wildcard ./src/tests/test_cammini.cu)))
+#TEST        := $(basename $(notdir $(wildcard ./src/tests/test_regen_path.cu)))
 #The Directories, Source, Includes, Objects, Binary and Resources
 SRCDIR      := src
 INCDIR      := inc

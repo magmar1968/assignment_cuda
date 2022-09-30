@@ -132,8 +132,8 @@ simulate_device(
     double* last_steps)
 {
     size_t index = blockIdx.x * blockDim.x + threadIdx.x;
-    size_t NBLOCKS = prcr_args->dev_opts.N_blocks;
-    size_t TPB = prcr_args->dev_opts.N_threads;
+    size_t NBLOCKS = gridDim.x;
+    size_t TPB = blockDim.x;
     if (index < NBLOCKS * TPB) simulate_generic(index, prcr_args, starting_point, schedule, last_steps);
 }
 
@@ -218,6 +218,8 @@ int main(int argc, char** argv)
                 last_step_check_gpu = false;
             }
         }
+	std::cout << last_steps_gpu[NBLOCKS*TPB-1] << std::endl;
+	
     }
 
     if (CPU == true) 
@@ -240,6 +242,7 @@ int main(int argc, char** argv)
     delete[](last_steps_gpu);
     delete(prcr_args);
     
+
     if(last_step_check_cpu && last_step_check_gpu){
         std::cout << "no error encountered" << std::endl;
         return 0;
