@@ -11,8 +11,9 @@ namespace prcr
 	{
 		
 		_dim = _schedule -> Get_dim(); // n schedule steps
-		_random_numbers_scenario = new double[_dim];
-		_eq_prices_scenario      = new double[_dim];
+		if(_dim > _max_dim){
+			_dim = _max_dim;
+		}
 		gen_path();
 	}
 
@@ -26,8 +27,7 @@ namespace prcr
 
 	__host__ __device__ Path::~Path()
 	{
-		delete[](_eq_prices_scenario);
-		delete[](_random_numbers_scenario);
+
 	}
 
 	__host__ __device__ void

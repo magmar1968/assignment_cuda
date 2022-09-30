@@ -150,7 +150,6 @@ simulate_generic(size_t index,
                 = new prcr::Process_eq_lognormal(gnr_in,prcr_args->stc_pr_args.exact);
 
                 
-    //prcr::Path* path = new prcr::Path(starting_point,schedule,process);
     prcr::Path path(starting_point, schedule, process);
     last_steps[index] = path.Get_last_eq_price();
     for(int i = 0; i < prcr_args->mc_args.N_simulations; ++i){
@@ -161,7 +160,6 @@ simulate_generic(size_t index,
             last_steps[index] = -1000;
     }
 
-    //delete(path);
     delete(process);
     delete(gnr_in);
 }
