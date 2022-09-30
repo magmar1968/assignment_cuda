@@ -53,8 +53,8 @@ namespace prcr
     __host__ __device__ void
     Option_pricer_montecarlo::simulate_option()
     {
-        double pay_off = 0;
-        double pay_off2 = 0;
+        double pay_off = 0.;
+        double pay_off2 = 0.;
 
 
         Contract_eq_option &contract = 

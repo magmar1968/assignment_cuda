@@ -15,7 +15,7 @@
 #N_blocks  128 !N of blocks to use for the computation. 
 #N_threads 128 !N of thread per block. 
 
-#N_simulations 1600 
+#N_simulations 1600
 
 !#yc_structured !decomment if you'd like to introduce a structured yield curve
 !#yc_rates
@@ -35,7 +35,7 @@
 
 !contract option input
 #option_type vanilla
-#contract_type C  !put C for a call contract or P for a pull contract
+#contract_type C  !put C for a call contract or P for a put contract
 #strike_price 100
 
 !decomment for corridor option
