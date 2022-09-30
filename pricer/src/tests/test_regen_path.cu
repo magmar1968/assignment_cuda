@@ -150,17 +150,18 @@ simulate_generic(size_t index,
                 = new prcr::Process_eq_lognormal(gnr_in,prcr_args->stc_pr_args.exact);
 
                 
-    prcr::Path* path = new prcr::Path(starting_point,schedule,process);
-    last_steps[index] = path->Get_last_eq_price();
+    //prcr::Path* path = new prcr::Path(starting_point,schedule,process);
+    prcr::Path path(starting_point, schedule, process);
+    last_steps[index] = path.Get_last_eq_price();
     for(int i = 0; i < prcr_args->mc_args.N_simulations; ++i){
-        path->regen_path();
-        if(last_steps[index] == path->Get_last_eq_price()){
+        path.regen_path();
+        if(last_steps[index] == path.Get_last_eq_price()){
             continue;
         }else
             last_steps[index] = -1000;
     }
 
-    delete(path);
+    //delete(path);
     delete(process);
     delete(gnr_in);
 }
@@ -204,7 +205,7 @@ int main(int argc, char** argv)
     bool GPU = prcr_args->dev_opts.GPU;
     bool CPU = prcr_args->dev_opts.CPU;
     bool status = true;
-
+    
     if (GPU == true) 
     {
         for(int i = 0; i < N_TEST_SIM; ++i)
@@ -219,8 +220,9 @@ int main(int argc, char** argv)
             }
         }
 	std::cout << last_steps_gpu[NBLOCKS*TPB-1] << std::endl;
-	
+		
     }
+    
 
     if (CPU == true) 
     {
