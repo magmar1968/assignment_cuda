@@ -248,10 +248,10 @@ int main(int argc, char** argv)
     double exact_value = 0.;
 
     if (prcr_args->stc_pr_args.exact == true) {
-        exact_value = 9.41742837052091;
+        exact_value = 109.41742837052091;
     }
     else
-        exact_value = 17.3188762183378;
+        exact_value = 117.3188762183378;
 
     bool GPU = prcr_args->dev_opts.GPU;
     bool CPU = prcr_args->dev_opts.CPU;
