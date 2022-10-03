@@ -251,7 +251,7 @@ int main(int argc, char** argv)
         exact_value = 109.41742837052091;
     }
     else
-        exact_value = 117.3188762183378;
+        exact_value = 109.36852726843609;// 117.3188762183378;
 
     bool GPU = prcr_args->dev_opts.GPU;
     bool CPU = prcr_args->dev_opts.CPU;
