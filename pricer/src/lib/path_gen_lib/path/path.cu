@@ -11,9 +11,9 @@ namespace prcr
 	{
 		
 		_dim = _schedule -> Get_dim(); // n schedule steps
-		if(_dim > _max_dim){
-			_dim = _max_dim;
-		}
+		_eq_prices_scenario = new double[_dim];
+		_random_numbers_scenario = new double[_dim];
+
 		gen_path();
 	}
 

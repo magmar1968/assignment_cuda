@@ -16,12 +16,11 @@ namespace prcr
 
 	class Path {
 	private:
-		const static int _max_dim = 300;
 		Equity_prices  * _starting_point;
 		Schedule       * _schedule; 
 		Process_eq_lognormal * _process_eq_lognormal;
-		double           _eq_prices_scenario[_max_dim];
-		double           _random_numbers_scenario[_max_dim];
+		double         * _eq_prices_scenario;
+		double         * _random_numbers_scenario;
 		size_t           _dim;  //number of steps
 		size_t           _start_ind;
 
