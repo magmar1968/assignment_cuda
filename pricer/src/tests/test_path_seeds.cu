@@ -193,9 +193,6 @@ int main(int argc, char** argv)
     uint* seeds = new uint[4 * NBLOCKS * TPB];
     for (size_t inc = 0; inc < 4 * NBLOCKS * TPB; inc++){   
         seeds[inc] = rnd::genSeed(true);
-        if(inc < 10){
-            std::cout << "seed[" << inc << "]: " << seeds[inc] << std::endl;
-        }
     }
 
 
