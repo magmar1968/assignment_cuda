@@ -6,11 +6,11 @@ namespace rnd
         :_seed1(seed1), _seed2(seed2), _seed3(seed3), _seed4(seed4), _m(m),
         MyRandomImplementation(m)
     {
-        genT1 = GenTausworth(_seed1, TAUSWORTH_1);
-        genT2 = GenTausworth(_seed2, TAUSWORTH_2);
-        genT3 = GenTausworth(_seed3, TAUSWORTH_3);
+        GenTausworth genT1(_seed1, TAUSWORTH_1);
+        GenTausworth genT2(_seed2, TAUSWORTH_2);
+        GenTausworth genT3(_seed3, TAUSWORTH_3);
 
-        genL1 = GenLinCongruential(_seed4);
+        GenLinCongruential genL1(_seed4);
 
         if(!genT1.Get_status() && genT2.Get_status() && genT3.Get_status())
         {
