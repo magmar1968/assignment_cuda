@@ -83,6 +83,33 @@ kernel(prcr::Pricer_args* prcr_args, Result* dev_results, uint * dev_seeds)
 {
     using namespace prcr;
 
+    Equity_description descr(
+        prcr_args->eq_descr_args.dividend_yield,
+        prcr_args->eq_descr_args.rate,
+        prcr_args->eq_descr_args.vol);
+
+    Equity_prices starting_point(
+        prcr_args->eq_price_args.time,
+        prcr_args->eq_price_args.price,
+        &descr);
+
+    Schedule schedule(
+        prcr_args->schedule_args.t_ref,
+        prcr_args->schedule_args.deltat,
+        prcr_args->schedule_args.dim);
+
+    simulate_device(prcr_args, &starting_point, &schedule, dev_results,dev_seeds);
+
+}
+
+
+__host__ bool
+simulate_host(prcr::Pricer_args* prcr_args, Result* host_results, uint * host_seeds)
+{
+    using namespace prcr;
+    size_t NBLOCKS = prcr_args->dev_opts.N_blocks;
+    size_t TPB = prcr_args->dev_opts.N_threads;
+
     Equity_description* descr = new Equity_description(
         prcr_args->eq_descr_args.dividend_yield,
         prcr_args->eq_descr_args.rate,
@@ -99,43 +126,15 @@ kernel(prcr::Pricer_args* prcr_args, Result* dev_results, uint * dev_seeds)
         prcr_args->schedule_args.dim);
 
 
+    for (int index = 0; index < NBLOCKS * TPB; ++index)
+    {
+        simulate_generic(index, prcr_args, starting_point, schedule, host_results,host_seeds);
+    }
 
-    simulate_device(prcr_args, starting_point, schedule, dev_results,dev_seeds);
 
     delete(descr);
     delete(starting_point);
     delete(schedule);
-}
-
-
-__host__ bool
-simulate_host(prcr::Pricer_args* prcr_args, Result* host_results, uint * host_seeds)
-{
-    using namespace prcr;
-    size_t NBLOCKS = prcr_args->dev_opts.N_blocks;
-    size_t TPB = prcr_args->dev_opts.N_threads;
-
-    Equity_description descr(
-        prcr_args->eq_descr_args.dividend_yield,
-        prcr_args->eq_descr_args.rate,
-        prcr_args->eq_descr_args.vol);
-
-    Equity_prices starting_point(
-        prcr_args->eq_price_args.time,
-        prcr_args->eq_price_args.price,
-        &descr);
-
-    Schedule schedule(
-        prcr_args->schedule_args.t_ref,
-        prcr_args->schedule_args.deltat,
-        prcr_args->schedule_args.dim);
-
-
-    for (int index = 0; index < NBLOCKS * TPB; ++index)
-    {
-        simulate_generic(index, prcr_args, &starting_point, &schedule, host_results,host_seeds);
-    }
-
     return true; // da mettere gi� meglio
 }
 
