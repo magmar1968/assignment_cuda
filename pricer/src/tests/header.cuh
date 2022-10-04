@@ -27,6 +27,7 @@
 #include "../lib/option_pricer_lib/option_pricer.cuh"
 #include "../lib/option_pricer_lib/option_pricer_montecarlo/option_pricer_montecarlo.cuh"
 #include "../lib/contract_option_lib/contract_eq_option_vanilla/contract_eq_option_vanilla.cuh"
+#include "../lib/contract_option_lib/contract_eq_option_esotic/contract_eq_option_esotic_corridor.cuh"
 #include "../lib/support_lib/statistic_lib/statistic_lib.cuh"
 #include "../lib/support_lib/myDouble_lib/myudouble.cuh"
 #include "../lib/support_lib/parse_lib/parse_lib.cuh"

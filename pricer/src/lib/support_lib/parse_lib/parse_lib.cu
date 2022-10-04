@@ -140,7 +140,7 @@ namespace prcr
         else if(option_type == "esotic_corridor"){
             status = status && fileGetOptionValue<double>(filename, "#strike_price", &prcr_args->contract_args.strike_price);
             status = status && fileGetOptionValue<double>(filename, "#B", &prcr_args->contract_args.B );
-            status = status && fileGetOptionValue<double>(filename, "#N", &prcr_args->contract_args.N );
+            status = status && fileGetOptionValue<double>(filename, "#Noz", &prcr_args->contract_args.N );
             status = status && fileGetOptionValue<double>(filename, "#K", &prcr_args->contract_args.K );    
         }
         else{

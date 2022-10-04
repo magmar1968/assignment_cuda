@@ -19,25 +19,25 @@ namespace prcr
 												double N,
 												double K )
 			:Contract_eq_option_esotic(eq_prices, schedule, strike_price, contract_type),
-			_N(N), _B(B), _K(K)
+			_Noz(N), _B(B), _K(K)
 		{
-			_sigma = eq_prices->Get_eq_description()->Get_vol_surface()->Get_volatility();
+			_sigma = eq_prices->Get_eq_description()->Get_vol_surface();
 			_delta_t = schedule->Get_t(1) - schedule->Get_t(0);  //tempi di schedule equispaziati per ipotesi
 			_steps = schedule->Get_dim();
 		}
 
 		HD void Set_B(double B) { _B = B; }
-		HD void Set_N(double N) { _N = N; }
+		HD void Set_N(double N) { _Noz = N; }
 		HD void Set_K(double K) { _K = K; }
 		HD double Get_B(void) { return _B; }
-		HD double Get_N(void) { return _N; }
+		HD double Get_N(void) { return _Noz; }
 		HD double Get_K(void) { return _K; }
 
 		HD ~Contract_eq_option_exotic_corridor() {};
 		HD double Pay_off(const Path* path);
 
 	private:
-		double _N;
+		double _Noz;
 		double _K;
 		double _B;
 		double _sigma;
@@ -58,16 +58,16 @@ namespace prcr
 		}
 
 		if (_contract_type == 'P')
-			return max((_N * (_K - P / (_steps-1))),0.);   //o steps e basta?
+			return  _Noz; // max((_Noz * (_K - P / (_steps - 1))), 0.);   //o steps e basta?
 		else
-				return 0; //non abbiamo formula per call performance corridor
+			return 0; //non abbiamo formula per call performance corridor
 
 
 	}
 
 
 
-HD inline bool Contract_eq_option_exotic_corridor::Evaluate_log_return(size_t i, const Path* path)
+HD bool Contract_eq_option_exotic_corridor::Evaluate_log_return(size_t i, const Path* path)
 {
 	double S_a = path->Get_equity_prices(i);
 	double S_b = path->Get_equity_prices(i + 1);

@@ -103,7 +103,7 @@ namespace prcr
 
     struct Contract_args
     {
-        char   option_type[15]; //vanilla ecc.       
+        char   option_type[16]; //vanilla ecc.       
         char   contract_type;   //call or put 
         
         double strike_price;
