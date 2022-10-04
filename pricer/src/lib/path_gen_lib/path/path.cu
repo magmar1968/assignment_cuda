@@ -27,7 +27,8 @@ namespace prcr
 
 	__host__ __device__ Path::~Path()
 	{
-
+		delete[](_eq_prices_scenario);
+		delete[](_random_numbers_scenario);
 	}
 
 	__host__ __device__ void
