@@ -115,17 +115,17 @@ simulate_host(prcr::Pricer_args* prcr_args, Result* host_results, uint * host_se
     size_t NBLOCKS = prcr_args->dev_opts.N_blocks;
     size_t TPB = prcr_args->dev_opts.N_threads;
 
-    Equity_description* descr = new Equity_description(
+    Equity_description descr(
         prcr_args->eq_descr_args.dividend_yield,
         prcr_args->eq_descr_args.rate,
         prcr_args->eq_descr_args.vol);
 
-    Equity_prices* starting_point = new Equity_prices(
+    Equity_prices starting_point(
         prcr_args->eq_price_args.time,
         prcr_args->eq_price_args.price,
-        descr);
+        &descr);
 
-    Schedule* schedule = new Schedule(
+    Schedule schedule(
         prcr_args->schedule_args.t_ref,
         prcr_args->schedule_args.deltat,
         prcr_args->schedule_args.dim);
@@ -133,13 +133,9 @@ simulate_host(prcr::Pricer_args* prcr_args, Result* host_results, uint * host_se
 
     for (int index = 0; index < NBLOCKS * TPB; ++index)
     {
-        simulate_generic(index, prcr_args, starting_point, schedule, host_results,host_seeds);
+        simulate_generic(index, prcr_args, &starting_point, &schedule, host_results,host_seeds);
     }
 
-
-    delete(descr);
-    delete(starting_point);
-    delete(schedule);
     return true; // da mettere gi� meglio
 }
 
@@ -172,25 +168,21 @@ simulate_generic(size_t index,
     uint seed2 = seeds[2 + index * 4];
     uint seed3 = seeds[3 + index * 4];
 
-    rnd::GenCombined* gnr_in = new rnd::GenCombined(seed0,seed1,seed2,seed3);
+    rnd::GenCombined gnr_in(seed0,seed1,seed2,seed3);
 
 
-    prcr::Process_eq_lognormal* process
-        = new prcr::Process_eq_lognormal(gnr_in, prcr_args->stc_pr_args.exact);
+    prcr::Process_eq_lognormal process(&gnr_in, prcr_args->stc_pr_args.exact);
 
     prcr::Contract_eq_option_vanilla contr_opt(starting_point,
                                                schedule,
                                                prcr_args->contract_args.strike_price,
                                                prcr_args->contract_args.contract_type);
     size_t _N = prcr_args->mc_args.N_simulations;
-    prcr::Option_pricer_montecarlo pricer(&contr_opt, process, _N);
+    prcr::Option_pricer_montecarlo pricer(&contr_opt, &process, _N);
 
     results[index].p_off = pricer.Get_price();
     results[index].p_off2 = pricer.Get_price_square();
 
-
-    delete(process);
-    delete(gnr_in);
 }
 
 

@@ -83,28 +83,24 @@ kernel(prcr::Pricer_args* prcr_args, Result* dev_results, uint * dev_seeds)
 {
     using namespace prcr;
 
-    Equity_description* descr = new Equity_description(
+    Equity_description descr(
         prcr_args->eq_descr_args.dividend_yield,
         prcr_args->eq_descr_args.rate,
         prcr_args->eq_descr_args.vol);
 
-    Equity_prices* starting_point = new Equity_prices(
+    Equity_prices starting_point(
         prcr_args->eq_price_args.time,
         prcr_args->eq_price_args.price,
-        descr);
+        &descr);
 
-    Schedule* schedule = new Schedule(
+    Schedule schedule(
         prcr_args->schedule_args.t_ref,
         prcr_args->schedule_args.deltat,
         prcr_args->schedule_args.dim);
 
 
 
-    simulate_device(prcr_args, starting_point, schedule, dev_results,dev_seeds);
-
-    delete(descr);
-    delete(starting_point);
-    delete(schedule);
+    simulate_device(prcr_args, &starting_point, &schedule, dev_results,dev_seeds);
 }
 
 
@@ -172,11 +168,10 @@ simulate_generic(size_t index,
     uint seed2 = seeds[2 + index * 4];
     uint seed3 = seeds[3 + index * 4];
 
-    rnd::GenCombined* gnr_in = new rnd::GenCombined(seed0,seed1,seed2,seed3);
+    rnd::GenCombined gnr_in(seed0,seed1,seed2,seed3);
 
 
-    prcr::Process_eq_lognormal* process
-        = new prcr::Process_eq_lognormal(gnr_in, prcr_args->stc_pr_args.exact);
+    prcr::Process_eq_lognormal process(&gnr_in, prcr_args->stc_pr_args.exact);
 
     prcr::Contract_eq_option_vanilla contr_opt(starting_point,
                                                schedule,
@@ -188,7 +183,7 @@ simulate_generic(size_t index,
 
     prcr::Contract_eq_option& contract =
         static_cast<prcr::Contract_eq_option&>(contr_opt);
-    prcr::Path path(starting_point, schedule, process);
+    prcr::Path path(starting_point, schedule, &process);
     size_t _N = prcr_args->mc_args.N_simulations;
     for (size_t i = 0; i < _N; ++i)
     {
@@ -201,10 +196,6 @@ simulate_generic(size_t index,
 
     results[index].p_off = pay_off / double(_N);
     results[index].p_off2 = pay_off2;
-
-
-    delete(process);
-    delete(gnr_in);
 }
 
 
