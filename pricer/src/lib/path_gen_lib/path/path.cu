@@ -12,7 +12,6 @@ namespace prcr
 		
 		_dim = _schedule -> Get_dim(); // n schedule steps
 		_eq_prices_scenario = new double[_dim];
-		_random_numbers_scenario = new double[_dim];
 
 		gen_path();
 	}
@@ -28,13 +27,14 @@ namespace prcr
 	__host__ __device__ Path::~Path()
 	{
 		delete[](_eq_prices_scenario);
-		delete[](_random_numbers_scenario);
 	}
 
 	__host__ __device__ void
 	Path::gen_path()
 	{
 		double start_t = _starting_point -> Get_time();	
+		double random_number;
+
 		//check for starting point in the schedule
 		//maybe better in another function
 		for(size_t k = 0; k < _dim; k++)
@@ -47,16 +47,23 @@ namespace prcr
 		}
 		
 		double delta_t = _schedule->Get_t(_start_ind) - start_t;   //first step, from starting_point
-		_random_numbers_scenario[_start_ind] = _process_eq_lognormal->Get_random_gaussian();
-		_eq_prices_scenario[_start_ind] = _process_eq_lognormal->Get_new_eq_price(_starting_point->Get_eq_description(), _starting_point->Get_price(), _random_numbers_scenario[_start_ind], delta_t);
+		random_number = _process_eq_lognormal->Get_random_gaussian();
+		_eq_prices_scenario[_start_ind] = 
+		                _process_eq_lognormal->Get_new_eq_price(_starting_point->Get_eq_description(), 
+		                                                        _starting_point->Get_price(), 
+																random_number, 
+																delta_t);
 
 		for (size_t j =  _start_ind + 1; j < _dim; j++)
 		{
 			delta_t = _schedule->Get_t(j) - _schedule->Get_t(j-1);
 
-			_random_numbers_scenario[j] = _process_eq_lognormal->Get_random_gaussian(); 
+			random_number = _process_eq_lognormal->Get_random_gaussian(); 
 			_eq_prices_scenario[j] = 
-				_process_eq_lognormal->Get_new_eq_price(_starting_point->Get_eq_description(), _eq_prices_scenario[j - 1], _random_numbers_scenario[j],delta_t); 
+				_process_eq_lognormal->Get_new_eq_price(_starting_point->Get_eq_description(),
+				                                        _eq_prices_scenario[j - 1],
+														random_number,
+														delta_t); 
 			
 		}
 	}
@@ -84,14 +91,6 @@ namespace prcr
 		return _eq_prices_scenario[_dim -1];
 	}
 
-	__host__ __device__ double
-	Path::Get_random_numbers(size_t i) const
-	{
-		if(i < _dim)
-			return _random_numbers_scenario[i];
-		else 
-			return -100;
-	}
 
 	__host__ __device__ size_t
 	Path::Get_dim(void) const

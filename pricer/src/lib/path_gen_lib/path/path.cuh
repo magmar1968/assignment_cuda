@@ -20,7 +20,6 @@ namespace prcr
 		Schedule       * _schedule; 
 		Process_eq_lognormal * _process_eq_lognormal;
 		double         * _eq_prices_scenario;
-		double         * _random_numbers_scenario;
 		size_t           _dim;  //number of steps
 		size_t           _start_ind;
 
@@ -39,13 +38,11 @@ namespace prcr
 		HD Equity_prices  * Get_starting_point(void) const;
 		HD double   Get_equity_prices(size_t i) const; 
 		HD double   Get_last_eq_price() const;
-		HD double    Get_random_numbers(size_t i) const;
 		HD size_t Get_dim(void) const;
 		HD size_t Get_start_ind() const;
 		//functions
 		HD double  operator[](size_t i) const;
 		HD void regen_path();
-		// HD void destroy ();
 
 	};
 }
