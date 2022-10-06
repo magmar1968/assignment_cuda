@@ -5,8 +5,8 @@ CC          := nvcc
 
 #The Target Binary Program
 TARGET      := $(basename $(notdir $(wildcard ./src/exam/*.cu )))
-#TEST        := $(basename $(notdir $(wildcard ./src/tests/*.cu)))
-TEST        := $(basename $(notdir $(wildcard ./src/tests/montecarlo_test2.cu)))
+TEST        := $(basename $(notdir $(wildcard ./src/tests/*.cu)))
+#TEST        := $(basename $(notdir $(wildcard ./src/tests/test_regen_path.cu)))
 #The Directories, Source, Includes, Objects, Binary and Resources
 SRCDIR      := src
 INCDIR      := inc
@@ -16,8 +16,8 @@ SRCEXT      := cu
 DEPEXT      := d
 OBJEXT      := o
 #Flags, Libraries and Includes
-LDFLAGS  = -std=c++11 -Xnvlink --disable-warnings -Wno-deprecated-gpu-targets
-CCFLAGS := -rdc=true  -std=c++11  -Wno-deprecated-gpu-targets
+LDFLAGS  = -std=c++11 -Xnvlink --disable-warnings -Wno-deprecated-gpu-targets -g
+CCFLAGS := -rdc=true  -std=c++11  -Wno-deprecated-gpu-targets -g
 INC         := -I$(INCDIR) -I/usr/local/include
 INCDEP      := -I$(INCDIR)
 
@@ -61,8 +61,7 @@ $(TARGET): $(OBJECTS)
 $(TEST): $(OBJECTS)
 	@printf "\n"
 	@$(CC) $(LDFLAGS) -o $(TARGETDIR)/$@ $(FILTER_OBJ) $(call FILTER_IN,$(basename $@),$(OBJECTS))
-	./$(TARGETDIR)/$@ -cpu 
-	./$(TARGETDIR)/$@ -gpu
+	./$(TARGETDIR)/$@ 
 
 
 

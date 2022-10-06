@@ -21,20 +21,18 @@ namespace prcr
     {
     private:
         double               _time;      //current time
-        udb                  _price;    //current price
+        double               _price;    //current price
         Equity_description * _eq_descr;   
     
     public:
         //constructors & destructors
         HD Equity_prices() {};
         HD Equity_prices(double time,
-                        udb  price,                               
+                        double  price,                               
                         Equity_description * equity_descriptions)
             :_time(time)
         {
             _price = price;
-            //_eq_descr = new Equity_description;
-            //*_eq_descr = *equity_descriptions;
             _eq_descr = equity_descriptions; 
         }
         
@@ -43,8 +41,8 @@ namespace prcr
         }
 
         // getter & setter
-        HD double      Get_time()     const{ return _time;}
-        HD udb Get_eq_price() const{ return _price;}
+        HD double         Get_time()     const{ return _time;}
+        HD double         Get_price() const{ return _price;}
         HD Equity_description * Get_eq_description() const // ha senso?
         {
             return _eq_descr;
@@ -52,7 +50,7 @@ namespace prcr
 
         //setters
         HD void Set_time(double t)             { _time  = t;}
-        HD void Set_eq_price(udb price){ _price = price;}
+        HD void Set_eq_price(double price){ _price = price;}
         HD void Set_eq_description( Equity_description * eq_description)
         {
             _eq_descr = eq_description; 

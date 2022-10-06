@@ -1,5 +1,4 @@
 #include <iostream>
-#include "device_launch_parameters.h"
 #include "../lib/path_gen_lib/path/path.cuh"
 #include "../lib/support_lib/myRandom/myRandom.cuh"
 #include "../lib/support_lib/myRandom/myRandom_gnr/combined.cuh"
@@ -51,7 +50,7 @@ run_device(uint * seeds, prcr::Pricer_args * prcr_args,Result * host_res)
     cudaStatus = cudaMalloc((void**)&dev_seeds, NBLOCKS * TPB * 4 * sizeof(uint));
     if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMalloc1 failed!\n"); }
 
-    cudaStatus = cudaMalloc((void**)&dev_prcr_args,sizeof(dev_prcr_args));
+    cudaStatus = cudaMalloc((void**)&dev_prcr_args,sizeof(Pricer_args));
     if(cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMalloc2 failed!\n");  }
 
     cudaStatus = cudaMalloc((void**)&dev_res, NBLOCKS * TPB * sizeof(Result));
@@ -63,7 +62,7 @@ run_device(uint * seeds, prcr::Pricer_args * prcr_args,Result * host_res)
     if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMemcpy1 failed!\n"); }
     fprintf(stderr, "%s\n", cudaGetErrorString(cudaStatus));
 
-    cudaStatus = cudaMemcpy(dev_prcr_args,prcr_args, sizeof(prcr_args),cudaMemcpyHostToDevice);
+    cudaStatus = cudaMemcpy(dev_prcr_args,prcr_args, sizeof(Pricer_args),cudaMemcpyHostToDevice);
     if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMemcpy2 failed!\n"); }
     fprintf(stderr, "%s\n", cudaGetErrorString(cudaStatus));
 
@@ -94,22 +93,13 @@ kernel(uint * seeds, prcr::Pricer_args * prcr_args,Result * dev_results)
 {
     using namespace prcr;
 
-    Volatility_surface * volatility_surface = new Volatility_surface(prcr_args->vol_args.vol);
-
-    Yield_curve_flat * yield_curve = new Yield_curve_flat(
-                                          prcr_args->eq_descr_args.currency,
-                                          prcr_args->yc_args.rate);
-
     Equity_description * descr = new Equity_description(
-                                    prcr_args->eq_descr_args.isin_code,
-                                    prcr_args->eq_descr_args.name,
-                                    prcr_args->eq_descr_args.currency,
                                     prcr_args->eq_descr_args.dividend_yield,
-                                    yield_curve,
-                                    volatility_surface);
+                                    prcr_args->eq_descr_args.rate,
+                                    prcr_args->eq_descr_args.vol);
     
     Equity_prices * starting_point = new Equity_prices(
-                                    prcr_args->eq_price_args.price,
+                                    prcr_args->eq_price_args.time,
                                     prcr_args->eq_price_args.price,
                                     descr);
 
@@ -127,8 +117,6 @@ kernel(uint * seeds, prcr::Pricer_args * prcr_args,Result * dev_results)
 
     simulate_device(seeds,eq_option,prcr_args, dev_results);
 
-    delete(volatility_surface);
-    delete(yield_curve);
     delete(descr);
     delete(starting_point);
     delete(schedule);
@@ -143,19 +131,10 @@ simulate_host(uint* seeds, prcr::Pricer_args* prcr_args, Result* host_res)
     size_t NBLOCKS = prcr_args->dev_opts.N_blocks;
     size_t TPB    = prcr_args->dev_opts.N_threads;
 
-    Volatility_surface* volatility_surface = new Volatility_surface(prcr_args->vol_args.vol);
-
-    Yield_curve_flat* yield_curve = new Yield_curve_flat(
-        prcr_args->eq_descr_args.currency,
-        prcr_args->yc_args.rate);
-
     Equity_description* descr = new Equity_description(
-        prcr_args->eq_descr_args.isin_code,
-        prcr_args->eq_descr_args.name,
-        prcr_args->eq_descr_args.currency,
         prcr_args->eq_descr_args.dividend_yield,
-        yield_curve,
-        volatility_surface);
+        prcr_args->eq_descr_args.rate,
+        prcr_args->eq_descr_args.vol);
 
     Equity_prices* starting_point = new Equity_prices(
         prcr_args->eq_price_args.time,
@@ -178,9 +157,6 @@ simulate_host(uint* seeds, prcr::Pricer_args* prcr_args, Result* host_res)
         simulate_generic(seeds, index, contr_opt, prcr_args,host_res);
 
     }
-
-    delete(volatility_surface);
-    delete(yield_curve);
     delete(descr);
     delete(starting_point);
     delete(schedule);
@@ -196,8 +172,8 @@ simulate_device(uint * seeds,
                 Result         * results)
 {
     size_t index   = blockIdx.x * blockDim.x + threadIdx.x;
-    size_t NBLOCKS = prcr_args->dev_opts.N_blocks;
-    size_t TPB     = prcr_args->dev_opts.N_threads;
+    size_t NBLOCKS = gridDim.x;
+    size_t TPB     = blockDim.x;
     if (index < NBLOCKS * TPB) simulate_generic(seeds, index, contr_opt,prcr_args, results);    
 }
 
@@ -213,15 +189,12 @@ simulate_generic(uint * seeds, size_t index,
     uint seed3 = seeds[3 + index * 4];
     size_t PPT = prcr_args->mc_args.N_simulations;
 
-    rnd::GenCombined               * gnr_in  = new rnd::GenCombined(seed0, seed1, seed2, seed3);
-    prcr::Process_eq_lognormal     * process = new prcr::Process_eq_lognormal(gnr_in,false,1);
-    prcr::Option_pricer_montecarlo * pric    = new prcr::Option_pricer_montecarlo(contr_opt,process,PPT);
-    results[index].opt_price = pric->Get_price();
-    results[index].error     = pric->Get_price_square();//MC_error();
+    rnd::GenCombined gnr_in(seed0, seed1, seed2, seed3);
+    prcr::Process_eq_lognormal process(&gnr_in, prcr_args->stc_pr_args.exact);
+    prcr::Option_pricer_montecarlo pric(contr_opt, &process, PPT);
+    results[index].opt_price = pric.Get_price();
+    results[index].error     = pric.Get_price_square();
 
-    delete(gnr_in);
-    delete(process);
-    delete(pric);
 }
 
 
@@ -256,27 +229,29 @@ int main(int argc, char ** argv)
     bool CPU = prcr_args->dev_opts.CPU;
     bool status = true;
 
-    if(GPU == true){ 
-	Timer gpu_timer;
+    if(GPU == true)
+    { 
+	    Timer gpu_timer;
         status = status && run_device(seeds,prcr_args,host_res);
-	gpu_timer.Stop();
+	    gpu_timer.Stop();
     }
     
-    if(CPU == true){
+    if(CPU == true)
+    {
+	    Timer cpu_timer;
         status = status && simulate_host(seeds,prcr_args,host_res);
+	    cpu_timer.Stop();
 
         double final_error = 0;
 	    double squares_sum = 0;
         double final_price = 0;
         for( int i = 0 ; i < NBLOCKS* TPB; ++i)
         {
-            //final_error += host_res[i].error;
             final_price += host_res[i].opt_price; 
-    	    squares_sum += host_res[i].error;
+	        squares_sum += host_res[i].error;
 	    
         }
         final_price /= static_cast<double>(NBLOCKS*TPB);
-        //final_error /= static_cast<double>(NBLOCKS*TPB);
 	    final_error = compute_final_error(squares_sum, final_price, NBLOCKS*TPB*PPT);
         std::cout << " CPU simulation final results:         \n"
                   << "         - price: " << final_price << "\n"

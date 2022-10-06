@@ -6,16 +6,16 @@
 #m 10   ! number of time steps 
 
 
-#pr_exact 1  
+#pr_exact 0  
 #l 1        ! extra time step for the euler scheme
 
 
 !both the following option must be filled even if the CPU option is the only one
 !setted to true
-#N_blocks  128 !N of blocks to use for the computation. 
-#N_threads 128 !N of thread per block. 
+#N_blocks 16 !N of blocks to use for the computation. 
+#N_threads 512 !N of thread per block. 
 
-#N_simulations 1600
+#N_simulations 500
 
 !#yc_structured !decomment if you'd like to introduce a structured yield curve
 !#yc_rates
@@ -24,8 +24,8 @@
 
 
 #eq_descr_dy         0.
-#yc_rate             0.01
-#volatility          0.05 !volatility of the pricer
+#yc_rate             0.
+#volatility          0.0 !volatility of the pricer
 
 
 !starting conditions
@@ -34,15 +34,12 @@
 
 
 !contract option input
-#option_type vanilla
-#contract_type C  !put C for a call contract or P for a put contract
-#strike_price 100
-
-!decomment for corridor option
-!#B    !0, 0.25, 0.5, 0.75, 1, 2, 4 <- possible values
-!#K    !0, 0.1, 0.2 ...
-!#N    !1EUR
-
+#option_type esotic_corridor
+#contract_type P  !put C for a call contract or P for a put contract
+#strike_price 0
+#B 0.25 !0, 0.25, 0.5, 0.75, 1, 2, 4 <- possible values
+#K 1    !0, 0.1, 0.2 ...
+#Noz 1    !1EUR
 
 
 
