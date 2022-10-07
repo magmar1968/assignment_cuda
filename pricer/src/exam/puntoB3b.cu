@@ -17,8 +17,7 @@ void __host__ __device__ simulate_generic
 
 __host__ bool
 run_device(prcr::Pricer_args* prcr_args, Result* host_results, uint * host_seeds)
-{	
-    std::cout << "i'm running\n" <<std::endl;
+{
     using namespace prcr;
     cudaError_t cudaStatus;
     Result* dev_results;
@@ -228,9 +227,8 @@ int main(int argc, char** argv)
 
     std::string filename_output;
     filename_output = "./data/puntoB3b.txt";
-    std::fstream fs;
+    std::ofstream fs;
     fs.open(filename_output, std::fstream::app);
-
 
 
 
