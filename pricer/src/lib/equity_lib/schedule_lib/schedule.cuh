@@ -13,7 +13,7 @@ namespace prcr
 		bool     _ascending;
 	  public:
 		HD Schedule(void){};
-		HD Schedule(double t_ref, double delta_t, int dim);
+		HD Schedule(double t_ref, double delta_t, size_t dim);
 		HD Schedule(double* t, int dim);
 		HD ~Schedule(void);  
 

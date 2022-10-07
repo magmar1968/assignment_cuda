@@ -108,7 +108,8 @@ namespace prcr
 
         status = status && fileGetOptionValue<double>(filename, "#T",&T);
         status = status && fileGetOptionValue<size_t>(filename, "#m",&steps);
-        
+
+        prcr_args->schedule_args.T = T;        
         prcr_args->schedule_args.dim = steps; //devi considerare anche lo 0
         prcr_args->schedule_args.t_ref = 0.; //non ha senso fare altrimenti
         prcr_args->schedule_args.deltat = T/ static_cast<double>(steps);
