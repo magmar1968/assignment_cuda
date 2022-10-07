@@ -1,4 +1,4 @@
-sigma = 0.3, yield_rate = 0.15, 20 fixing dates, N_simulations (per thread) = 15k, processo esatto. Di seguito: B, price, error
+sigma = 0.3, yield_rate = 0.15, 20 fixing dates, NBLOCKS = 128, TPB = 512, N_simulations (per thread) = 15k, processo esatto. Di seguito: B, price, error
 0,1,0
 5,0.265015,3.14762e-06
 0.5,0.911249,2.02824e-06
@@ -6,3 +6,7 @@ sigma = 0.3, yield_rate = 0.15, 20 fixing dates, N_simulations (per thread) = 15
 1.5,0.738086,3.13567e-06
 2,0.655709,3.3886e-06
 2.5,0.577316,3.523e-06
+3,0.503645,3.56583e-06
+3.5,0.435257,3.53586e-06
+4,0.372558,3.44814e-06
+4.5,0.315789,3.31503e-06
