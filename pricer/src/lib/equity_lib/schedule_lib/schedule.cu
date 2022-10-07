@@ -2,7 +2,7 @@
 
 namespace prcr
 {
-    HD Schedule::Schedule(double t_ref, double delta_t, int dim)
+    HD Schedule::Schedule(double t_ref, double delta_t, size_t dim)
         :_dim(dim)
     {
         _t = new double[_dim];

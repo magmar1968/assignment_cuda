@@ -96,6 +96,7 @@ namespace prcr
 
     struct Schedule_args
     {
+        double T;
         double t_ref;   //initial time
         double deltat;  //time step size
         size_t dim;     //time steps
