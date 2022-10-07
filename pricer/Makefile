@@ -5,8 +5,7 @@ CC          := nvcc
 
 #The Target Binary Program
 TARGET      := $(basename $(notdir $(wildcard ./src/exam/*.cu )))
-TEST        := $(basename $(notdir $(wildcard ./src/tests/*.cu)))
-#TEST        := $(basename $(notdir $(wildcard ./src/tests/test_regen_path.cu)))
+#TEST        := $(basename $(notdir $(wildcard ./src/tests/*.cu)))
 #The Directories, Source, Includes, Objects, Binary and Resources
 SRCDIR      := src
 INCDIR      := inc
@@ -23,7 +22,9 @@ INCDEP      := -I$(INCDIR)
 
 SOURCES     := $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
 OBJECTS     := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.$(OBJEXT)))
+EXAM_OBJ    := $(wildcard $(BUILDDIR)/exam/*)
 FILTER_OBJ  := $(call FILTER_OUT,test, $(OBJECTS))
+FILTER_OBJ  := $(filter-out $(EXAM_OBJ),$(FILTER_OBJ))
 
 #Default Make
 all: resources $(TEST) $(TARGET) #compile all
