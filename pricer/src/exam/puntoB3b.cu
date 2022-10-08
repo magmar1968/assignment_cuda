@@ -226,7 +226,7 @@ int main(int argc, char** argv)
     bool status = true;
 
     std::string filename_output;
-    filename_output = "./data/puntoB4a.txt";
+    filename_output = "./data/puntoB4a_appr.txt";
     std::ofstream fs;
     fs.open(filename_output, std::fstream::app);
 
@@ -275,9 +275,14 @@ int main(int argc, char** argv)
         cpu_final_result /= double(NBLOCKS * TPB);
         double cpu_MC_error = compute_final_error(cpu_squares_sum, cpu_final_result, NBLOCKS * TPB*PPT);
 
+	
+	//B3b
+        //fs << prcr_args->contract_args.B << "," << cpu_final_result << "," << cpu_MC_error << "\n";
+        
+	// B4a
+        fs << prcr_args->schedule_args.dim-1 << "," << cpu_final_result << "," << cpu_MC_error << "\n";
 
-        fs << prcr_args->contract_args.B << "," << cpu_final_result << "," << cpu_MC_error << "\n";
-        fs.close();
+	fs.close();
         
     }
 
