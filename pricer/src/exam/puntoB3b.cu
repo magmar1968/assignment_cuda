@@ -275,9 +275,13 @@ int main(int argc, char** argv)
         cpu_final_result /= double(NBLOCKS * TPB);
         double cpu_MC_error = compute_final_error(cpu_squares_sum, cpu_final_result, NBLOCKS * TPB*PPT);
 
+	//B3b
+        //fs << prcr_args->contract_args.B << "," << cpu_final_result << "," << cpu_MC_error << "\n";
 
-        fs << prcr_args->contract_args.B << "," << cpu_final_result << "," << cpu_MC_error << "\n";
-        fs.close();
+	//B4a
+	fs << prcr_args->schedule_args.dim-1 << "," << cpu_final_result << "," << cpu_MC_error << "\n";
+        
+	fs.close();
         
     }
 
