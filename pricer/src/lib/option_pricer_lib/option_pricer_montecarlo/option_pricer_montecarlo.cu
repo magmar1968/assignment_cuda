@@ -66,13 +66,13 @@ namespace prcr
         for(size_t i = 0; i < _N; ++i)
         {
 
-            pay_off += contract.Pay_off(&path);
+            pay_off += contract.Pay_off(&path) / double(_N); // more precise
             pay_off2 += contract.Pay_off(&path) * contract.Pay_off(&path);
         
             path.regen_path();
         }    
         
-        _price = pay_off / double(_N);
+        _price = pay_off ;
         _price_square = pay_off2;  //cos'è la somma dei quadrati ---> forse meglio cambiargli nome
 
         //compute_MC_error();
