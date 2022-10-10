@@ -42,8 +42,23 @@ public:
 
     }
 
+    double Get_delta_time()
+    {
+        using namespace std::chrono;
+        auto endTimepoint = high_resolution_clock::now();
+
+        auto start = time_point_cast<milliseconds>(_StartTimepoint).time_since_epoch().count();
+        auto end = time_point_cast<milliseconds>(endTimepoint).time_since_epoch().count();
+
+        auto ms = end - start;
+
+        return ms / 1000;
+        
+    }
+
 private:
     std::chrono::time_point< std::chrono::high_resolution_clock> _StartTimepoint;
+
 };
 }
 
