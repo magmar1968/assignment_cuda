@@ -1,9 +1,9 @@
-#CPU 1   !set to 1 to use the CPU for computing, 0 otherwise
-#GPU 0   !both option can be enabled at the same time but at least one must be true
+#CPU 0   !set to 1 to use the CPU for computing, 0 otherwise
+#GPU 1   !both option can be enabled at the same time but at least one must be true
 
 
 #T 1     ! simulation time range in years
-#m 100   ! number of time steps 
+#m 10   ! number of time steps 
 
 
 #pr_exact 1  
@@ -13,9 +13,9 @@
 !both the following option must be filled even if the CPU option is the only one
 !setted to true
 #N_blocks  64 !N of blocks to use for the computation. 
-#N_threads 32 !N of thread per block. 
+#N_threads 90 !N of thread per block. 
 
-#N_simulations 100
+#N_simulations 50000
 
 !#yc_structured !decomment if you'd like to introduce a structured yield curve
 !#yc_rates

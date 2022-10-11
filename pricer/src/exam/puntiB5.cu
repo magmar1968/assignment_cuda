@@ -247,7 +247,7 @@ int main(int argc, char** argv)
         gpu_final_result /= double(NBLOCKS * TPB);
         double gpu_MC_error = compute_final_error(gpu_squares_sum, gpu_final_result, NBLOCKS * TPB * PPT);
 
-        fs << NBLOCKS * TPB << "," << prcr_args->schedule_args.dim - 1 << "," << gpu_time << "\n";
+        fs << NBLOCKS * TPB << "," << prcr_args->schedule_args.dim - 1 << "," << std::setprecision(3) << gpu_time << "\n";
 
         fs.close();
 
@@ -271,7 +271,7 @@ int main(int argc, char** argv)
         double cpu_MC_error = compute_final_error(cpu_squares_sum, cpu_final_result, NBLOCKS * TPB * PPT);
 
 
-        fs << NBLOCKS * TPB << "," << prcr_args->schedule_args.dim - 1 << "," << cpu_time << "\n";
+        fs << NBLOCKS * TPB << "," << prcr_args->schedule_args.dim - 1 << "," << std::setprecision(3) << cpu_time << "\n";
 
         fs.close();
 
