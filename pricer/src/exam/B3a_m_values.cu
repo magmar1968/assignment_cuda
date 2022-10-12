@@ -209,9 +209,7 @@ int main(int argc, char** argv)
     //gen seeds 
     srand(time(NULL));
     uint* seeds = new uint[4 * NBLOCKS * TPB];
-    for (size_t inc = 0; inc < 4 * NBLOCKS * TPB; inc++)
-        seeds[inc] = rnd::genSeed(true); 
-
+    
 
 
     std::fstream ofs(outfilename.c_str(),std::fstream::out);
@@ -231,9 +229,14 @@ int main(int argc, char** argv)
 
         //simulate
         prcr_args->stc_pr_args.exact = true;
+        for (size_t inc = 0; inc < 4 * NBLOCKS * TPB; inc++)
+        seeds[inc] = rnd::genSeed(true); 
         status = status && run_device(prcr_args, exact_results,seeds);
+        
         prcr_args->stc_pr_args.exact = false;
-        status = status && run_device(prcr_args, exact_results,seeds);
+        for (size_t inc = 0; inc < 4 * NBLOCKS * TPB; inc++)
+        seeds[inc] = rnd::genSeed(true); 
+        status = status && run_device(prcr_args, approx_results,seeds);
 
         
         //print
