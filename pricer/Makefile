@@ -23,7 +23,7 @@ INCDEP      := -I$(INCDIR)
 
 SOURCES     := $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
 OBJECTS     := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.$(OBJEXT)))
-EXAM_OBJ    := $(wildcard $(BUILDDIR)/exam/*)
+EXAM_OBJ    := $(wildcard $(BUILDDIR)/exam/*.o)
 FILTER_OBJ  := $(call FILTER_OUT,test, $(OBJECTS))
 FILTER_OBJ  := $(filter-out $(EXAM_OBJ),$(FILTER_OBJ))
 
@@ -32,6 +32,10 @@ all: resources $(TEST) $(TARGET) #compile all
 
 #Remake
 remake: cleaner all
+
+print: 
+	$(EXAM_OBJ)\
+	$(FILTER_OBJ)
 
 #exam 
 exam: resources $(TARGET)
