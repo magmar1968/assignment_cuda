@@ -212,7 +212,7 @@ int main(int argc, char** argv)
 
 
 
-    std::fstream ofs(filename.c_str(),std::fstream::out);
+    std::fstream ofs(outfilename.c_str(),std::fstream::out);
     ofs << "m,exact_result,exact_error,approx_result,approx_erro\n";
 
     for (size_t m = 0; m < 100; m+5){
