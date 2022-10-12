@@ -17,6 +17,8 @@ public:
 
     void Stop()
     {
+
+        _stopped = true;
         using namespace std::chrono;
         auto endTimepoint = high_resolution_clock::now();
 
@@ -47,9 +49,19 @@ public:
 
     } 
 
+    double GetTime(){
+        if(_stopped == true)
+            return _ms;
+        else{
+            Stop();
+            return _ms;
+        }
+    }
+
 private:
     std::chrono::time_point< std::chrono::high_resolution_clock> _StartTimepoint;
     double _secs,_ms,_mins,_hour;
+    bool _stopped = false;
 };
 }
 
