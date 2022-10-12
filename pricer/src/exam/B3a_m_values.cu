@@ -2,6 +2,8 @@
 #include <iomanip>
 
 
+#define MAX_M  100
+
 struct Result
 {
     double p_off = 0.;
@@ -215,7 +217,7 @@ int main(int argc, char** argv)
     std::fstream ofs(outfilename.c_str(),std::fstream::out);
     ofs << "m,exact_result,exact_error,approx_result,approx_erro\n";
 
-    for (size_t m = 0; m < 100; m+5){
+    for (size_t m = 0; m < MAX_M; m+=5){
         if(m == 0)
             prcr_args->schedule_args.dim = 1;
         else
@@ -256,7 +258,7 @@ int main(int argc, char** argv)
        
         delete[](exact_results);
         delete[](approx_results);
-
+        std::cout << "currently at: " << double(m)/double(MAX_M) * 100 << "% " << "\t\r" << std::flush;
     }
     ofs.close();
 
