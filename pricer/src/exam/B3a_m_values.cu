@@ -233,7 +233,7 @@ int main(int argc, char** argv)
         prcr_args->stc_pr_args.exact = true;
         status = status && run_device(prcr_args, exact_results,seeds);
         prcr_args->stc_pr_args.exact = false;
-        status = status && run_device(prcr_args, exact_results,seeds);
+        status = status && run_device(prcr_args, approx_results,seeds);
 
         
         //print
