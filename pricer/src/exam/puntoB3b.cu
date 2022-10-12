@@ -195,7 +195,7 @@ int main(int argc, char** argv)
     srand(time(NULL));
 
 
-    std::string filename = "./data/infile_puntoB4a.txt";
+    std::string filename = "./data/infile_puntoB3b.txt";
     Pricer_args* prcr_args = new Pricer_args;
     ReadInputOption(filename, prcr_args);
 
@@ -226,7 +226,7 @@ int main(int argc, char** argv)
     bool status = true;
 
     std::string filename_output;
-    filename_output = "./data/puntoB4a_appr.txt";
+    filename_output = "./data/puntoB3b_K1.txt";
     std::ofstream fs;
     fs.open(filename_output, std::fstream::app);
 
@@ -250,10 +250,10 @@ int main(int argc, char** argv)
         double gpu_MC_error = compute_final_error(gpu_squares_sum, gpu_final_result, NBLOCKS * TPB*PPT);
 	
 	// B3b
-        //fs << prcr_args->contract_args.B << "," << gpu_final_result << "," << gpu_MC_error << "\n";
+        fs << prcr_args->contract_args.B << "," << gpu_final_result << "," << gpu_MC_error << "\n";
 	
 	// B4a
-	fs << prcr_args->schedule_args.dim-1 << "," << gpu_final_result << "," << gpu_MC_error << "\n";
+	//fs << prcr_args->schedule_args.dim-1 << "," << gpu_final_result << "," << gpu_MC_error << "\n";
 	
         fs.close();
         
@@ -277,10 +277,10 @@ int main(int argc, char** argv)
 
 	
 	//B3b
-        //fs << prcr_args->contract_args.B << "," << cpu_final_result << "," << cpu_MC_error << "\n";
+        fs << prcr_args->contract_args.B << "," << cpu_final_result << "," << cpu_MC_error << "\n";
         
 	// B4a
-        fs << prcr_args->schedule_args.dim-1 << "," << cpu_final_result << "," << cpu_MC_error << "\n";
+        //fs << prcr_args->schedule_args.dim-1 << "," << cpu_final_result << "," << cpu_MC_error << "\n";
 
 	fs.close();
         

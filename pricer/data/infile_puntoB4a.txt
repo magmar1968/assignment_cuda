@@ -24,7 +24,7 @@
 
 
 #eq_descr_dy         0.
-#yc_rate             0.15
+#yc_rate             0.0015
 #volatility          0.3 !volatility of the pricer
 
 
