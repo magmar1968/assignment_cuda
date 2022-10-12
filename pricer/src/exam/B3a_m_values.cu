@@ -197,7 +197,7 @@ int main(int argc, char** argv)
 
 
     std::string filename = "./data/infile_B3a_m_values.txt";
-    std::string outfilename  = "./data/outfile_B3a_m_values.txt";
+    std::string outfilename  = "./data/outfile_B3a_m_values.csv";
     
     Pricer_args* prcr_args = new Pricer_args;
     ReadInputOption(filename, prcr_args);
@@ -261,5 +261,4 @@ int main(int argc, char** argv)
         std::cout << "currently at: " << double(m)/double(MAX_M) * 100 << "% " << "\t\r" << std::flush;
     }
     ofs.close();
-
 }
