@@ -6,8 +6,8 @@
 
 struct Result
 {
-    double p_off  = 0.;
-    double p_off2 = 0.;
+    double p_off = 0.;
+    double p_off2 =0.;
 };
 
 void __host__ print_results(std::string filename, Result *, Result *, size_t,uint);
@@ -196,8 +196,8 @@ int main(int argc, char** argv)
     srand(time(NULL));
 
 
-    std::string filename = "./data/infile_B3a_m_values.txt";
-    std::string outfilename  = "./data/outfile_B3a_m_values.csv";
+    std::string filename = "./data/infile_B5b_g.txt";
+    std::string outfilename  = "./data/outfile_B5b_g.csv";
     
     Pricer_args* prcr_args = new Pricer_args;
     ReadInputOption(filename, prcr_args);
@@ -209,11 +209,13 @@ int main(int argc, char** argv)
     //gen seeds 
     srand(time(NULL));
     uint* seeds = new uint[4 * NBLOCKS * TPB];
-    
+    for (size_t inc = 0; inc < 4 * NBLOCKS * TPB; inc++)
+        seeds[inc] = rnd::genSeed(true); 
+
 
 
     std::fstream ofs(outfilename.c_str(),std::fstream::out);
-    ofs << "m,exact_result,exact_error,approx_result,approx_erro\n";
+    ofs << "m,cpu_time,gpu_time,g\n";
 
     for (size_t m = 0; m < MAX_M; m+=5){
         if(m == 0)
@@ -223,45 +225,30 @@ int main(int argc, char** argv)
         
 
         //last_steps
-        Result* exact_results = new Result[NBLOCKS * TPB];
-        Result* approx_results = new Result[NBLOCKS * TPB];
+        Result* cpu_results = new Result[NBLOCKS * TPB];
+        Result* gpu_results = new Result[NBLOCKS * TPB];
         bool status = true;
 
         //simulate
-        prcr_args->stc_pr_args.exact = true;
-        for (size_t inc = 0; inc < 4 * NBLOCKS * TPB; inc++)
-            seeds[inc] = rnd::genSeed(true); 
-        status = status && run_device(prcr_args, exact_results,seeds);
-        cudaDeviceSynchronize();
-        
-        prcr_args->stc_pr_args.exact = false;
-        for (size_t inc = 0; inc < 4 * NBLOCKS * TPB; inc++)
-            seeds[inc] = rnd::genSeed(true); 
-        status = status && run_device(prcr_args, approx_results,seeds);
-        cudaDeviceSynchronize();
-        
-        //print
-        double square_sum_ex = 0., square_sum_ap = 0.;
-        double final_res_ex = 0., final_res_ap = 0.;
+        double time_gpu,time_cpu;
+        Timer timer_gpu;
+        status = status && run_device(prcr_args, cpu_results,seeds);
+        time_gpu = timer_gpu.GetTime();
 
-        for(size_t i = 0; i < NBLOCKS*TPB;++i){
-            final_res_ex += exact_results[i].p_off;
-            final_res_ap += approx_results[i].p_off;
- 
-            square_sum_ex += exact_results[i].p_off2;
-            square_sum_ap += approx_results[i].p_off2;
-        }
-        double exact_MC_error = prcr::compute_final_error(square_sum_ex,final_res_ex,NBLOCKS*TPB*PPT);
-        double approx_MC_error = prcr::compute_final_error(square_sum_ap,final_res_ap,NBLOCKS*TPB*PPT);
+        Timer timer_cpu;
+        status = status && simulate_host(prcr_args,cpu_results,seeds);
+        time_cpu = timer_cpu.GetTime();
+        
+        double g = time_cpu/time_gpu;
+        
 
         ofs << m
-            << "," << final_res_ex/double(NBLOCKS*TPB)
-            << "," << exact_MC_error
-            << "," << final_res_ap/double(NBLOCKS*TPB)
-            << "," << approx_MC_error << "\n";
+            << "," << time_cpu
+            << "," << time_gpu 
+            << "," << g << "\n";
        
-        delete[](exact_results);
-        delete[](approx_results);
+        delete[](cpu_results);
+        delete[](gpu_results);
         std::cout << "currently at: " << double(m)/double(MAX_M) * 100 << "% " << "\t\r" << std::flush;
     }
     ofs.close();

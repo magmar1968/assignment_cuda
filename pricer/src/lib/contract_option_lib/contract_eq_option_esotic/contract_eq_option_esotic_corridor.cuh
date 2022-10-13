@@ -58,7 +58,7 @@ namespace prcr
 		}
 
 		if (_contract_type == 'P')
-			return  _Noz; // max((_Noz * (_K - P / (_steps - 1))), 0.);   //o steps e basta?
+			return max((_Noz * (_K - P / (_steps - 1))), 0.);   //o steps e basta?
 		else
 			return 0; //non abbiamo formula per call performance corridor
 
