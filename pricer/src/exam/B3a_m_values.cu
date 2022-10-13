@@ -248,8 +248,8 @@ int main(int argc, char** argv)
         double final_res_ex = 0., final_res_ap = 0.;
 
         for(size_t i = 0; i < NBLOCKS*TPB;++i){
-            final_res_ex += exact_results[i].p_off;
-            final_res_ap += approx_results[i].p_off;
+            final_res_ex += exact_results[i].p_off/double(NBLOCKS*TPB);
+            final_res_ap += approx_results[i].p_off/double(NBLOCKS*TPB);
  
             square_sum_ex += exact_results[i].p_off2;
             square_sum_ap += approx_results[i].p_off2;
@@ -258,9 +258,9 @@ int main(int argc, char** argv)
         double approx_MC_error = prcr::compute_final_error(square_sum_ap,final_res_ap,NBLOCKS*TPB*PPT);
 
         ofs << m
-            << "," << final_res_ex/double(NBLOCKS*TPB)
+            << "," << final_res_ex
             << "," << exact_MC_error
-            << "," << final_res_ap/double(NBLOCKS*TPB)
+            << "," << final_res_ap
             << "," << approx_MC_error << "\n";
        
         delete[](exact_results);
