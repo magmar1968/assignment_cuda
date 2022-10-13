@@ -81,23 +81,36 @@ kernel(prcr::Pricer_args* prcr_args, Result* dev_results, uint* dev_seeds)
 {
     using namespace prcr;
 
-    Equity_description descr(
+     __shared__ Equity_description *descr; 
+     __shared__ Equity_prices *starting_point;
+     __shared__ Schedule *schedule ;
+	if(threadIdx.x == 0){
+	
+	
+	descr = new Equity_description(
         prcr_args->eq_descr_args.dividend_yield,
         prcr_args->eq_descr_args.rate,
         prcr_args->eq_descr_args.vol);
 
-    Equity_prices starting_point(
+	
+	starting_point = new Equity_prices(
         prcr_args->eq_price_args.time,
         prcr_args->eq_price_args.price,
-        &descr);
+        descr);
 
-    Schedule schedule(
+
+	schedule = new Schedule(
         prcr_args->schedule_args.t_ref,
         prcr_args->schedule_args.deltat,
-        prcr_args->schedule_args.dim);
-
-    simulate_device(prcr_args, &starting_point, &schedule, dev_results, dev_seeds);
-
+        prcr_args->schedule_args.dim);}
+	
+    	simulate_device(prcr_args, starting_point, schedule, dev_results, dev_seeds);
+	__syncthreads();
+	if(threadIdx.x == 0){
+	delete(descr);
+	delete(starting_point);
+	delete(schedule);}
+	
 }
 
 
@@ -247,7 +260,7 @@ int main(int argc, char** argv)
         gpu_final_result /= double(NBLOCKS * TPB);
         double gpu_MC_error = compute_final_error(gpu_squares_sum, gpu_final_result, NBLOCKS * TPB * PPT);
 
-        fs << NBLOCKS * TPB << "," << prcr_args->schedule_args.dim - 1 << "," << std::setprecision(3) << gpu_time << "\n";
+        fs << NBLOCKS * TPB << "," << prcr_args->schedule_args.dim - 1 << "," << std::setprecision(5) << gpu_time << "\n";
 
         fs.close();
 

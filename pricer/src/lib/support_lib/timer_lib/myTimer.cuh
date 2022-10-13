@@ -52,7 +52,7 @@ public:
 
         auto ms = end - start;
 
-        return ms / 1000;
+        return double(ms) / double(1000);
         
     }
 

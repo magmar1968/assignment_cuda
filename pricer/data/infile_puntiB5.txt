@@ -3,7 +3,7 @@
 
 
 #T 1     ! simulation time range in years
-#m 50   ! number of time steps 
+#m 100   ! number of time steps 
 
 
 #pr_exact 1  
@@ -12,10 +12,10 @@
 
 !both the following option must be filled even if the CPU option is the only one
 !setted to true
-#N_blocks  64 !N of blocks to use for the computation. 
-#N_threads 90 !N of thread per block. 
+#N_blocks  2048 !N of blocks to use for the computation. 
+#N_threads 32 !N of thread per block. 
 
-#N_simulations 50000
+#N_simulations 10000
 
 !#yc_structured !decomment if you'd like to introduce a structured yield curve
 !#yc_rates
@@ -24,7 +24,7 @@
 
 
 #eq_descr_dy         0.
-#yc_rate             0.15
+#yc_rate             0.0015
 #volatility          0.3 !volatility of the pricer
 
 
@@ -35,11 +35,11 @@
 
 !contract option input
 #option_type esotic_corridor
-#contract_type C  !put C for a call contract or P for a put contract
+#contract_type P  !put C for a call contract or P for a put contract
 #strike_price 100
 
 !decomment for corridor option
-#B 0.5   !0, 0.25, 0.5, 0.75, 1, 2, 4 <- possible values
+#B 2   !0, 0.25, 0.5, 0.75, 1, 2, 4 <- possible values
 #K 1   !0, 0.1, 0.2 ...
 #Noz 1   !1EUR
 
