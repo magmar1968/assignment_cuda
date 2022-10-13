@@ -62,6 +62,9 @@ run_device(prcr::Pricer_args* prcr_args, Result* host_results, uint * host_seeds
 
 
     kernel << < NBLOCKS, TPB >> > (dev_prcr_args, dev_results, dev_seeds);
+    std::cerr << "kernel launched" << std::endl;
+    cudaDeviceSynchronize();
+
 
     cudaStatus = cudaMemcpy(host_results, dev_results, NBLOCKS * TPB * sizeof(Result), cudaMemcpyDeviceToHost);
     if (cudaStatus != cudaSuccess) {
@@ -241,7 +244,6 @@ int main(int argc, char** argv)
             seeds[inc] = rnd::genSeed(true); 
         cudaSetDevice(1);
         status = status && run_device(prcr_args, exact_results,seeds);
-        
         for(size_t i = 0; i < NBLOCKS*TPB;++i){
             final_res_ex += exact_results[i].p_off/double(NBLOCKS*TPB);
             square_sum_ex += exact_results[i].p_off2;
@@ -254,7 +256,6 @@ int main(int argc, char** argv)
             seeds[inc] = rnd::genSeed(true); 
         cudaSetDevice(2);
         status = status && run_device(prcr_args, approx_results,seeds);
-        cudaDeviceSynchronize();
         for(size_t i = 0; i < NBLOCKS*TPB;++i){
             final_res_ap += approx_results[i].p_off/double(NBLOCKS*TPB);
             square_sum_ap += approx_results[i].p_off2;
