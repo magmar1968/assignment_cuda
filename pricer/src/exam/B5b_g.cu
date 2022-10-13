@@ -227,16 +227,15 @@ int main(int argc, char** argv)
         //last_steps
         Result* cpu_results = new Result[NBLOCKS * TPB];
         Result* gpu_results = new Result[NBLOCKS * TPB];
-        bool status = true;
 
         //simulate
         double time_gpu,time_cpu;
         Timer timer_gpu;
-        status = status && run_device(prcr_args, cpu_results,seeds);
+        run_device(prcr_args, cpu_results,seeds);
         time_gpu = timer_gpu.GetTime();
 
         Timer timer_cpu;
-        status = status && simulate_host(prcr_args,cpu_results,seeds);
+        simulate_host(prcr_args,cpu_results,seeds);
         time_cpu = timer_cpu.GetTime();
         
         double g = time_cpu/time_gpu;
