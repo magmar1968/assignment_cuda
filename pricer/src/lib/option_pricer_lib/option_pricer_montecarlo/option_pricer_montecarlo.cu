@@ -65,9 +65,9 @@ namespace prcr
 
         for(size_t i = 0; i < _N; ++i)
         {
-
-            pay_off += contract.Pay_off(&path) / double(_N); // more precise
-            pay_off2 += contract.Pay_off(&path) * contract.Pay_off(&path);
+            double local_pay_off = contract.Pay_off(&path);
+            pay_off += local_pay_off / double(_N); // more precise
+            pay_off2 += local_pay_off * local_pay_off;
         
             path.regen_path();
         }    
