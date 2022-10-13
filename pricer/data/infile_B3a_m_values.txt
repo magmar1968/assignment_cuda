@@ -39,9 +39,9 @@
 #strike_price 0
 
 !decomment for corridor option
-!#B    !0, 0.25, 0.5, 0.75, 1, 2, 4 <- possible values
-!#K    !0, 0.1, 0.2 ...
-!#N    !1EUR
+!#B 2.0   !0, 0.25, 0.5, 0.75, 1, 2, 4 <- possible values
+!#K 1   !0, 0.1, 0.2 ...
+!#Noz 1   !1EUR
 
 
 

@@ -173,10 +173,13 @@ simulate_generic(size_t index,
 
     prcr::Process_eq_lognormal process(&gnr_in, prcr_args->stc_pr_args.exact);
 
-    prcr::Contract_eq_option_vanilla contr_opt(starting_point,
+    prcr::Contract_eq_option_exotic_corridor contr_opt(starting_point,
                                                schedule,
                                                prcr_args->contract_args.strike_price,
-                                               prcr_args->contract_args.contract_type);
+                                               prcr_args->contract_args.contract_type,
+                                               prcr_args->contract_args.B,
+                                               prcr_args->contract_args.N,
+                                               prcr_args->contract_args.K);
     size_t _N = prcr_args->mc_args.N_simulations;
     prcr::Option_pricer_montecarlo pricer(&contr_opt, &process, _N);
 
