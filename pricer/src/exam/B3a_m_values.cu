@@ -6,8 +6,8 @@
 
 struct Result
 {
-    double p_off = 0.;
-    double p_off2 =0.;
+    double p_off  = 0.;
+    double p_off2 = 0.;
 };
 
 void __host__ print_results(std::string filename, Result *, Result *, size_t,uint);
@@ -230,12 +230,13 @@ int main(int argc, char** argv)
         //simulate
         prcr_args->stc_pr_args.exact = true;
         for (size_t inc = 0; inc < 4 * NBLOCKS * TPB; inc++)
-        seeds[inc] = rnd::genSeed(true); 
+            seeds[inc] = rnd::genSeed(true); 
         status = status && run_device(prcr_args, exact_results,seeds);
+        cudaDeviceSynchronize();
         
         prcr_args->stc_pr_args.exact = false;
         for (size_t inc = 0; inc < 4 * NBLOCKS * TPB; inc++)
-        seeds[inc] = rnd::genSeed(true); 
+            seeds[inc] = rnd::genSeed(true); 
         status = status && run_device(prcr_args, approx_results,seeds);
 
         
