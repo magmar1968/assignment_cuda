@@ -238,7 +238,7 @@ int main(int argc, char** argv)
         for (size_t inc = 0; inc < 4 * NBLOCKS * TPB; inc++)
             seeds[inc] = rnd::genSeed(true); 
         status = status && run_device(prcr_args, approx_results,seeds);
-
+        cudaDeviceSynchronize();
         
         //print
         double square_sum_ex = 0., square_sum_ap = 0.;
