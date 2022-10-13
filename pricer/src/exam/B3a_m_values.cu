@@ -231,31 +231,34 @@ int main(int argc, char** argv)
         bool status = true;
 
         //simulate
+        //print
+        double square_sum_ex = 0., square_sum_ap = 0.;
+        double final_res_ex = 0., final_res_ap = 0.;
+
+        
         prcr_args->stc_pr_args.exact = true;
         for (size_t inc = 0; inc < 4 * NBLOCKS * TPB; inc++)
             seeds[inc] = rnd::genSeed(true); 
         status = status && run_device(prcr_args, exact_results,seeds);
         cudaDeviceSynchronize();
+        for(size_t i = 0; i < NBLOCKS*TPB;++i){
+            final_res_ex += exact_results[i].p_off/double(NBLOCKS*TPB);
+            square_sum_ex += exact_results[i].p_off2;
+        }
+        double exact_MC_error = prcr::compute_final_error(square_sum_ex,final_res_ex,NBLOCKS*TPB*PPT);
         
+
         prcr_args->stc_pr_args.exact = false;
         for (size_t inc = 0; inc < 4 * NBLOCKS * TPB; inc++)
             seeds[inc] = rnd::genSeed(true); 
         status = status && run_device(prcr_args, approx_results,seeds);
         cudaDeviceSynchronize();
-        
-        //print
-        double square_sum_ex = 0., square_sum_ap = 0.;
-        double final_res_ex = 0., final_res_ap = 0.;
-
         for(size_t i = 0; i < NBLOCKS*TPB;++i){
-            final_res_ex += exact_results[i].p_off/double(NBLOCKS*TPB);
             final_res_ap += approx_results[i].p_off/double(NBLOCKS*TPB);
- 
-            square_sum_ex += exact_results[i].p_off2;
             square_sum_ap += approx_results[i].p_off2;
         }
-        double exact_MC_error = prcr::compute_final_error(square_sum_ex,final_res_ex,NBLOCKS*TPB*PPT);
         double approx_MC_error = prcr::compute_final_error(square_sum_ap,final_res_ap,NBLOCKS*TPB*PPT);
+        
 
         ofs << m
             << "," << final_res_ex
