@@ -62,7 +62,6 @@ run_device(prcr::Pricer_args* prcr_args, Result* host_results, uint * host_seeds
 
 
     kernel << < NBLOCKS, TPB >> > (dev_prcr_args, dev_results, dev_seeds);
-    std::cerr << "kernel launched" << std::endl;
     cudaDeviceSynchronize();
 
 
@@ -198,6 +197,9 @@ int main(int argc, char** argv)
 {
     using namespace prcr;
 
+    int count;
+    cudaGetDeviceCount(&count);
+    std::cout << "devices: " << count << std::endl;
 
     srand(time(NULL));
 
