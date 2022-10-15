@@ -81,35 +81,26 @@ kernel(prcr::Pricer_args* prcr_args, Result* dev_results, uint* dev_seeds)
 {
     using namespace prcr;
 
-     __shared__ Equity_description *descr; 
-     __shared__ Equity_prices *starting_point;
-     __shared__ Schedule *schedule ;
-	if(threadIdx.x == 0){
+
 	
-	
-	descr = new Equity_description(
+	Equity_description descr(
         prcr_args->eq_descr_args.dividend_yield,
         prcr_args->eq_descr_args.rate,
         prcr_args->eq_descr_args.vol);
 
 	
-	starting_point = new Equity_prices(
+	Equity_prices starting_point(
         prcr_args->eq_price_args.time,
         prcr_args->eq_price_args.price,
-        descr);
+        &descr);
 
 
-	schedule = new Schedule(
+	Schedule schedule(
         prcr_args->schedule_args.t_ref,
         prcr_args->schedule_args.deltat,
         prcr_args->schedule_args.dim);}
 	
-    	simulate_device(prcr_args, starting_point, schedule, dev_results, dev_seeds);
-	__syncthreads();
-	if(threadIdx.x == 0){
-	delete(descr);
-	delete(starting_point);
-	delete(schedule);}
+    simulate_device(prcr_args, &starting_point, &schedule, dev_results, dev_seeds);
 	
 }
 
@@ -206,6 +197,12 @@ int main(int argc, char** argv)
     using namespace prcr;
 
     srand(time(NULL));
+
+    cudaSetDevice(1);
+    size_t value;
+    cudaDeviceGetLimit(&value, cudaLimitMallocHeapSize);
+    cudaDeviceSetLimit(cudaLimitMallocHeapSize, 40000000);
+    std::cout << "MallocHeapSize: " << value << std::endl;
 
 
     std::string filename = "./data/infile_puntiB5.txt";
