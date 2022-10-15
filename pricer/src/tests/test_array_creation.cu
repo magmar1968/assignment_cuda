@@ -85,39 +85,7 @@ kernel(prcr::Pricer_args* prcr_args, Result* dev_results, uint* dev_seeds)
 	double* array = new double[100];
 	array[31] = 1;
 	delete[](array);
-     /*__shared__ Equity_description *descr; 
-     __shared__ Equity_prices *starting_point;
-     __shared__ Schedule *schedule ;
-	if(threadIdx.x == 0){
-	
-	
-	descr = new Equity_description(
-        prcr_args->eq_descr_args.dividend_yield,
-        prcr_args->eq_descr_args.rate,
-        prcr_args->eq_descr_args.vol);
-
-	
-	starting_point = new Equity_prices(
-        prcr_args->eq_price_args.time,
-        prcr_args->eq_price_args.price,
-        descr);
-
-
-	schedule = new Schedule(
-        prcr_args->schedule_args.t_ref,
-        prcr_args->schedule_args.deltat,
-        prcr_args->schedule_args.dim);}
-	
-    	simulate_device(prcr_args, starting_point, schedule, dev_results, dev_seeds);
-	__syncthreads();
-	if(threadIdx.x == 0){
-	delete(descr);
-	delete(starting_point);
-	delete(schedule);}
-	*/
-}
-
-
+}    	
 __host__ bool
 simulate_host(prcr::Pricer_args* prcr_args, Result* host_results, uint* host_seeds)
 {
