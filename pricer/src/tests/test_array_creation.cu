@@ -80,41 +80,41 @@ __global__ void
 kernel(prcr::Pricer_args* prcr_args, Result* dev_results, uint* dev_seeds)
 {
     using namespace prcr;
-    //size_t TPB = prcr_args->dev_opts.N_threads;
-    //size_t m = prcr_args->schedule_args.dim;
-    double * array = new double[200];
-    array[31] = 98;
-    delete[](array);
+	
+
+	double* array = new double[100];
+	array[31] = 1;
+	delete[](array);
      /*__shared__ Equity_description *descr; 
      __shared__ Equity_prices *starting_point;
      __shared__ Schedule *schedule ;
-	if(threadIdx.x == 0){*/
+	if(threadIdx.x == 0){
 	
-	/*
-	Equity_description descr(
+	
+	descr = new Equity_description(
         prcr_args->eq_descr_args.dividend_yield,
         prcr_args->eq_descr_args.rate,
         prcr_args->eq_descr_args.vol);
 
 	
-	Equity_prices starting_point(
+	starting_point = new Equity_prices(
         prcr_args->eq_price_args.time,
         prcr_args->eq_price_args.price,
-        &descr);
+        descr);
 
 
-	Schedule schedule(
+	schedule = new Schedule(
         prcr_args->schedule_args.t_ref,
         prcr_args->schedule_args.deltat,
-        prcr_args->schedule_args.dim);//}
-	//__syncthreads();*/
-    	//simulate_device(prcr_args, &starting_point, &schedule, dev_results, dev_seeds);
-	//__syncthreads();
-	/*if(threadIdx.x == 0){
+        prcr_args->schedule_args.dim);}
+	
+    	simulate_device(prcr_args, starting_point, schedule, dev_results, dev_seeds);
+	__syncthreads();
+	if(threadIdx.x == 0){
 	delete(descr);
 	delete(starting_point);
-	delete(schedule);}*/
-	
+	delete(schedule);}
+	*/
 }
 
 
@@ -125,17 +125,17 @@ simulate_host(prcr::Pricer_args* prcr_args, Result* host_results, uint* host_see
     size_t NBLOCKS = prcr_args->dev_opts.N_blocks;
     size_t TPB = prcr_args->dev_opts.N_threads;
 
-    Equity_description descr(
+    Equity_description* descr = new Equity_description(
         prcr_args->eq_descr_args.dividend_yield,
         prcr_args->eq_descr_args.rate,
         prcr_args->eq_descr_args.vol);
 
-    Equity_prices starting_point(
+    Equity_prices* starting_point = new Equity_prices(
         prcr_args->eq_price_args.time,
         prcr_args->eq_price_args.price,
-        &descr);
+        descr);
 
-    Schedule schedule(
+    Schedule* schedule = new Schedule(
         prcr_args->schedule_args.t_ref,
         prcr_args->schedule_args.deltat,
         prcr_args->schedule_args.dim);
@@ -143,13 +143,13 @@ simulate_host(prcr::Pricer_args* prcr_args, Result* host_results, uint* host_see
 
     for (int index = 0; index < NBLOCKS * TPB; ++index)
     {
-        simulate_generic(index, prcr_args, &starting_point, &schedule, host_results, host_seeds);
+        simulate_generic(index, prcr_args, starting_point, schedule, host_results, host_seeds);
     }
 
 
-    /*delete(descr);
+    delete(descr);
     delete(starting_point);
-    delete(schedule);*/
+    delete(schedule);
     return true; // da mettere gi� meglio
 }
 
@@ -196,6 +196,7 @@ simulate_generic(size_t index,
         prcr_args->contract_args.K);
     size_t _N = prcr_args->mc_args.N_simulations;
     prcr::Option_pricer_montecarlo pricer(&contr_opt, &process, _N);
+
     results[index].p_off = pricer.Get_price();
     results[index].p_off2 = pricer.Get_price_square();
 
@@ -249,8 +250,9 @@ int main(int argc, char** argv)
 
 
     if (GPU == true)
-    
     {
+       
+        status = run_device(prcr_args, gpu_results, seeds);
         double gpu_squares_sum = 0.;
         double gpu_final_result = 0.;
         for (size_t i = 0; i < NBLOCKS * TPB; i++)
@@ -261,7 +263,7 @@ int main(int argc, char** argv)
         gpu_final_result /= double(NBLOCKS * TPB);
         double gpu_MC_error = compute_final_error(gpu_squares_sum, gpu_final_result, NBLOCKS * TPB * PPT);
 
-        fs << NBLOCKS * TPB << "," << prcr_args->schedule_args.dim - 1 << ","  << "\n";
+        fs << NBLOCKS * TPB << "," << prcr_args->schedule_args.dim - 1 << "," <<  "\n";
 
         fs.close();
 
@@ -270,7 +272,9 @@ int main(int argc, char** argv)
 
     if (CPU == true)
     {
+       
         status = simulate_host(prcr_args, cpu_results, seeds);
+      
         double cpu_squares_sum = 0.;
         double cpu_final_result = 0.;
         for (size_t i = 0; i < NBLOCKS * TPB; i++)
@@ -282,7 +286,7 @@ int main(int argc, char** argv)
         double cpu_MC_error = compute_final_error(cpu_squares_sum, cpu_final_result, NBLOCKS * TPB * PPT);
 
 
-        fs << NBLOCKS * TPB << "," << prcr_args->schedule_args.dim - 1 << "," << "\n";
+        fs << NBLOCKS * TPB << "," << prcr_args->schedule_args.dim - 1 << "\n";
 
         fs.close();
 
