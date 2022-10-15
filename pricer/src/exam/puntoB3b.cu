@@ -193,6 +193,12 @@ int main(int argc, char** argv)
     using namespace prcr;
 
     srand(time(NULL));
+    cudaSetDevice(1);
+    size_t value;
+    cudaDeviceGetLimit(&value, cudaLimitMallocHeapSize);
+    cudaDeviceSetLimit(cudaLimitMallocHeapSize, 40000000);
+    std::cout << "MallocHeapSize: " << value << std::endl;
+
 
 
     std::string filename = "./data/infile_puntoB3b.txt";
