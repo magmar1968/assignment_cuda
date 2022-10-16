@@ -201,7 +201,7 @@ int main(int argc, char** argv)
     cudaSetDevice(1);
     size_t value;
     cudaDeviceGetLimit(&value, cudaLimitMallocHeapSize);
-    cudaDeviceSetLimit(cudaLimitMallocHeapSize, 40000000);
+    cudaDeviceSetLimit(cudaLimitMallocHeapSize, 80000000);
     std::cout << "MallocHeapSize: " << value << std::endl;
 
 
@@ -257,7 +257,8 @@ int main(int argc, char** argv)
         gpu_final_result /= double(NBLOCKS * TPB);
         double gpu_MC_error = compute_final_error(gpu_squares_sum, gpu_final_result, NBLOCKS * TPB * PPT);
 
-        fs << NBLOCKS << ","<< TPB << "," << prcr_args->schedule_args.dim - 1 << "," << std::setprecision(5) << gpu_time << "\n";
+        fs << NBLOCKS << ","<< TPB << "," << prcr_args->schedule_args.dim - 1 << "," << std::setprecision(5) 
+	   << gpu_time << gpu_final_result << "," << gpu_MC_error << "\n";
 
         fs.close();
 
