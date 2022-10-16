@@ -12,7 +12,7 @@
 
 !both the following option must be filled even if the CPU option is the only one
 !setted to true
-#N_blocks   39 !N of blocks to use for the computation. 
+#N_blocks   13 !N of blocks to use for the computation. 
 #N_threads  32 !N of thread per block. 
 
 #N_simulations 1000
