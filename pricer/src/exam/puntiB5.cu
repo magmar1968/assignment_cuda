@@ -193,15 +193,15 @@ simulate_generic(size_t index,
 
 
 int main(int argc, char** argv)
-{
+{   
     using namespace prcr;
 
     srand(time(NULL));
 
     cudaSetDevice(1);
     size_t value;
-    cudaDeviceGetLimit(&value, cudaLimitMallocHeapSize);
     cudaDeviceSetLimit(cudaLimitMallocHeapSize, 80000000);
+    cudaDeviceGetLimit(&value, cudaLimitMallocHeapSize);
     std::cout << "MallocHeapSize: " << value << std::endl;
 
 
@@ -217,7 +217,7 @@ int main(int argc, char** argv)
     uint* seeds = new uint[4 * NBLOCKS * TPB];
     for (size_t inc = 0; inc < 4 * NBLOCKS * TPB; inc++)
         seeds[inc] = rnd::genSeed(true);
-
+    
 
     //last_steps
     Result* gpu_results = new Result[NBLOCKS * TPB];   //array che contiene i valori del prezzo all'ultimo step, per ogni thread
@@ -236,14 +236,14 @@ int main(int argc, char** argv)
     bool status = true;
 
     std::string filename_output;
-    filename_output = "./data/outfile_puntiB5.txt";
+    filename_output = "./data/outfile_puntiB5_res.txt";
     std::ofstream fs;
     fs.open(filename_output, std::fstream::app);
 
 
 
     if (GPU == true)
-    {
+    {   
         Timer timer_gpu;
         status = run_device(prcr_args, gpu_results, seeds);
         double gpu_time = timer_gpu.Get_delta_time();
@@ -258,7 +258,7 @@ int main(int argc, char** argv)
         double gpu_MC_error = compute_final_error(gpu_squares_sum, gpu_final_result, NBLOCKS * TPB * PPT);
 
         fs << NBLOCKS << ","<< TPB << "," << prcr_args->schedule_args.dim - 1 << "," << std::setprecision(5) 
-	   << gpu_time << gpu_final_result << "," << gpu_MC_error << "\n";
+	   << gpu_time << "," <<  gpu_final_result << "," << gpu_MC_error << "\n";
 
         fs.close();
 
