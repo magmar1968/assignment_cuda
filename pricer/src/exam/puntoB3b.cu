@@ -35,7 +35,6 @@ run_device(prcr::Pricer_args* prcr_args, Result* host_results, uint * host_seeds
 
     cudaStatus = cudaMalloc((void**)&dev_seeds, NBLOCKS * TPB *4 * sizeof(uint));
     if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMalloc3 failed!\n"); }
-    fprintf(stderr, "%s\n", cudaGetErrorString(cudaStatus));
 
 
 
@@ -47,7 +46,7 @@ run_device(prcr::Pricer_args* prcr_args, Result* host_results, uint * host_seeds
     }
     cudaStatus = cudaMemcpy(dev_results, host_results, NBLOCKS * TPB * sizeof(Result), cudaMemcpyHostToDevice);
     if (cudaStatus != cudaSuccess) {
-        fprintf(stderr, "cudaMemcpy244 failed!\n");
+        fprintf(stderr, "cudaMemcpy2 failed!\n");
         fprintf(stderr, "%s\n", cudaGetErrorString(cudaStatus));
     }
 
@@ -197,7 +196,7 @@ int main(int argc, char** argv)
     cudaSetDevice(1);
     size_t value;
     cudaDeviceGetLimit(&value, cudaLimitMallocHeapSize);
-    //cudaDeviceSetLimit(cudaLimitMallocHeapSize, 40000000);
+    cudaDeviceSetLimit(cudaLimitMallocHeapSize, 40000000);
     std::cout << "MallocHeapSize: " << value << std::endl;
 
 
