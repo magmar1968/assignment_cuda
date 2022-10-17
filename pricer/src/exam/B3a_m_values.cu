@@ -200,6 +200,11 @@ int main(int argc, char** argv)
     int count;
     cudaGetDeviceCount(&count);
     std::cout << "devices: " << count << std::endl;
+    size_t value;
+    cudaDeviceSetLimit(cudaLimitMallocHeapSize, 80000000);
+    cudaDeviceGetLimit(&value, cudaLimitMallocHeapSize);
+    std::cout << "MallocHeapSize: " << value << std::endl;
+
 
     srand(time(NULL));
 
