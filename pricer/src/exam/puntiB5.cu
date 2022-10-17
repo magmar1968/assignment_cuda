@@ -193,14 +193,15 @@ simulate_generic(size_t index,
 
 
 int main(int argc, char** argv)
-{   
+{   for(size_t NBLOCKS = 13; NBLOCKS < 91; NBLOCKS ++)
+    {
     using namespace prcr;
 
     srand(time(NULL));
 
     cudaSetDevice(1);
     size_t value;
-    cudaDeviceSetLimit(cudaLimitMallocHeapSize, 80000000);
+    cudaDeviceSetLimit(cudaLimitMallocHeapSize, 8000000);
     cudaDeviceGetLimit(&value, cudaLimitMallocHeapSize);
     std::cout << "MallocHeapSize: " << value << std::endl;
 
@@ -209,7 +210,7 @@ int main(int argc, char** argv)
     Pricer_args* prcr_args = new Pricer_args;
     ReadInputOption(filename, prcr_args);
 
-    size_t NBLOCKS = prcr_args->dev_opts.N_blocks;
+ //   size_t NBLOCKS = prcr_args->dev_opts.N_blocks;
     size_t TPB = prcr_args->dev_opts.N_threads;
     size_t PPT = prcr_args->mc_args.N_simulations;
     // gen seeds 
@@ -294,5 +295,5 @@ int main(int argc, char** argv)
     delete(prcr_args);
 
 
-
+}
 }
