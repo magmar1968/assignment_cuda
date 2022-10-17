@@ -14,4 +14,4 @@ plt.plot(m_values,exact_vals, label = r"pay off exact ")
 
 
 plt.legend()
-plt.show()
+plt.savefig("../plots/B3a_plot",format="png")
