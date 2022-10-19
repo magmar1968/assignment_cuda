@@ -193,8 +193,8 @@ simulate_generic(size_t index,
 
 
 int main(int argc, char** argv)
-{   for(size_t NBLOCKS = 13; NBLOCKS < 91; NBLOCKS ++)
-    {
+{   //for(size_t NBLOCKS = 13; NBLOCKS < 91; NBLOCKS ++)
+    //{
     using namespace prcr;
 
     srand(time(NULL));
@@ -210,7 +210,7 @@ int main(int argc, char** argv)
     Pricer_args* prcr_args = new Pricer_args;
     ReadInputOption(filename, prcr_args);
 
- //   size_t NBLOCKS = prcr_args->dev_opts.N_blocks;
+    size_t NBLOCKS = prcr_args->dev_opts.N_blocks;
     size_t TPB = prcr_args->dev_opts.N_threads;
     size_t PPT = prcr_args->mc_args.N_simulations;
     // gen seeds 
@@ -237,7 +237,7 @@ int main(int argc, char** argv)
     bool status = true;
 
     std::string filename_output;
-    filename_output = "./data/outfile_puntiB5_res.txt";
+    filename_output = "./data/outfile_puntiB5_m5.txt";
     std::ofstream fs;
     fs.open(filename_output, std::fstream::app);
 
@@ -295,5 +295,5 @@ int main(int argc, char** argv)
     delete(prcr_args);
 
 
-}
+//}
 }
