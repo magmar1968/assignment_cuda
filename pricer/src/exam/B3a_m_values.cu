@@ -14,7 +14,7 @@ void __host__ print_results(std::string filename, Result *, Result *, size_t,uin
 bool __host__ run_device(const prcr::Pricer_args* prcr_args, Result* host_results,const uint *);
 void __global__ kernel( prcr::Pricer_args* prcr_args, Result* dev_results, uint *);
 bool __host__   simulate_host(const prcr::Pricer_args* prcr_args, Result* host_results, const uint*);
-void __device__ simulate_device( prcr::Pricer_args* prcr_args, prcr::Equity_prices*, prcr::Schedule*, Result* dev_results,const uint*);
+void __device__ simulate_device( prcr::Pricer_args* prcr_args, prcr::Equity_prices*, prcr::Schedule*, Result* dev_results, uint*);
 void __host__ __device__ simulate_generic
 (size_t, const prcr::Pricer_args*, prcr::Equity_prices*, prcr::Schedule*, Result*,const uint*);
 
