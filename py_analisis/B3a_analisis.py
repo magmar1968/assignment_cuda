@@ -11,8 +11,9 @@ approx_vals = df["approx_result"].to_list()
 
 plt.plot(m_values,approx_vals,label = r"pay off approx")
 plt.plot(m_values,exact_vals, label = r"pay off exact ")
-plt.yscale('log')
+# plt.yscale('log')
 
 
 plt.legend()
-plt.savefig("../plots/B3a_plot.png",format="png")
+# plt.savefig("../plots/B3a_plot.png",format="png")
+plt.show()
