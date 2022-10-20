@@ -216,6 +216,7 @@ int main(int argc, char** argv)
         //simulate
         double time_gpu,time_cpu;
         Timer timer_gpu;
+        cudaDeviceSetLimit(cudaLimitMallocHeapSize, 80000000);
         run_device(prcr_args,seeds,&m_array[m_cont]);
         time_gpu = timer_gpu.GetTime();
 
