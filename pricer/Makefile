@@ -23,18 +23,16 @@ INCDEP      := -I$(INCDIR)
 
 SOURCES     := $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
 OBJECTS     := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.$(OBJEXT)))
-EXAM_OBJ    := $(wildcard $(BUILDDIR)/exam/*.o)
 FILTER_OBJ  := $(call FILTER_OUT,test, $(OBJECTS))
 FILTER_OBJ  := $(call FILTER_OUT,exam,$(FILTER_OBJ))
 
 #Default Make
-all: resources $(TEST) $(TARGET) #compile all
+all: resources $(TARGET) $(TEST)  #compile all
 
 #Remake
 remake: cleaner all
 
 print: 
-	$(EXAM_OBJ)\
 	$(FILTER_OBJ)
 
 #exam 
@@ -84,5 +82,4 @@ $(BUILDDIR)/%.$(OBJEXT): $(SRCDIR)/%.$(SRCEXT)
 
 #Non-File Targets
 .PHONY: all remake clean cleaner resources
-
 
