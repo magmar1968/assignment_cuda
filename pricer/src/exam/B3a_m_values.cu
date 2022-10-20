@@ -2,7 +2,8 @@
 #include <iomanip>
 
 
-#define MAX_M  100
+#define MAX_M  120
+#define MIN_M  10
 
 struct Result
 {
@@ -227,7 +228,7 @@ int main(int argc, char** argv)
     std::fstream ofs(outfilename.c_str(),std::fstream::out);
     ofs << "m,exact_result,exact_error,approx_result,approx_erro\n";
 
-    for (size_t m = 0; m < MAX_M; m+=5){
+    for (size_t m = MIN_M; m < MAX_M; m+=5){
         if(m == 0)
             prcr_args->schedule_args.dim = 1;
         else
