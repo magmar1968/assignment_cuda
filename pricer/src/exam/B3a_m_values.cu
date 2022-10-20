@@ -11,15 +11,15 @@ struct Result
 };
 
 void __host__ print_results(std::string filename, Result *, Result *, size_t,uint);
-bool __host__ run_device(prcr::Pricer_args* prcr_args, Result* host_results,uint *);
-void __global__ kernel(prcr::Pricer_args* prcr_args, Result* dev_results, uint *);
-bool __host__   simulate_host(prcr::Pricer_args* prcr_args, Result* host_results, uint*);
-void __device__ simulate_device(prcr::Pricer_args* prcr_args, prcr::Equity_prices*, prcr::Schedule*, Result* dev_results, uint*);
+bool __host__ run_device(const prcr::Pricer_args* prcr_args, Result* host_results,const uint *);
+void __global__ kernel( prcr::Pricer_args* prcr_args, Result* dev_results, uint *);
+bool __host__   simulate_host(const prcr::Pricer_args* prcr_args, Result* host_results, const uint*);
+void __device__ simulate_device( prcr::Pricer_args* prcr_args, prcr::Equity_prices*, prcr::Schedule*, Result* dev_results,const uint*);
 void __host__ __device__ simulate_generic
-(size_t, prcr::Pricer_args*, prcr::Equity_prices*, prcr::Schedule*, Result*, uint*);
+(size_t, const prcr::Pricer_args*, prcr::Equity_prices*, prcr::Schedule*, Result*,const uint*);
 
 __host__ bool
-run_device(prcr::Pricer_args* prcr_args, Result* host_results, uint * host_seeds)
+run_device(const prcr::Pricer_args* prcr_args, Result* host_results,const uint * host_seeds)
 {
     using namespace prcr;
     cudaError_t cudaStatus;
@@ -107,7 +107,7 @@ kernel(prcr::Pricer_args* prcr_args, Result* dev_results, uint * dev_seeds)
 
 
 __host__ bool
-simulate_host(prcr::Pricer_args* prcr_args, Result* host_results, uint * host_seeds)
+simulate_host(const prcr::Pricer_args* prcr_args, Result* host_results, const uint * host_seeds)
 {
     using namespace prcr;
     size_t NBLOCKS = prcr_args->dev_opts.N_blocks;
@@ -158,11 +158,11 @@ simulate_device(
 
 __host__ __device__ void
 simulate_generic(size_t index,
-    prcr::Pricer_args* prcr_args,
+    const prcr::Pricer_args* prcr_args,
     prcr::Equity_prices* starting_point,
     prcr::Schedule* schedule,
     Result* results,
-    uint * seeds)
+    const uint * seeds)
 {
 
     uint seed0 = seeds[0 + index * 4];
@@ -222,7 +222,6 @@ int main(int argc, char** argv)
     //gen seeds 
     srand(time(NULL));
     uint* seeds = new uint[4 * NBLOCKS * TPB];
-    
 
 
     std::fstream ofs(outfilename.c_str(),std::fstream::out);
@@ -248,9 +247,6 @@ int main(int argc, char** argv)
         cudaDeviceProp prop;
         cudaGetDeviceProperties(&prop, 1);
         
-        std::cout << "currently at: " << double(m)/double(MAX_M) * 100 << std::endl;
-        printf("Device Number: %d\n", 1);
-        printf("  Device name: %s\n", prop.name);
         run_device(prcr_args, exact_results,seeds);
         
         prcr_args->stc_pr_args.exact = false;
@@ -259,8 +255,6 @@ int main(int argc, char** argv)
         
         cudaSetDevice(2);
         cudaGetDeviceProperties(&prop, 2);
-        printf("Device Number: %d\n", 2);
-        printf("  Device name: %s\n", prop.name);
         run_device(prcr_args, approx_results,seeds);
 
         //print
