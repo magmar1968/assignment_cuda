@@ -3,7 +3,7 @@
 
 
 #define MAX_M  120
-#define MIN_M  10
+#define MIN_M  5
 
 struct Result
 {

@@ -69,9 +69,9 @@ namespace prcr
 
 HD bool Contract_eq_option_exotic_corridor::Evaluate_log_return(size_t i, const Path* path)
 {
-	double S_a = path->Get_equity_prices(i);
-	double S_b = path->Get_equity_prices(i + 1);
-	if (abs((log(S_a / S_b)) / _delta_t) < _B * _sigma)
+	double S_a = path->Get_equity_prices(i + 1);
+	double S_b = path->Get_equity_prices(i);
+	if (abs((log(S_a / S_b)) / sqrt(_delta_t)) < _B * _sigma)
 		return 1;
 	else
 		return 0;
