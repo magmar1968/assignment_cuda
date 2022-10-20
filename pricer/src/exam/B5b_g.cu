@@ -3,29 +3,25 @@
 
 
 #define MAX_M  100
+#define MIN_M  10
+#define M_STEP 5
 
-struct Result
-{
-    double p_off = 0.;
-    double p_off2 =0.;
-};
 
-void __host__ print_results(std::string filename, Result *, Result *, size_t,uint);
-bool __host__ run_device(prcr::Pricer_args* prcr_args, Result* host_results,uint *);
-void __global__ kernel(prcr::Pricer_args* prcr_args, Result* dev_results, uint *);
-bool __host__   simulate_host(prcr::Pricer_args* prcr_args, Result* host_results, uint*);
-void __device__ simulate_device(prcr::Pricer_args* prcr_args, prcr::Equity_prices*, prcr::Schedule*, Result* dev_results, uint*);
+bool __host__ run_device(const prcr::Pricer_args* prcr_args, const uint *, uint * );
+void __global__ kernel(const prcr::Pricer_args* prcr_args, const  uint *, uint * );
+bool __host__   simulate_host(prcr::Pricer_args* prcr_args, uint*, uint);
+void __device__ simulate_device(prcr::Pricer_args* prcr_args, prcr::Equity_prices*, prcr::Schedule*, uint*);
 void __host__ __device__ simulate_generic
-(size_t, prcr::Pricer_args*, prcr::Equity_prices*, prcr::Schedule*, Result*, uint*);
+(size_t, const prcr::Pricer_args*, prcr::Equity_prices*, prcr::Schedule*, const uint*);
 
 __host__ bool
-run_device(prcr::Pricer_args* prcr_args, Result* host_results, uint * host_seeds)
+run_device(const prcr::Pricer_args* prcr_args,const uint * host_seeds,const uint * host_m)
 {
     using namespace prcr;
     cudaError_t cudaStatus;
-    Result* dev_results;
     Pricer_args* dev_prcr_args;
     uint * dev_seeds;
+    uint * dev_m;
 
     size_t NBLOCKS = prcr_args->dev_opts.N_blocks;
     size_t TPB = prcr_args->dev_opts.N_threads;
@@ -33,7 +29,7 @@ run_device(prcr::Pricer_args* prcr_args, Result* host_results, uint * host_seeds
     cudaStatus = cudaMalloc((void**)&dev_prcr_args, sizeof(Pricer_args));
     if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMalloc1 failed!\n"); }
 
-    cudaStatus = cudaMalloc((void**)&dev_results, NBLOCKS * TPB * sizeof(Result));
+    cudaStatus = cudaMalloc((void**)&dev_m, sizeof(uint));
     if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMalloc2 failed!\n"); }
 
     cudaStatus = cudaMalloc((void**)&dev_seeds, NBLOCKS * TPB *4 * sizeof(uint));
@@ -47,9 +43,10 @@ run_device(prcr::Pricer_args* prcr_args, Result* host_results, uint * host_seeds
         fprintf(stderr, "cudaMemcpy1 failed!\n");
         fprintf(stderr, "%s\n", cudaGetErrorString(cudaStatus));
     }
-    cudaStatus = cudaMemcpy(dev_results, host_results, NBLOCKS * TPB * sizeof(Result), cudaMemcpyHostToDevice);
+
+    cudaStatus = cudaMemcpy(dev_m, host_m, sizeof(uint), cudaMemcpyHostToDevice);
     if (cudaStatus != cudaSuccess) {
-        fprintf(stderr, "cudaMemcpy2 failed!\n");
+        fprintf(stderr, "cudaMemcpy1 failed!\n");
         fprintf(stderr, "%s\n", cudaGetErrorString(cudaStatus));
     }
 
@@ -61,15 +58,10 @@ run_device(prcr::Pricer_args* prcr_args, Result* host_results, uint * host_seeds
 
 
 
-    kernel << < NBLOCKS, TPB >> > (dev_prcr_args, dev_results, dev_seeds);
+    kernel << < NBLOCKS, TPB >> > (dev_prcr_args, dev_seeds,dev_m);
 
-    cudaStatus = cudaMemcpy(host_results, dev_results, NBLOCKS * TPB * sizeof(Result), cudaMemcpyDeviceToHost);
-    if (cudaStatus != cudaSuccess) {
-        fprintf(stderr, "cudaMemcpy4 failed!\n");
-        fprintf(stderr, "%s\n", cudaGetErrorString(cudaStatus));
-    }
 
-    cudaFree(dev_results);
+    cudaFree(dev_m);
     cudaFree(dev_prcr_args);
     cudaFree(dev_seeds);
 
@@ -80,7 +72,7 @@ run_device(prcr::Pricer_args* prcr_args, Result* host_results, uint * host_seeds
 
 
 __global__ void
-kernel(prcr::Pricer_args* prcr_args, Result* dev_results, uint * dev_seeds)
+kernel(prcr::Pricer_args* prcr_args,  uint * dev_seeds, uint * dev_m)
 {
     using namespace prcr;
 
@@ -96,16 +88,16 @@ kernel(prcr::Pricer_args* prcr_args, Result* dev_results, uint * dev_seeds)
 
     Schedule schedule(
         0.,
-        prcr_args->schedule_args.T/double(prcr_args->schedule_args.dim),
-        prcr_args->schedule_args.dim);
+        prcr_args->schedule_args.T/double(*dev_m),
+        *dev_m);
 
-    simulate_device(prcr_args, &starting_point, &schedule, dev_results,dev_seeds);
+    simulate_device(prcr_args, &starting_point, &schedule,dev_seeds);
 
 }
 
 
 __host__ bool
-simulate_host(prcr::Pricer_args* prcr_args, Result* host_results, uint * host_seeds)
+simulate_host(const prcr::Pricer_args* prcr_args, const uint * host_seeds, const uint * host_m)
 {
     using namespace prcr;
     size_t NBLOCKS = prcr_args->dev_opts.N_blocks;
@@ -121,15 +113,15 @@ simulate_host(prcr::Pricer_args* prcr_args, Result* host_results, uint * host_se
         prcr_args->eq_price_args.price,
         descr);
 
-    Schedule* schedule = new Schedule(
-        prcr_args->schedule_args.t_ref,
-        prcr_args->schedule_args.deltat,
-        prcr_args->schedule_args.dim);
+    Schedule * schedule = new Schedule(
+        0.,
+        prcr_args->schedule_args.T/double(*host_m),
+        *host_m);
 
 
     for (int index = 0; index < NBLOCKS * TPB; ++index)
     {
-        simulate_generic(index, prcr_args, starting_point, schedule, host_results,host_seeds);
+        simulate_generic(index, prcr_args, starting_point, schedule,host_seeds);
     }
 
 
@@ -145,22 +137,20 @@ simulate_device(
     prcr::Pricer_args* prcr_args,
     prcr::Equity_prices* starting_point,
     prcr::Schedule* schedule,
-    Result* dev_results,
     uint * dev_seeds)
 {
     size_t index = blockIdx.x * blockDim.x + threadIdx.x;
     size_t NBLOCKS = gridDim.x;
     size_t TPB = blockDim.x;
-    if (index < NBLOCKS * TPB) simulate_generic(index, prcr_args, starting_point, schedule, dev_results,dev_seeds);
+    if (index < NBLOCKS * TPB) simulate_generic(index, prcr_args, starting_point, schedule,dev_seeds);
 }
 
 __host__ __device__ void
 simulate_generic(size_t index,
-    prcr::Pricer_args* prcr_args,
+    const prcr::Pricer_args* prcr_args,
     prcr::Equity_prices* starting_point,
     prcr::Schedule* schedule,
-    Result* results,
-    uint * seeds)
+    const uint * seeds)
 {
 
     uint seed0 = seeds[0 + index * 4];
@@ -168,6 +158,8 @@ simulate_generic(size_t index,
     uint seed2 = seeds[2 + index * 4];
     uint seed3 = seeds[3 + index * 4];
 
+    double p_off;
+    double p_off2;
     rnd::GenCombined gnr_in(seed0,seed1,seed2,seed3);
 
 
@@ -180,8 +172,8 @@ simulate_generic(size_t index,
     size_t _N = prcr_args->mc_args.N_simulations;
     prcr::Option_pricer_montecarlo pricer(&contr_opt, &process, _N);
 
-    results[index].p_off = pricer.Get_price();
-    results[index].p_off2 = pricer.Get_price_square();
+    p_off = pricer.Get_price();
+    p_off2 = pricer.Get_price_square();
 
 }
 
@@ -204,7 +196,6 @@ int main(int argc, char** argv)
 
     size_t NBLOCKS = prcr_args->dev_opts.N_blocks;
     size_t TPB = prcr_args->dev_opts.N_threads;
-    size_t PPT = prcr_args->mc_args.N_simulations;
     
     //gen seeds 
     srand(time(NULL));
@@ -217,25 +208,19 @@ int main(int argc, char** argv)
     std::fstream ofs(outfilename.c_str(),std::fstream::out);
     ofs << "m,cpu_time,gpu_time,g\n";
 
-    for (size_t m = 0; m < MAX_M; m+=5){
-        if(m == 0)
-            prcr_args->schedule_args.dim = 1;
-        else
-            prcr_args->schedule_args.dim = m;
-        
-
-        //last_steps
-        Result* cpu_results = new Result[NBLOCKS * TPB];
-        Result* gpu_results = new Result[NBLOCKS * TPB];
-
+    uint * m_array = new uint[MAX_M];
+    size_t m_cont = 0;
+    for (size_t m = MIN_M; m < MAX_M; m+=M_STEP){
+        m_array[m_cont] = m;
+        m_cont ++;
         //simulate
         double time_gpu,time_cpu;
         Timer timer_gpu;
-        run_device(prcr_args, cpu_results,seeds);
+        run_device(prcr_args,seeds,&m_array[m_cont]);
         time_gpu = timer_gpu.GetTime();
 
         Timer timer_cpu;
-        simulate_host(prcr_args,cpu_results,seeds);
+        simulate_host(prcr_args,seeds,&m_array[m_cont]);
         time_cpu = timer_cpu.GetTime();
         
         double g = time_cpu/time_gpu;
@@ -246,8 +231,7 @@ int main(int argc, char** argv)
             << "," << time_gpu 
             << "," << g << "\n";
        
-        delete[](cpu_results);
-        delete[](gpu_results);
+        delete[](m_array);
         std::cout << "currently at: " << double(m)/double(MAX_M) * 100 << "% " << "\t\r" << std::flush;
     }
     ofs.close();
