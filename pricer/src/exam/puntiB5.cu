@@ -26,7 +26,12 @@ run_device(prcr::Pricer_args* prcr_args, Result* host_results, uint* host_seeds)
 
     size_t NBLOCKS = prcr_args->dev_opts.N_blocks;
     size_t TPB = prcr_args->dev_opts.N_threads;
+    
+    int dev_label;
+    cudaGetDevice(&dev_label);  
+    std::cout << "Using device: " << dev_label << std::endl;
 
+    
     cudaStatus = cudaMalloc((void**)&dev_prcr_args, sizeof(Pricer_args));
     if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMalloc1 failed!\n"); }
 
@@ -112,17 +117,17 @@ simulate_host(prcr::Pricer_args* prcr_args, Result* host_results, uint* host_see
     size_t NBLOCKS = prcr_args->dev_opts.N_blocks;
     size_t TPB = prcr_args->dev_opts.N_threads;
 
-    Equity_description* descr = new Equity_description(
+    Equity_description descr(
         prcr_args->eq_descr_args.dividend_yield,
         prcr_args->eq_descr_args.rate,
         prcr_args->eq_descr_args.vol);
 
-    Equity_prices* starting_point = new Equity_prices(
+    Equity_prices starting_point(
         prcr_args->eq_price_args.time,
         prcr_args->eq_price_args.price,
-        descr);
+        &descr);
 
-    Schedule* schedule = new Schedule(
+    Schedule schedule(
         prcr_args->schedule_args.t_ref,
         prcr_args->schedule_args.deltat,
         prcr_args->schedule_args.dim);
@@ -130,14 +135,14 @@ simulate_host(prcr::Pricer_args* prcr_args, Result* host_results, uint* host_see
 
     for (int index = 0; index < NBLOCKS * TPB; ++index)
     {
-        simulate_generic(index, prcr_args, starting_point, schedule, host_results, host_seeds);
+        simulate_generic(index, prcr_args, &starting_point, &schedule, host_results, host_seeds);
     }
 
 
-    delete(descr);
+    /*delete(descr);
     delete(starting_point);
-    delete(schedule);
-    return true; // da mettere gi� meglio
+    delete(schedule);*/
+    return true;
 }
 
 
@@ -237,7 +242,7 @@ int main(int argc, char** argv)
     bool status = true;
 
     std::string filename_output;
-    filename_output = "./data/outfile_puntiB5_m5.txt";
+    filename_output = "./data/out_B5_CPU_m20.txt";
     std::ofstream fs;
     fs.open(filename_output, std::fstream::app);
 
@@ -283,7 +288,8 @@ int main(int argc, char** argv)
         double cpu_MC_error = compute_final_error(cpu_squares_sum, cpu_final_result, NBLOCKS * TPB * PPT);
 
 
-        fs << NBLOCKS << "," << TPB << "," << prcr_args->schedule_args.dim - 1 << "," << std::setprecision(5) << cpu_time << "\n";
+        fs << NBLOCKS << "," << TPB << "," << prcr_args->schedule_args.dim - 1 << "," << std::setprecision(5)
+           << cpu_time  << "," <<  cpu_final_result << "," << cpu_MC_error << "\n";
 
         fs.close();
 
