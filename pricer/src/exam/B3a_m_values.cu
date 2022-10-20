@@ -244,6 +244,7 @@ int main(int argc, char** argv)
             seeds[inc] = rnd::genSeed(true); 
         
         cudaSetDevice(1);
+        cudaDeviceSetLimit(cudaLimitMallocHeapSize, 80000000);
         cudaDeviceProp prop;
         cudaGetDeviceProperties(&prop, 1);
         
@@ -254,8 +255,7 @@ int main(int argc, char** argv)
             seeds[inc] = rnd::genSeed(true); 
         
         cudaSetDevice(2);
-        cudaGetDeviceProperties(&prop, 2);
-        run_device(prcr_args, approx_results,seeds);
+        cudaDeviceSetLimit(cudaLimitMallocHeapSize, 80000000);
 
         //print
         double square_sum_ex = 0., square_sum_ap = 0.;
