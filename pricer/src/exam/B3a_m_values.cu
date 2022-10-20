@@ -239,24 +239,20 @@ int main(int argc, char** argv)
         Result* approx_results = new Result[NBLOCKS * TPB];
 
         //simulate
+        cudaSetDevice(1);
+        cudaDeviceSetLimit(cudaLimitMallocHeapSize, 80000000);
         prcr_args->stc_pr_args.exact = true;
         for (size_t inc = 0; inc < 4 * NBLOCKS * TPB; inc++)
             seeds[inc] = rnd::genSeed(true); 
-        
-        cudaSetDevice(1);
-        cudaDeviceSetLimit(cudaLimitMallocHeapSize, 80000000);
-        cudaDeviceProp prop;
-        cudaGetDeviceProperties(&prop, 1);
-        
         run_device(prcr_args, exact_results,seeds);
-        
-        prcr_args->stc_pr_args.exact = false;
-        for (size_t inc = 0; inc < 4 * NBLOCKS * TPB; inc++)
-            seeds[inc] = rnd::genSeed(true); 
         
         cudaSetDevice(2);
         cudaDeviceSetLimit(cudaLimitMallocHeapSize, 80000000);
-
+        prcr_args->stc_pr_args.exact = false;
+        for (size_t inc = 0; inc < 4 * NBLOCKS * TPB; inc++)
+            seeds[inc] = rnd::genSeed(true); 
+        run_device(prcr_args,approx_results,seeds);
+        
         //print
         double square_sum_ex = 0., square_sum_ap = 0.;
         double final_res_ex = 0., final_res_ap = 0.;
