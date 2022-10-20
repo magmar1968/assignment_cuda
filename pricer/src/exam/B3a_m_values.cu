@@ -243,13 +243,24 @@ int main(int argc, char** argv)
         prcr_args->stc_pr_args.exact = true;
         for (size_t inc = 0; inc < 4 * NBLOCKS * TPB; inc++)
             seeds[inc] = rnd::genSeed(true); 
+        
         cudaSetDevice(1);
+        cudaDeviceProp prop;
+        cudaGetDeviceProperties(&prop, 1);
+        
+        std::cout << "currently at: " << double(m)/double(MAX_M) * 100 << std::endl;
+        printf("Device Number: %d\n", 1);
+        printf("  Device name: %s\n", prop.name);
         run_device(prcr_args, exact_results,seeds);
         
         prcr_args->stc_pr_args.exact = false;
         for (size_t inc = 0; inc < 4 * NBLOCKS * TPB; inc++)
             seeds[inc] = rnd::genSeed(true); 
+        
         cudaSetDevice(2);
+        cudaGetDeviceProperties(&prop, 2);
+        printf("Device Number: %d\n", 2);
+        printf("  Device name: %s\n", prop.name);
         run_device(prcr_args, approx_results,seeds);
 
         //print
