@@ -7,17 +7,18 @@
 #define M_STEP 5
 
 
-bool __host__ run_device(const prcr::Pricer_args* prcr_args, const uint *, const uint * );
+double __host__ run_device(const prcr::Pricer_args* prcr_args, const uint *, const uint * );
 void __global__ kernel(const prcr::Pricer_args* prcr_args, const  uint *, uint * );
-bool __host__   simulate_host(prcr::Pricer_args* prcr_args, uint*, uint);
+double __host__   simulate_host(prcr::Pricer_args* prcr_args, uint*, uint);
 void __device__ simulate_device(const prcr::Pricer_args* prcr_args, prcr::Equity_prices*, prcr::Schedule*, const uint*);
 void __host__ __device__ simulate_generic
 (size_t, const prcr::Pricer_args*, prcr::Equity_prices*, prcr::Schedule*, const uint*);
 
-__host__ bool
+__host__ double
 run_device(const prcr::Pricer_args* prcr_args,const uint * host_seeds,const uint * host_m)
 {
     using namespace prcr;
+    Timer timer;
     cudaError_t cudaStatus;
     Pricer_args* dev_prcr_args;
     uint * dev_seeds;
@@ -65,7 +66,7 @@ run_device(const prcr::Pricer_args* prcr_args,const uint * host_seeds,const uint
     cudaFree(dev_prcr_args);
     cudaFree(dev_seeds);
 
-    return cudaStatus;
+    return timer.GetTime();
 }
 
 
@@ -96,10 +97,11 @@ kernel(const prcr::Pricer_args* prcr_args, const uint * dev_seeds, uint * dev_m)
 }
 
 
-__host__ bool
+__host__ double
 simulate_host(const prcr::Pricer_args* prcr_args, const uint * host_seeds, const uint * host_m)
 {
     using namespace prcr;
+    Timer timer;
     size_t NBLOCKS = prcr_args->dev_opts.N_blocks;
     size_t TPB = prcr_args->dev_opts.N_threads;
 
@@ -128,7 +130,7 @@ simulate_host(const prcr::Pricer_args* prcr_args, const uint * host_seeds, const
     delete(descr);
     delete(starting_point);
     delete(schedule);
-    return true; // da mettere gi� meglio
+    return timer.GetTime(); // da mettere gi� meglio
 }
 
 
@@ -217,15 +219,11 @@ int main(int argc, char** argv)
         //simulate
         double time_gpu,time_cpu;
 
-        Timer timer_gpu;
-        run_device(prcr_args,seeds,&m_array[m_cont]);
-        timer_gpu.Stop();
-        time_gpu = timer_gpu.GetTime();
-
-        Timer timer_cpu;
-        simulate_host(prcr_args,seeds,&m_array[m_cont]);
-        timer_cpu.Stop();
-        time_cpu = timer_cpu.GetTime();
+        time_gpu = run_device(prcr_args,seeds,&m_array[m_cont]);
+        
+        time_cpu = simulate_host(prcr_args,seeds,&m_array[m_cont]);
+        
+         
         
         double g = time_cpu/time_gpu;
         
