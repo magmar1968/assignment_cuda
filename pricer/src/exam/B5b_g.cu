@@ -7,7 +7,7 @@
 #define M_STEP 5
 
 
-bool __host__ run_device(const prcr::Pricer_args* prcr_args, const uint *, uint * );
+bool __host__ run_device(const prcr::Pricer_args* prcr_args, const uint *, const uint * );
 void __global__ kernel(const prcr::Pricer_args* prcr_args, const  uint *, uint * );
 bool __host__   simulate_host(prcr::Pricer_args* prcr_args, uint*, uint);
 void __device__ simulate_device(const prcr::Pricer_args* prcr_args, prcr::Equity_prices*, prcr::Schedule*, const uint*);
