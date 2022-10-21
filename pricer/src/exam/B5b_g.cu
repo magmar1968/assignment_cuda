@@ -10,7 +10,7 @@
 bool __host__ run_device(const prcr::Pricer_args* prcr_args, const uint *, uint * );
 void __global__ kernel(const prcr::Pricer_args* prcr_args, const  uint *, uint * );
 bool __host__   simulate_host(prcr::Pricer_args* prcr_args, uint*, uint);
-void __device__ simulate_device(prcr::Pricer_args* prcr_args, prcr::Equity_prices*, prcr::Schedule*, uint*);
+void __device__ simulate_device(const prcr::Pricer_args* prcr_args, prcr::Equity_prices*, prcr::Schedule*, const uint*);
 void __host__ __device__ simulate_generic
 (size_t, const prcr::Pricer_args*, prcr::Equity_prices*, prcr::Schedule*, const uint*);
 
@@ -72,7 +72,7 @@ run_device(const prcr::Pricer_args* prcr_args,const uint * host_seeds,const uint
 
 
 __global__ void
-kernel(prcr::Pricer_args* prcr_args,  uint * dev_seeds, uint * dev_m)
+kernel(const prcr::Pricer_args* prcr_args, const uint * dev_seeds, uint * dev_m)
 {
     using namespace prcr;
 
@@ -134,10 +134,10 @@ simulate_host(const prcr::Pricer_args* prcr_args, const uint * host_seeds, const
 
 __device__ void
 simulate_device(
-    prcr::Pricer_args* prcr_args,
+    const prcr::Pricer_args* prcr_args,
     prcr::Equity_prices* starting_point,
     prcr::Schedule* schedule,
-    uint * dev_seeds)
+    const uint * dev_seeds)
 {
     size_t index = blockIdx.x * blockDim.x + threadIdx.x;
     size_t NBLOCKS = gridDim.x;
@@ -212,7 +212,6 @@ int main(int argc, char** argv)
     size_t m_cont = 0;
     for (size_t m = MIN_M; m < MAX_M; m+=M_STEP){
         m_array[m_cont] = m;
-        m_cont ++;
         //simulate
         double time_gpu,time_cpu;
         Timer timer_gpu;
@@ -232,8 +231,9 @@ int main(int argc, char** argv)
             << "," << time_gpu 
             << "," << g << "\n";
        
-        delete[](m_array);
         std::cout << "currently at: " << double(m)/double(MAX_M) * 100 << "% " << "\t\r" << std::flush;
+        m_cont ++;
     }
+    delete[](m_array);
     ofs.close();
 }
