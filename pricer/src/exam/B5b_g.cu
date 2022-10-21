@@ -216,12 +216,15 @@ int main(int argc, char** argv)
         m_array[m_cont] = m;
         //simulate
         double time_gpu,time_cpu;
+
         Timer timer_gpu;
         run_device(prcr_args,seeds,&m_array[m_cont]);
+        timer_gpu.Stop();
         time_gpu = timer_gpu.GetTime();
 
         Timer timer_cpu;
         simulate_host(prcr_args,seeds,&m_array[m_cont]);
+        timer_cpu.Stop();
         time_cpu = timer_cpu.GetTime();
         
         double g = time_cpu/time_gpu;
