@@ -11,8 +11,9 @@ class Timer
 public:
     Timer()
     {
-        _StartTimepoint = std::chrono::high_resolution_clock::now();
+        _StartTimepoint = std::chrono::steady_clock::now();
     }
+ 
     ~Timer() {}
 
     void Stop()
@@ -20,7 +21,7 @@ public:
 
         _stopped = true;
         using namespace std::chrono;
-        auto endTimepoint = high_resolution_clock::now();
+        auto endTimepoint = steady_clock::now();
 
         auto start = time_point_cast<milliseconds>(_StartTimepoint).time_since_epoch().count();
         auto end = time_point_cast<milliseconds>(endTimepoint).time_since_epoch().count();
@@ -59,7 +60,7 @@ public:
     }
 
 private:
-    std::chrono::time_point< std::chrono::high_resolution_clock> _StartTimepoint;
+    std::chrono::time_point< std::chrono::steady_clock> _StartTimepoint;
     double _secs,_ms,_mins,_hour;
     bool _stopped = false;
 };
