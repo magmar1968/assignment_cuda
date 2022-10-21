@@ -18,7 +18,7 @@ __host__ double
 run_device(const prcr::Pricer_args* prcr_args,const uint * host_seeds,const uint * host_m)
 {
     using namespace prcr;
-    Timer timer;
+    Timer * timer = new Timer();
     cudaError_t cudaStatus;
     Pricer_args* dev_prcr_args;
     uint * dev_seeds;
@@ -66,7 +66,9 @@ run_device(const prcr::Pricer_args* prcr_args,const uint * host_seeds,const uint
     cudaFree(dev_prcr_args);
     cudaFree(dev_seeds);
 
-    return timer.GetTime();
+    double time = timer->GetTime();
+    delete(timer);
+    return time;
 }
 
 
@@ -101,7 +103,7 @@ __host__ double
 simulate_host(const prcr::Pricer_args* prcr_args, const uint * host_seeds, const uint * host_m)
 {
     using namespace prcr;
-    Timer timer;
+    Timer * timer = new Timer();
     size_t NBLOCKS = prcr_args->dev_opts.N_blocks;
     size_t TPB = prcr_args->dev_opts.N_threads;
 
@@ -130,7 +132,9 @@ simulate_host(const prcr::Pricer_args* prcr_args, const uint * host_seeds, const
     delete(descr);
     delete(starting_point);
     delete(schedule);
-    return timer.GetTime(); // da mettere gi� meglio
+    double time = timer->GetTime();
+    delete(timer);
+    return  time;
 }
 
 
