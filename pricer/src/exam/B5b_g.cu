@@ -2,7 +2,7 @@
 #include <iomanip>
 
 
-#define MAX_M  100
+#define MAX_M  105
 #define MIN_M  10
 #define M_STEP 5
 
@@ -208,6 +208,8 @@ int main(int argc, char** argv)
     std::fstream ofs(outfilename.c_str(),std::fstream::out);
     ofs << "m,cpu_time,gpu_time,g\n";
 
+    cudaSetDevice(1);
+    cudaDeviceSetLimit(cudaLimitMallocHeapSize, 80000000);
     uint * m_array = new uint[MAX_M];
     size_t m_cont = 0;
     for (size_t m = MIN_M; m < MAX_M; m+=M_STEP){
@@ -215,7 +217,6 @@ int main(int argc, char** argv)
         //simulate
         double time_gpu,time_cpu;
         Timer timer_gpu;
-        cudaDeviceSetLimit(cudaLimitMallocHeapSize, 80000000);
         run_device(prcr_args,seeds,&m_array[m_cont]);
         time_gpu = timer_gpu.GetTime();
 
