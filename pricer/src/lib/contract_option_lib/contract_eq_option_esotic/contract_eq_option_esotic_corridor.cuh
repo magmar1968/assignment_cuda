@@ -71,7 +71,7 @@ HD bool Contract_eq_option_exotic_corridor::Evaluate_log_return(size_t i, const 
 {
 	double S_a = path->Get_equity_prices(i + 1);
 	double S_b = path->Get_equity_prices(i);
-	if (abs((log(S_a / S_b)) / srqt(_delta_t)) < _B * _sigma)
+	if (abs((log(S_a / S_b)) / sqrt(_delta_t)) < _B * _sigma)
 		return 1;
 	else
 		return 0;
