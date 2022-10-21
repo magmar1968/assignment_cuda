@@ -232,7 +232,7 @@ int main(int argc, char** argv)
     bool status = true;
 
     std::string filename_output;
-    filename_output = "./data/puntoB3b_K1.txt";
+    filename_output = "./data/out_B3b_K1.txt";
     std::ofstream fs;
     fs.open(filename_output, std::fstream::app);
 
