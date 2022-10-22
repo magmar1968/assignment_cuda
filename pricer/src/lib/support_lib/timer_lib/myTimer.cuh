@@ -9,7 +9,8 @@ namespace prcr
 class Timer
 {
 public:
-    Timer()
+    Timer():
+    _ms(0),_secs(0),_hour(0),_mins(0)
     {
         _StartTimepoint = std::chrono::steady_clock::now();
     }
@@ -27,6 +28,7 @@ public:
         auto end = time_point_cast<milliseconds>(endTimepoint).time_since_epoch().count();
 
         _ms = end - start;
+        delta_ms = _ms;
 
 
 
@@ -52,16 +54,17 @@ public:
 
     double GetTime(){
         if(_stopped == true)
-            return _ms;
+            return delta_ms;
         else{
             Stop();
-            return _ms;
+            return delta_ms;
         }
     }
 
 private:
     std::chrono::time_point< std::chrono::steady_clock> _StartTimepoint;
-    double _secs,_ms,_mins,_hour;
+    int64_t _secs,_ms,_mins,_hour;
+    int64_t delta_ms = 0;
     bool _stopped = false;
 };
 }
