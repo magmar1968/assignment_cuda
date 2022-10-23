@@ -200,7 +200,7 @@ simulate_generic(size_t index,
 
 
 int main(int argc, char** argv)
-{   for(size_t NBLOCKS = 91; NBLOCKS < 129; NBLOCKS ++)
+{   for(size_t NBLOCKS = 100 ; NBLOCKS <601 ; NBLOCKS +=120)
     {
     using namespace prcr;
 
@@ -208,7 +208,7 @@ int main(int argc, char** argv)
 
     cudaSetDevice(1);
     size_t value;
-    cudaDeviceSetLimit(cudaLimitMallocHeapSize, 20000000);
+    cudaDeviceSetLimit(cudaLimitMallocHeapSize, 120000000);
     cudaDeviceGetLimit(&value, cudaLimitMallocHeapSize);
     std::cout << "MallocHeapSize: " << value << std::endl;
 
@@ -245,7 +245,7 @@ int main(int argc, char** argv)
     bool status = true;
 
     std::string filename_output;
-    filename_output = "./data/out_B5_GPU_m200v2.txt";
+    filename_output = "./data/out_B5_GPU_m20032.txt";
     std::ofstream fs;
     fs.open(filename_output, std::fstream::app);
 
