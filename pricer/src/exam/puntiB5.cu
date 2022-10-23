@@ -29,7 +29,7 @@ run_device(prcr::Pricer_args* prcr_args, Result* host_results, uint* host_seeds)
     
     int dev_label;
     cudaGetDevice(&dev_label);  
-    std::cout << "Using device: " << dev_label << std::endl;
+   // std::cout << "Using device: " << dev_label << std::endl;
 
     Timer gpu_timer;    
 
@@ -205,8 +205,8 @@ int main(int argc, char** argv)
     char a = 177, b = 219;
 
     printf("\n\n\n\n");
-    printf("\n\n\n\n\t\t\t\t\t"
-        + "Simulating...\n\n");
+    printf("\n\n\n\n\t\t\t\t\t");
+    printf("Simulating...\n\n");
     printf("\t\t\t\t\t");
 
     for (int i = 0; i < 26; i++)
@@ -225,7 +225,7 @@ int main(int argc, char** argv)
     size_t value;
     cudaDeviceSetLimit(cudaLimitMallocHeapSize, 120000000);
     cudaDeviceGetLimit(&value, cudaLimitMallocHeapSize);
-    std::cout << "MallocHeapSize: " << value << std::endl;
+    //std::cout << "MallocHeapSize: " << value << std::endl;
 
 
     std::string filename = "./data/infile_puntiB5.txt";
