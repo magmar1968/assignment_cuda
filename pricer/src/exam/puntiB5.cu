@@ -8,14 +8,14 @@ struct Result
     double p_off2;
 };
 
-bool __host__ run_device(prcr::Pricer_args* prcr_args, Result* host_results, uint*);
+double __host__ run_device(prcr::Pricer_args* prcr_args, Result* host_results, uint*);
 void __global__ kernel(prcr::Pricer_args* prcr_args, Result* dev_results, uint*);
 bool __host__   simulate_host(prcr::Pricer_args* prcr_args, Result* host_results, uint*);
 void __device__ simulate_device(prcr::Pricer_args* prcr_args, prcr::Equity_prices*, prcr::Schedule*, Result* dev_results, uint*);
 void __host__ __device__ simulate_generic
 (size_t, prcr::Pricer_args*, prcr::Equity_prices*, prcr::Schedule*, Result*, uint*);
 
-__host__ bool
+__host__ double
 run_device(prcr::Pricer_args* prcr_args, Result* host_results, uint* host_seeds)
 {
     using namespace prcr;
@@ -31,7 +31,9 @@ run_device(prcr::Pricer_args* prcr_args, Result* host_results, uint* host_seeds)
     cudaGetDevice(&dev_label);  
     std::cout << "Using device: " << dev_label << std::endl;
 
-    
+    Timer gpu_timer;    
+
+
     cudaStatus = cudaMalloc((void**)&dev_prcr_args, sizeof(Pricer_args));
     if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMalloc1 failed!\n"); }
 
@@ -74,8 +76,8 @@ run_device(prcr::Pricer_args* prcr_args, Result* host_results, uint* host_seeds)
     cudaFree(dev_results);
     cudaFree(dev_prcr_args);
     cudaFree(dev_seeds);
-
-    return cudaStatus;
+    double tme = gpu_timer.Get_delta_time();
+    return tme;
 }
 
 
@@ -198,15 +200,15 @@ simulate_generic(size_t index,
 
 
 int main(int argc, char** argv)
-{   //for(size_t NBLOCKS = 13; NBLOCKS < 91; NBLOCKS ++)
-    //{
+{   for(size_t NBLOCKS = 56; NBLOCKS < 91; NBLOCKS ++)
+    {
     using namespace prcr;
 
     srand(time(NULL));
 
     cudaSetDevice(1);
     size_t value;
-    cudaDeviceSetLimit(cudaLimitMallocHeapSize, 8000000);
+    cudaDeviceSetLimit(cudaLimitMallocHeapSize, 20000000);
     cudaDeviceGetLimit(&value, cudaLimitMallocHeapSize);
     std::cout << "MallocHeapSize: " << value << std::endl;
 
@@ -215,7 +217,8 @@ int main(int argc, char** argv)
     Pricer_args* prcr_args = new Pricer_args;
     ReadInputOption(filename, prcr_args);
 
-    size_t NBLOCKS = prcr_args->dev_opts.N_blocks;
+ //   size_t NBLOCKS = prcr_args->dev_opts.N_blocks;
+    prcr_args->dev_opts.N_blocks = NBLOCKS;
     size_t TPB = prcr_args->dev_opts.N_threads;
     size_t PPT = prcr_args->mc_args.N_simulations;
     // gen seeds 
@@ -242,7 +245,7 @@ int main(int argc, char** argv)
     bool status = true;
 
     std::string filename_output;
-    filename_output = "./data/out_B5_CPU_m20.txt";
+    filename_output = "./data/out_B5_GPU_m200v2.txt";
     std::ofstream fs;
     fs.open(filename_output, std::fstream::app);
 
@@ -250,9 +253,9 @@ int main(int argc, char** argv)
 
     if (GPU == true)
     {   
-        Timer timer_gpu;
-        status = run_device(prcr_args, gpu_results, seeds);
-        double gpu_time = timer_gpu.Get_delta_time();
+        //Timer timer_gpu;
+        double gpu_time = run_device(prcr_args, gpu_results, seeds);
+        //double gpu_time = timer_gpu.Get_delta_time();
         double gpu_squares_sum = 0.;
         double gpu_final_result = 0.;
         for (size_t i = 0; i < NBLOCKS * TPB; i++)
@@ -301,5 +304,5 @@ int main(int argc, char** argv)
     delete(prcr_args);
 
 
-//}
+}
 }
