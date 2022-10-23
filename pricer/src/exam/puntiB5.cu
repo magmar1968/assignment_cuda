@@ -200,7 +200,22 @@ simulate_generic(size_t index,
 
 
 int main(int argc, char** argv)
-{   for(size_t NBLOCKS = 10 ; NBLOCKS <601 ; NBLOCKS +=10)
+{   
+    system("color 0A");
+    char a = 177, b = 219;
+
+    printf("\n\n\n\n");
+    printf("\n\n\n\n\t\t\t\t\t"
+        + "Simulating...\n\n");
+    printf("\t\t\t\t\t");
+
+    for (int i = 0; i < 26; i++)
+        printf("%c", a);
+
+    printf("\r");
+    printf("\t\t\t\t\t");
+    
+    for(size_t NBLOCKS = 10 ; NBLOCKS <601 ; NBLOCKS +=10)
     {
     using namespace prcr;
 
@@ -303,6 +318,6 @@ int main(int argc, char** argv)
     delete[](gpu_results);
     delete(prcr_args);
 
-
+    printf("%c", b);
 }
 }
