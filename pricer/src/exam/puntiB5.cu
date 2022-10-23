@@ -200,7 +200,7 @@ simulate_generic(size_t index,
 
 
 int main(int argc, char** argv)
-{   for(size_t NBLOCKS = 160 ; NBLOCKS <601 ; NBLOCKS +=120)
+{   for(size_t NBLOCKS = 10 ; NBLOCKS <601 ; NBLOCKS +=10)
     {
     using namespace prcr;
 
@@ -245,7 +245,7 @@ int main(int argc, char** argv)
     bool status = true;
 
     std::string filename_output;
-    filename_output = "./data/out_B5_GPU_m20032.txt";
+    filename_output = "./data/out_B5_GPU_m200_long_range.txt";
     std::ofstream fs;
     fs.open(filename_output, std::fstream::app);
 
