@@ -200,7 +200,7 @@ simulate_generic(size_t index,
 
 
 int main(int argc, char** argv)
-{   for(size_t NBLOCKS = 56; NBLOCKS < 91; NBLOCKS ++)
+{   for(size_t NBLOCKS = 91; NBLOCKS < 129; NBLOCKS ++)
     {
     using namespace prcr;
 
