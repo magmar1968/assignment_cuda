@@ -190,8 +190,10 @@ simulate_generic(size_t index,
 
 int main(int argc, char** argv)
 {
+    for(double b = 0; b < 4.1; b += 0.25)
+    {
     using namespace prcr;
-
+	
     srand(time(NULL));
     cudaSetDevice(1);
     size_t value;
@@ -204,6 +206,8 @@ int main(int argc, char** argv)
     std::string filename = "./data/infile_puntoB3b.txt";
     Pricer_args* prcr_args = new Pricer_args;
     ReadInputOption(filename, prcr_args);
+    
+    prcr_args->contract_args.B = b;
 
     size_t NBLOCKS = prcr_args->dev_opts.N_blocks;
     size_t TPB = prcr_args->dev_opts.N_threads;
@@ -232,7 +236,7 @@ int main(int argc, char** argv)
     bool status = true;
 
     std::string filename_output;
-    filename_output = "./data/out_B3b_K1.txt";
+    filename_output = "./data/out_B3b_K05.txt";
     std::ofstream fs;
     fs.open(filename_output, std::fstream::app);
 
@@ -298,5 +302,5 @@ int main(int argc, char** argv)
     delete(prcr_args);
 
 
-    
+    }
 }
