@@ -236,7 +236,7 @@ int main(int argc, char** argv)
     bool status = true;
 
     std::string filename_output;
-    filename_output = "./data/out_B3b_K05.txt";
+    filename_output = "./data/out_B3b_K075.txt";
     std::ofstream fs;
     fs.open(filename_output, std::fstream::app);
 
