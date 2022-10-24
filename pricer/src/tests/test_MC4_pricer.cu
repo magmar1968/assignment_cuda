@@ -237,17 +237,20 @@ int main(int argc, char** argv)
 
     bool GPU = prcr_args->dev_opts.GPU;
     bool CPU = prcr_args->dev_opts.CPU;
+
+
     bool status = true;
 
+    double gpu_final_result = 0.;
     if (GPU == true)
     {
         for (int i = 0; i < N_TEST_SIM; ++i)
-            status = status && run_device(prcr_args, gpu_results,seeds);
+            status = status && (!run_device(prcr_args, gpu_results,seeds));
         
         
         
         double gpu_squares_sum  = 0.;
-        double gpu_final_result = 0.;
+        
         for(size_t i = 0; i < NBLOCKS * TPB; i++)
         {
             gpu_final_result += gpu_results[i].p_off;
@@ -267,14 +270,14 @@ int main(int argc, char** argv)
         
     }
 
-
+    double cpu_final_result = 0.;
     if (CPU == true)
     {
         for (int i = 0; i < N_TEST_SIM; ++i)
-            status = status && simulate_host(prcr_args, cpu_results,seeds);
+            status = simulate_host(prcr_args, cpu_results,seeds);
         
         double cpu_squares_sum  = 0.;
-        double cpu_final_result = 0.;
+        
         for(size_t i = 0; i < NBLOCKS * TPB; i++)
         {
             cpu_final_result += cpu_results[i].p_off;
@@ -299,6 +302,14 @@ int main(int argc, char** argv)
     delete[](gpu_results);
     delete(prcr_args);
 
+
+    if (CPU == true && GPU == true)
+    {
+        if (abs(cpu_final_result - gpu_final_result) > pow(10, -12))
+            std::cout << "Results are different: delta = " << cpu_final_result - gpu_final_result << std::endl;
+        else
+            std::cout << "gpu and cpu results are equal" << std::endl;
+    }
 
     if (results_check_cpu && results_check_gpu) {
         std::cout << "no error encountered" << std::endl;

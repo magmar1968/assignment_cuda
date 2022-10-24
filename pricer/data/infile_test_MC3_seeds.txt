@@ -1,4 +1,4 @@
-#CPU 0   !set to 1 to use the CPU for computing, 0 otherwise
+#CPU 1   !set to 1 to use the CPU for computing, 0 otherwise
 #GPU 1   !both option can be enabled at the same time but at least one must be true
 
 
