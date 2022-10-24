@@ -1,6 +1,6 @@
 ﻿#include "../tests/header.cuh"
 #include <iomanip>
-
+#include <unistd.h>
 
 struct Result
 {
@@ -201,16 +201,16 @@ simulate_generic(size_t index,
 
 int main(int argc, char** argv)
 {   
-    system("color 0A");
-    char a = 177, b = 219;
+    //system("color 0A");
+    //char a = 177, b = 219;
 
     printf("\n\n\n\n");
     printf("\n\n\n\n\t\t\t\t\t");
     printf("Simulating...\n\n");
     printf("\t\t\t\t\t");
 
-    for (int i = 0; i < 26; i++)
-        printf("%c", a);
+    for (int i = 0; i <  60; i++)
+        std::cout <<"▒";
 
     printf("\r");
     printf("\t\t\t\t\t");
@@ -260,7 +260,7 @@ int main(int argc, char** argv)
     bool status = true;
 
     std::string filename_output;
-    filename_output = "./data/out_B5_GPU_m20_long_range.txt";
+    filename_output = "./data/out_B5_GPU_m2_long_range.txt";
     std::ofstream fs;
     fs.open(filename_output, std::fstream::app);
 
@@ -318,6 +318,7 @@ int main(int argc, char** argv)
     delete[](gpu_results);
     delete(prcr_args);
 
-    printf("%c", b);
+    printf("█");
+    
 }
 }

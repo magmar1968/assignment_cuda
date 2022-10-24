@@ -3,7 +3,7 @@
 
 
 #T 1     ! simulation time range in years
-#m 5   ! number of time steps 
+#m 2   ! number of time steps 
 
 
 #pr_exact 1  
@@ -15,7 +15,7 @@
 #N_blocks   40 !N of blocks to use for the computation. 
 #N_threads  32 !N of thread per block. 
 
-#N_simulations 10
+#N_simulations 1000
 
 
 !#yc_structured !decomment if you'd like to introduce a structured yield curve
