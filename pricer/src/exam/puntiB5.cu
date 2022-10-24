@@ -215,8 +215,11 @@ int main(int argc, char** argv)
     printf("\r");
     printf("\t\t\t\t\t");
     
+    
     for(size_t NBLOCKS = 10 ; NBLOCKS <601 ; NBLOCKS +=10)
     {
+    std::cout << "█";
+    fflush(stdout);
     using namespace prcr;
 
     srand(time(NULL));
@@ -260,7 +263,7 @@ int main(int argc, char** argv)
     bool status = true;
 
     std::string filename_output;
-    filename_output = "./data/out_B5_GPU_m2_long_range.txt";
+    filename_output = "./data/out_B5_GPU_m2_long_range512.txt";
     std::ofstream fs;
     fs.open(filename_output, std::fstream::app);
 
@@ -318,7 +321,11 @@ int main(int argc, char** argv)
     delete[](gpu_results);
     delete(prcr_args);
 
-    printf("█");
+
+
+
+    
     
 }
+std::cout << std::endl;
 }
