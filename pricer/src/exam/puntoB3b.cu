@@ -191,7 +191,20 @@ simulate_generic(size_t index,
 int main(int argc, char** argv)
 {
     for(double b = 0; b < 4.1; b += 0.25)
+    //for (double b = 0; b < 4.1; b += 0.25)
+    int vec[9];
+    vec[0] = 0.0375;
+    vec[1] = 0.075;
+    vec[2] = 0.125;
+    vec[3] = 0.1875;
+    vec[4] = 0.375;
+    vec[5] = 0.625;
+    vec[6] = 0.875;
+    vec[7] = 1.125;
+    vec[8] = 1.325;
+    for(int i = 0; i < 9; i++)
     {
+    b = vec[i];
     using namespace prcr;
 	
     srand(time(NULL));
