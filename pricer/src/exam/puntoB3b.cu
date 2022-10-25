@@ -190,7 +190,6 @@ simulate_generic(size_t index,
 
 int main(int argc, char** argv)
 {
-    for(double b = 0; b < 4.1; b += 0.25)
     //for (double b = 0; b < 4.1; b += 0.25)
     int vec[9];
     vec[0] = 0.0375;
