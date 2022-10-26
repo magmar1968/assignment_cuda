@@ -4,8 +4,8 @@
 
 struct Result
 {
-    double P;
-    double P;
+    int P;
+    int P2;
 };
 
 bool __host__ run_device(prcr::Pricer_args* prcr_args, Result* host_results,uint *);
@@ -181,7 +181,7 @@ simulate_generic(size_t index,
     //B7: compute probability.K must be equal to 1
     if (contr_opt.Get_K() != 1)
     {
-        contr_opt.Set_k(1.0);
+	contr_opt.Set_K(1.0);
     }
     for (int i = 0; i < _N; i++)
     {
@@ -211,7 +211,19 @@ simulate_generic(size_t index,
 
 int main(int argc, char** argv)
 {
-    for (double b = 0; b < 4.1; b += 0.25)
+    printf("\n\n\n\n");
+    printf("Simulating...\n\n");
+    printf("\t\t\t\t\t");
+
+    for (int i = 0; i < 33 ; i++)
+        std::cout <<"▒";
+
+    printf("\r");
+    printf("\t\t\t\t\t");
+    for (double b = 3.375; b < 4.1; b += 0.125)
+    {
+	std::cout << "█";
+        fflush(stdout);
     /*double vec[9];
     vec[0] = 0.0375;
     vec[1] = 0.075;
@@ -233,11 +245,11 @@ int main(int argc, char** argv)
     size_t value;
     cudaDeviceGetLimit(&value, cudaLimitMallocHeapSize);
     cudaDeviceSetLimit(cudaLimitMallocHeapSize, 40000000);
-    std::cout << "MallocHeapSize: " << value << std::endl;
+    //std::cout << "MallocHeapSize: " << value << std::endl;
 
 
 
-    std::string filename = "./data/infile_puntoB7b.txt";
+    std::string filename = "./data/infile_puntoB7.txt";
     Pricer_args* prcr_args = new Pricer_args;
     ReadInputOption(filename, prcr_args);
     
@@ -270,7 +282,7 @@ int main(int argc, char** argv)
     bool status = true;
 
     std::string filename_output;
-    filename_output = "./data/out_B7.txt";
+    filename_output = "./data/out_B7_m100.txt";
     std::ofstream fs;
     fs.open(filename_output, std::fstream::app);
 
@@ -290,11 +302,11 @@ int main(int argc, char** argv)
             gpu_final_result += gpu_results[i].P;
             gpu_squares_sum  += gpu_results[i].P2;
         }
-        gpu_final_result /= double(NBLOCKS * TPB);
+        gpu_final_result /= double(NBLOCKS * TPB * PPT);
         double gpu_error = compute_final_error(gpu_squares_sum, gpu_final_result, NBLOCKS * TPB*PPT);
 	
 	// B3b
-        fs << prcr_args->contract_args.B << "," << gpu_final_result << "," << gpu_error << "\n";
+        fs << prcr_args->contract_args.B << "," << std::setprecision(7) << gpu_final_result << "," << std::setprecision(7) << gpu_error << "\n";
 	
 	// B4a
 	//fs << prcr_args->schedule_args.dim-1 << "," << gpu_final_result << "," << gpu_error << "\n";
@@ -321,7 +333,7 @@ int main(int argc, char** argv)
 
 	
 	//B3b
-        fs << prcr_args->contract_args.B << "," << cpu_final_result << "," << cpu_error << "\n";
+        fs << prcr_args->contract_args.B << "," << std::setprecision(7) << cpu_final_result << "," << std::setprecision(7) << cpu_error << "\n";
         
 	// B4a
         //fs << prcr_args->schedule_args.dim-1 << "," << cpu_final_result << "," << cpu_error << "\n";
@@ -337,4 +349,5 @@ int main(int argc, char** argv)
 
 
     }
+std::cout << std::endl;
 }
