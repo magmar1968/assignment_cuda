@@ -178,21 +178,30 @@ simulate_generic(size_t index,
                                                prcr_args->contract_args.N,
                                                prcr_args->contract_args.K);
     size_t _N = prcr_args->mc_args.N_simulations;
-    prcr::Option_pricer_montecarlo pricer(&contr_opt, &process, _N);
-
-
-    //B7: compute probability. _N must be 1 and K must be 1, too
-    double x = pricer.Get_price();
-    if (x == 0)
+    //B7: compute probability.K must be equal to 1
+    if (contr_opt.Get_K() != 1)
     {
-        results[index].P = 1;
-        results[index].P2 = 1;
+        contr_opt.Set_k(1.0);
     }
-    else
+    for (int i = 0; i < _N; i++)
     {
-        results[index].P = 0;
-        results[index].P2 = 0;
+
+        prcr::Option_pricer_montecarlo pricer(&contr_opt, &process, 1);
+        double x = pricer.Get_price();
+        if (x == 0)     
+        {
+            results[index].P += 1;
+            results[index].P2 += 1;
+        }
+        else
+        {
+            //results[index].P += 0;
+            //results[index].P2 += 0;
+        }
     }
+    
+    
+    
     
 
 }
@@ -202,7 +211,7 @@ simulate_generic(size_t index,
 
 int main(int argc, char** argv)
 {
-    for (double b = 0; b < 4; b += 0.25)
+    for (double b = 0; b < 4.1; b += 0.25)
     /*double vec[9];
     vec[0] = 0.0375;
     vec[1] = 0.075;
@@ -228,7 +237,7 @@ int main(int argc, char** argv)
 
 
 
-    std::string filename = "./data/infile_puntoB3b.txt";
+    std::string filename = "./data/infile_puntoB7b.txt";
     Pricer_args* prcr_args = new Pricer_args;
     ReadInputOption(filename, prcr_args);
     
@@ -261,7 +270,7 @@ int main(int argc, char** argv)
     bool status = true;
 
     std::string filename_output;
-    filename_output = "./data/out_B3b_K05.txt";
+    filename_output = "./data/out_B7.txt";
     std::ofstream fs;
     fs.open(filename_output, std::fstream::app);
 
@@ -282,13 +291,13 @@ int main(int argc, char** argv)
             gpu_squares_sum  += gpu_results[i].P2;
         }
         gpu_final_result /= double(NBLOCKS * TPB);
-        double gpu_MC_error = compute_final_error(gpu_squares_sum, gpu_final_result, NBLOCKS * TPB*PPT);
+        double gpu_error = compute_final_error(gpu_squares_sum, gpu_final_result, NBLOCKS * TPB*PPT);
 	
 	// B3b
-        fs << prcr_args->contract_args.B << "," << gpu_final_result << "," << gpu_MC_error << "\n";
+        fs << prcr_args->contract_args.B << "," << gpu_final_result << "," << gpu_error << "\n";
 	
 	// B4a
-	//fs << prcr_args->schedule_args.dim-1 << "," << gpu_final_result << "," << gpu_MC_error << "\n";
+	//fs << prcr_args->schedule_args.dim-1 << "," << gpu_final_result << "," << gpu_error << "\n";
 	
         fs.close();
         
@@ -308,14 +317,14 @@ int main(int argc, char** argv)
             cpu_squares_sum  += cpu_results[i].P2;
         }
         cpu_final_result /= double(NBLOCKS * TPB);
-        double cpu_MC_error = compute_final_error(cpu_squares_sum, cpu_final_result, NBLOCKS * TPB*PPT);
+        double cpu_error = compute_final_error(cpu_squares_sum, cpu_final_result, NBLOCKS * TPB*PPT);
 
 	
 	//B3b
-        fs << prcr_args->contract_args.B << "," << cpu_final_result << "," << cpu_MC_error << "\n";
+        fs << prcr_args->contract_args.B << "," << cpu_final_result << "," << cpu_error << "\n";
         
 	// B4a
-        //fs << prcr_args->schedule_args.dim-1 << "," << cpu_final_result << "," << cpu_MC_error << "\n";
+        //fs << prcr_args->schedule_args.dim-1 << "," << cpu_final_result << "," << cpu_error << "\n";
 
 	fs.close();
         
