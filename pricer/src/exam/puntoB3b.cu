@@ -191,7 +191,7 @@ simulate_generic(size_t index,
 int main(int argc, char** argv)
 {
     //for (double b = 0; b < 4.1; b += 0.25)
-    int vec[9];
+    double vec[9];
     vec[0] = 0.0375;
     vec[1] = 0.075;
     vec[2] = 0.125;
@@ -203,7 +203,8 @@ int main(int argc, char** argv)
     vec[8] = 1.325;
     for(int i = 0; i < 9; i++)
     {
-    b = vec[i];
+    double b = vec[i];
+    std::cout << i << std::endl;
     using namespace prcr;
 	
     srand(time(NULL));
@@ -248,7 +249,7 @@ int main(int argc, char** argv)
     bool status = true;
 
     std::string filename_output;
-    filename_output = "./data/out_B3b_K075.txt";
+    filename_output = "./data/out_B3b_K05.txt";
     std::ofstream fs;
     fs.open(filename_output, std::fstream::app);
 
