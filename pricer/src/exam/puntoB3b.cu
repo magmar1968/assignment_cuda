@@ -190,8 +190,8 @@ simulate_generic(size_t index,
 
 int main(int argc, char** argv)
 {
-    //for (double b = 0; b < 4.1; b += 0.25)
-    double vec[9];
+    for (double b = 0; b < 2.0; b += 0.25){
+    /*double vec[9];
     vec[0] = 0.0375;
     vec[1] = 0.075;
     vec[2] = 0.125;
@@ -204,7 +204,7 @@ int main(int argc, char** argv)
     for(int i = 0; i < 9; i++)
     {
     double b = vec[i];
-    std::cout << i << std::endl;
+    std::cout << i << std::endl;*/
     using namespace prcr;
 	
     srand(time(NULL));
