@@ -4,8 +4,8 @@
 
 struct Result
 {
-    double p_off;
-    double p_off2;
+    double P;
+    double P;
 };
 
 bool __host__ run_device(prcr::Pricer_args* prcr_args, Result* host_results,uint *);
@@ -180,8 +180,20 @@ simulate_generic(size_t index,
     size_t _N = prcr_args->mc_args.N_simulations;
     prcr::Option_pricer_montecarlo pricer(&contr_opt, &process, _N);
 
-    results[index].p_off =  pricer.Get_price();
-    results[index].p_off2 = pricer.Get_price_square();
+
+    //B7: compute probability. _N must be 1 and K must be 1, too
+    double x = pricer.Get_price();
+    if (x == 0)
+    {
+        results[index].P = 1;
+        results[index].P2 = 1;
+    }
+    else
+    {
+        results[index].P = 0;
+        results[index].P2 = 0;
+    }
+    
 
 }
 
@@ -190,8 +202,8 @@ simulate_generic(size_t index,
 
 int main(int argc, char** argv)
 {
-    //for (double b = 0; b < 4.1; b += 0.25)
-    double vec[9];
+    for (double b = 0; b < 4; b += 0.25)
+    /*double vec[9];
     vec[0] = 0.0375;
     vec[1] = 0.075;
     vec[2] = 0.125;
@@ -204,7 +216,7 @@ int main(int argc, char** argv)
     for(int i = 0; i < 9; i++)
     {
     double b = vec[i];
-    std::cout << i << std::endl;
+    std::cout << i << std::endl;*/
     using namespace prcr;
 	
     srand(time(NULL));
@@ -237,10 +249,10 @@ int main(int argc, char** argv)
     Result* cpu_results = new Result[NBLOCKS * TPB];
     for (size_t inc = 0; inc < NBLOCKS * TPB; inc++)
     {
-        gpu_results[inc].p_off = 0;
-        gpu_results[inc].p_off2 = 0;
-        cpu_results[inc].p_off = 0;
-        cpu_results[inc].p_off2 = 0;
+        gpu_results[inc].P = 0;
+        gpu_results[inc].P2 = 0;
+        cpu_results[inc].P = 0;
+        cpu_results[inc].P2 = 0;
     }
 
 
@@ -266,8 +278,8 @@ int main(int argc, char** argv)
         double gpu_final_result = 0.;
         for(size_t i = 0; i < NBLOCKS * TPB; i++)
         {
-            gpu_final_result += gpu_results[i].p_off;
-            gpu_squares_sum  += gpu_results[i].p_off2;
+            gpu_final_result += gpu_results[i].P;
+            gpu_squares_sum  += gpu_results[i].P2;
         }
         gpu_final_result /= double(NBLOCKS * TPB);
         double gpu_MC_error = compute_final_error(gpu_squares_sum, gpu_final_result, NBLOCKS * TPB*PPT);
@@ -292,8 +304,8 @@ int main(int argc, char** argv)
         double cpu_final_result = 0.;
         for(size_t i = 0; i < NBLOCKS * TPB; i++)
         {
-            cpu_final_result += cpu_results[i].p_off;
-            cpu_squares_sum  += cpu_results[i].p_off2;
+            cpu_final_result += cpu_results[i].P;
+            cpu_squares_sum  += cpu_results[i].P2;
         }
         cpu_final_result /= double(NBLOCKS * TPB);
         double cpu_MC_error = compute_final_error(cpu_squares_sum, cpu_final_result, NBLOCKS * TPB*PPT);
