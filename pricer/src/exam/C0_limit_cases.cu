@@ -272,12 +272,25 @@ int main(int argc, char** argv)
     prcr_args->contract_args.B = 0.;
     run_device(prcr_args, b0_results,seeds);
     
+    
     prcr_args->contract_args.B = 0.5;
     prcr_args->contract_args.K = 0;
     run_device(prcr_args, k0_results, seeds);
     
     prcr_args->contract_args.K = 1.;
     run_device(prcr_args, k1_results, seeds);
+
+    // results
+    MC_result mc_result;
+    mc_result = compute_MC_result(prcr_args,b0_results);
+    ofs << "B = 0:  " << mc_result.value
+        << "  "       << mc_result.MC_error << std::endl;
+    mc_result = compute_MC_result(prcr_args,k0_results);
+    ofs << "K = 0:  " << mc_result.value
+        << "  "       << mc_result.MC_error << std::endl;
+    mc_result = compute_MC_result(prcr_args,k1_results);
+    ofs << "K = 1:  " << mc_result.value
+        << "  "       << mc_result.MC_error << std::endl;
     
     ofs.close();
 }
