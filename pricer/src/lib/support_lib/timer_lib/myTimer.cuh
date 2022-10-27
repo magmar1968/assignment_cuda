@@ -9,10 +9,12 @@ namespace prcr
 class Timer
 {
 public:
-    Timer()
+    Timer():
+    _ms(0),_secs(0),_hour(0),_mins(0),_delta_ms(0)
     {
-        _StartTimepoint = std::chrono::high_resolution_clock::now();
+        _StartTimepoint = std::chrono::steady_clock::now();
     }
+ 
     ~Timer() {}
 
     void Stop()
@@ -20,12 +22,12 @@ public:
 
         _stopped = true;
         using namespace std::chrono;
-        auto endTimepoint = high_resolution_clock::now();
-
-        auto start = time_point_cast<milliseconds>(_StartTimepoint).time_since_epoch().count();
-        auto end = time_point_cast<milliseconds>(endTimepoint).time_since_epoch().count();
-
-        auto _ms = end - start;
+        auto endTimepoint = steady_clock::now();
+        auto duration = endTimepoint - _StartTimepoint;
+        auto ms = duration_cast<milliseconds>(duration);
+        
+        _ms = ms.count();
+        _delta_ms = ms.count();
 
 
 
@@ -49,18 +51,19 @@ public:
 
     } 
 
-    double GetTime(){
+    double GetDeltamsTime(){
         if(_stopped == true)
-            return _ms;
+            return _delta_ms;
         else{
             Stop();
-            return _ms;
+            return _delta_ms;
         }
     }
 
 private:
-    std::chrono::time_point< std::chrono::high_resolution_clock> _StartTimepoint;
-    double _secs,_ms,_mins,_hour;
+    std::chrono::time_point< std::chrono::steady_clock> _StartTimepoint;
+    int64_t _secs,_ms,_mins,_hour;
+    int64_t _delta_ms;
     bool _stopped = false;
 };
 }
