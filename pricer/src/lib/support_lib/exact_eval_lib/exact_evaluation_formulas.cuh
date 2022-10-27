@@ -16,7 +16,7 @@ namespace prcr
 
 
 
-	__host__ int Factorial(int)
+	__host__ int Factorial(int x)
 	{
 		return tgamma(x + 1);
 	}
@@ -123,7 +123,7 @@ namespace prcr
 		double deltat = T / double(m);
 		double sup = -sqrt(deltat) * (rate - sigma * sigma/2) + B;
 		double inf = -sqrt(deltat) * (rate - sigma * sigma/2) - B;
-		return -erf(inf/sqrt(2)) + erf(sup/sqrt(2));
+		return 0.5*( - erf(inf / sqrt(2)) + erf(sup / sqrt(2)));
 	}
 }
 #endif
