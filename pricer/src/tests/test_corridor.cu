@@ -226,12 +226,17 @@ int main(int argc, char** argv)
     bool results_check_gpu = true;
     double exact_value = 0.;
 
-    if (prcr_args->stc_pr_args.exact == true) {
-        exact_value = 1;
-    }
-    else
-        exact_value = 1;
-
+    
+   exact_value = Evaluate_corridor(     prcr_args->eq_descr_args.rate,
+					prcr_args->eq_descr_args.vol,
+					prcr_args->schedule_args.dim,
+					prcr_args->schedule_args.dim * prcr_args->schedule_args.deltat,
+                                        prcr_args->contract_args.K,
+					prcr_args->contract_args.B);
+    
+    std::cout << "exact value: "<< exact_value << std::endl;
+    std::cout << prcr_args->schedule_args.dim * prcr_args->schedule_args.deltat << std::endl;
+    std::cout << prcr_args->schedule_args.dim << std::endl;
     bool GPU = prcr_args->dev_opts.GPU;
     bool CPU = prcr_args->dev_opts.CPU;
     bool status = true;
@@ -252,7 +257,7 @@ int main(int argc, char** argv)
         }
         gpu_final_result /= double(NBLOCKS * TPB);
         double gpu_MC_error = compute_final_error(gpu_squares_sum, gpu_final_result, NBLOCKS * TPB*PPT);
-
+        std::cout << "gpu result:" << gpu_final_result << std::endl;
         double delta;
         delta = gpu_final_result - exact_value;
         if (abs(delta) > 3 * gpu_MC_error)
