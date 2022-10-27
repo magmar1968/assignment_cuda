@@ -190,7 +190,7 @@ simulate_generic(size_t index,
 
 int main(int argc, char** argv)
 {
-    for (double b = 0; b < 2.0; b += 0.25){
+    for (double b = 0; b < 3.0; b += 0.25){
     /*double vec[9];
     vec[0] = 0.0375;
     vec[1] = 0.075;
@@ -249,7 +249,7 @@ int main(int argc, char** argv)
     bool status = true;
 
     std::string filename_output;
-    filename_output = "./data/out_B3b_K05.txt";
+    filename_output = "./data/out_B3b_K075.txt";
     std::ofstream fs;
     fs.open(filename_output, std::fstream::app);
 
