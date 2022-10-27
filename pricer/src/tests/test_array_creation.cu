@@ -1,7 +1,5 @@
-﻿#include "header.cuh"
+﻿#include "../tests/header.cuh"
 #include <iomanip>
-
-#define NSIM 1
 
 
 struct Result
@@ -10,21 +8,21 @@ struct Result
     double p_off2;
 };
 
-bool __host__ run_device(prcr::Pricer_args* prcr_args, Result* host_results,uint *);
-void __global__ kernel(prcr::Pricer_args* prcr_args, Result* dev_results, uint *);
+bool __host__ run_device(prcr::Pricer_args* prcr_args, Result* host_results, uint*);
+void __global__ kernel(prcr::Pricer_args* prcr_args, Result* dev_results, uint*);
 bool __host__   simulate_host(prcr::Pricer_args* prcr_args, Result* host_results, uint*);
 void __device__ simulate_device(prcr::Pricer_args* prcr_args, prcr::Equity_prices*, prcr::Schedule*, Result* dev_results, uint*);
 void __host__ __device__ simulate_generic
 (size_t, prcr::Pricer_args*, prcr::Equity_prices*, prcr::Schedule*, Result*, uint*);
 
 __host__ bool
-run_device(prcr::Pricer_args* prcr_args, Result* host_results, uint * host_seeds)
+run_device(prcr::Pricer_args* prcr_args, Result* host_results, uint* host_seeds)
 {
     using namespace prcr;
     cudaError_t cudaStatus;
     Result* dev_results;
     Pricer_args* dev_prcr_args;
-    uint * dev_seeds;
+    uint* dev_seeds;
 
     size_t NBLOCKS = prcr_args->dev_opts.N_blocks;
     size_t TPB = prcr_args->dev_opts.N_threads;
@@ -35,7 +33,7 @@ run_device(prcr::Pricer_args* prcr_args, Result* host_results, uint * host_seeds
     cudaStatus = cudaMalloc((void**)&dev_results, NBLOCKS * TPB * sizeof(Result));
     if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMalloc2 failed!\n"); }
 
-    cudaStatus = cudaMalloc((void**)&dev_seeds, NBLOCKS * TPB *4 * sizeof(uint));
+    cudaStatus = cudaMalloc((void**)&dev_seeds, NBLOCKS * TPB * 4 * sizeof(uint));
     if (cudaStatus != cudaSuccess) { fprintf(stderr, "cudaMalloc3 failed!\n"); }
 
 
@@ -79,32 +77,17 @@ run_device(prcr::Pricer_args* prcr_args, Result* host_results, uint * host_seeds
 
 
 __global__ void
-kernel(prcr::Pricer_args* prcr_args, Result* dev_results, uint * dev_seeds)
+kernel(prcr::Pricer_args* prcr_args, Result* dev_results, uint* dev_seeds)
 {
     using namespace prcr;
+	
 
-    Equity_description descr(
-        prcr_args->eq_descr_args.dividend_yield,
-        prcr_args->eq_descr_args.rate,
-        prcr_args->eq_descr_args.vol);
-
-    Equity_prices starting_point(
-        prcr_args->eq_price_args.time,
-        prcr_args->eq_price_args.price,
-        &descr);
-
-    Schedule schedule(
-        prcr_args->schedule_args.t_ref,
-        prcr_args->schedule_args.deltat,
-        prcr_args->schedule_args.dim);
-
-    simulate_device(prcr_args, &starting_point, &schedule, dev_results,dev_seeds);
-
-}
-
-
+	double* array = new double[100];
+	array[31] = 1;
+	delete[](array);
+}    	
 __host__ bool
-simulate_host(prcr::Pricer_args* prcr_args, Result* host_results, uint * host_seeds)
+simulate_host(prcr::Pricer_args* prcr_args, Result* host_results, uint* host_seeds)
 {
     using namespace prcr;
     size_t NBLOCKS = prcr_args->dev_opts.N_blocks;
@@ -128,7 +111,7 @@ simulate_host(prcr::Pricer_args* prcr_args, Result* host_results, uint * host_se
 
     for (int index = 0; index < NBLOCKS * TPB; ++index)
     {
-        simulate_generic(index, prcr_args, starting_point, schedule, host_results,host_seeds);
+        simulate_generic(index, prcr_args, starting_point, schedule, host_results, host_seeds);
     }
 
 
@@ -145,12 +128,12 @@ simulate_device(
     prcr::Equity_prices* starting_point,
     prcr::Schedule* schedule,
     Result* dev_results,
-    uint * dev_seeds)
+    uint* dev_seeds)
 {
     size_t index = blockIdx.x * blockDim.x + threadIdx.x;
     size_t NBLOCKS = gridDim.x;
     size_t TPB = blockDim.x;
-    if (index < NBLOCKS * TPB) simulate_generic(index, prcr_args, starting_point, schedule, dev_results,dev_seeds);
+    if (index < NBLOCKS * TPB) simulate_generic(index, prcr_args, starting_point, schedule, dev_results, dev_seeds);
 }
 
 __host__ __device__ void
@@ -159,7 +142,7 @@ simulate_generic(size_t index,
     prcr::Equity_prices* starting_point,
     prcr::Schedule* schedule,
     Result* results,
-    uint * seeds)
+    uint* seeds)
 {
 
     uint seed0 = seeds[0 + index * 4];
@@ -167,15 +150,18 @@ simulate_generic(size_t index,
     uint seed2 = seeds[2 + index * 4];
     uint seed3 = seeds[3 + index * 4];
 
-    rnd::GenCombined gnr_in(seed0,seed1,seed2,seed3);
+    rnd::GenCombined gnr_in(seed0, seed1, seed2, seed3);
 
 
     prcr::Process_eq_lognormal process(&gnr_in, prcr_args->stc_pr_args.exact);
 
-    prcr::Contract_eq_option_vanilla contr_opt(starting_point,
-                                               schedule,
-                                               prcr_args->contract_args.strike_price,
-                                               prcr_args->contract_args.contract_type);
+    prcr::Contract_eq_option_exotic_corridor contr_opt(starting_point,
+        schedule,
+        prcr_args->contract_args.strike_price,
+        prcr_args->contract_args.contract_type,
+        prcr_args->contract_args.B,
+        prcr_args->contract_args.N,
+        prcr_args->contract_args.K);
     size_t _N = prcr_args->mc_args.N_simulations;
     prcr::Option_pricer_montecarlo pricer(&contr_opt, &process, _N);
 
@@ -191,11 +177,10 @@ int main(int argc, char** argv)
 {
     using namespace prcr;
 
-
     srand(time(NULL));
 
 
-    std::string filename = "./data/infile_test_MC3_seeds.txt";
+    std::string filename = "./data/infile_test_array_creation.txt";
     Pricer_args* prcr_args = new Pricer_args;
     ReadInputOption(filename, prcr_args);
 
@@ -220,81 +205,59 @@ int main(int argc, char** argv)
         cpu_results[inc].p_off2 = 0;
     }
 
-    bool results_check_cpu = true;
-    bool results_check_gpu = true;
-    double exact_value = 0.;
-
-    if (prcr_args->stc_pr_args.exact == true) {
-        exact_value = prcr::Evaluate_vanilla(prcr_args->contract_args.contract_type,
-            prcr_args->eq_descr_args.vol,
-            prcr_args->eq_descr_args.rate,
-            prcr_args->eq_price_args.price,
-            prcr_args->schedule_args.t_ref + prcr_args->schedule_args.deltat * (prcr_args->schedule_args.dim - 1),
-            prcr_args->contract_args.strike_price);
-    }
-    else
-        exact_value = 109.36852726843609;  //!!works only if strike price is 0
 
     bool GPU = prcr_args->dev_opts.GPU;
     bool CPU = prcr_args->dev_opts.CPU;
-
-
     bool status = true;
 
-    double gpu_final_result = 0.;
+    std::string filename_output;
+    filename_output = "./data/outfile_puntiB5.txt";
+    std::ofstream fs;
+    fs.open(filename_output, std::fstream::app);
+
+
+
     if (GPU == true)
     {
-        for (int i = 0; i < N_TEST_SIM; ++i)
-            status = status && (!run_device(prcr_args, gpu_results,seeds));
-        
-        
-        
-        double gpu_squares_sum  = 0.;
-        
-        for(size_t i = 0; i < NBLOCKS * TPB; i++)
+       
+        status = run_device(prcr_args, gpu_results, seeds);
+        double gpu_squares_sum = 0.;
+        double gpu_final_result = 0.;
+        for (size_t i = 0; i < NBLOCKS * TPB; i++)
         {
             gpu_final_result += gpu_results[i].p_off;
-            gpu_squares_sum  += gpu_results[i].p_off2;
+            gpu_squares_sum += gpu_results[i].p_off2;
         }
         gpu_final_result /= double(NBLOCKS * TPB);
-        double gpu_MC_error = compute_final_error(gpu_squares_sum, gpu_final_result, NBLOCKS * TPB*PPT);
+        double gpu_MC_error = compute_final_error(gpu_squares_sum, gpu_final_result, NBLOCKS * TPB * PPT);
 
-        double delta;
-        delta = gpu_final_result - exact_value;
-        if (abs(delta) > 3 * gpu_MC_error)
-        {
-            results_check_gpu = false;
-            std::cout << "Errore MC: " << gpu_MC_error << std::endl;
-            std::cout << "Delta: " << delta << std::endl;
-        }
-        
+        fs << NBLOCKS * TPB << "," << prcr_args->schedule_args.dim - 1 << "," <<  "\n";
+
+        fs.close();
+
     }
 
-    double cpu_final_result = 0.;
+
     if (CPU == true)
     {
-        for (int i = 0; i < N_TEST_SIM; ++i)
-            status = simulate_host(prcr_args, cpu_results,seeds);
-        
-        double cpu_squares_sum  = 0.;
-        
-        for(size_t i = 0; i < NBLOCKS * TPB; i++)
+       
+        status = simulate_host(prcr_args, cpu_results, seeds);
+      
+        double cpu_squares_sum = 0.;
+        double cpu_final_result = 0.;
+        for (size_t i = 0; i < NBLOCKS * TPB; i++)
         {
             cpu_final_result += cpu_results[i].p_off;
-            cpu_squares_sum  += cpu_results[i].p_off2;
+            cpu_squares_sum += cpu_results[i].p_off2;
         }
         cpu_final_result /= double(NBLOCKS * TPB);
-        double cpu_MC_error = compute_final_error(cpu_squares_sum, cpu_final_result, NBLOCKS * TPB*PPT);
+        double cpu_MC_error = compute_final_error(cpu_squares_sum, cpu_final_result, NBLOCKS * TPB * PPT);
 
-        double delta;
-        delta = cpu_final_result - exact_value;
-        if (abs(delta) > 3 * cpu_MC_error)
-        {
-            results_check_cpu = false;
-            std::cout << "mean: "      << std::setprecision(12) << cpu_final_result << std::endl;
-            std::cout << "Errore MC: " << cpu_MC_error << std::endl;
-            std::cout << "Delta: "     << delta << std::endl;
-        }
+
+        fs << NBLOCKS * TPB << "," << prcr_args->schedule_args.dim - 1 << "\n";
+
+        fs.close();
+
     }
 
 
@@ -303,28 +266,5 @@ int main(int argc, char** argv)
     delete(prcr_args);
 
 
-    if (CPU == true && GPU == true)
-    {
-        if (abs(cpu_final_result - gpu_final_result) > pow(10, -12))
-            std::cout << "Results are different: delta = " << cpu_final_result - gpu_final_result << std::endl;
-        else
-            std::cout << "gpu and cpu results are equal" << std::endl;
-    }
 
-    if (results_check_cpu && results_check_gpu) {
-        std::cout << "no error encountered" << std::endl;
-        return 0;
-    }
-    else if (results_check_cpu == false and results_check_gpu == true) {
-        std::cerr << "ERROR: cpu simulation failed!" << std::endl;
-        return 1;
-    }
-    else if (results_check_cpu == true and results_check_gpu == false) {
-        std::cerr << "ERROR: gpu simulation failed!" << std::endl;
-        return 2;
-    }
-    else {
-        std::cerr << "ERROR: both cpu and gpu simulations failed! " << std::endl;
-        return 3;
-    }
 }

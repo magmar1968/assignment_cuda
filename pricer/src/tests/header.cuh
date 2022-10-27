@@ -10,7 +10,7 @@
  */
 
 
-
+#include "../lib/support_lib/exact_eval_lib/exact_evaluation_formulas.cuh"
 #include <iostream>
 #include "device_launch_parameters.h"
 #include "../lib/path_gen_lib/path/path.cuh"
