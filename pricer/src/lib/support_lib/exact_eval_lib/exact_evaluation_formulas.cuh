@@ -11,8 +11,15 @@ namespace prcr
 	__host__ double Evaluate_vanilla(const Equity_prices* starting_point, const Contract_eq_option_vanilla* contract);
 	__host__ double Evaluate_vanilla(const char contract_type, const double sigma, const double r, const double S_0, const double T, const double E);
 	__host__ double Evaluate_corridor(Equity_prices* starting_point, const Contract_eq_option_esotic* contract);
+	__host__ double Evaluate_corridor(double rate, double sigam, int m, double T, double K, double B);
+	__host__ double Compute_P_corridor_single_step(double rate, double sigma, int m, double T, double B);
 
 
+
+	__host__ int Factorial(int)
+	{
+		return tgamma(x + 1);
+	}
 
 	__host__ double Evaluate_forward(const double S_0, const double T, const double rate)
 	{
@@ -78,7 +85,45 @@ namespace prcr
 
 	__host__ double Evaluate_corridor(Equity_prices* starting_point, const Contract_eq_option_esotic* contract)
 	{
-		return 0;
+		char ctype = contract->Get_contract_type();
+		if (ctype == 'C')
+		{
+			K = contract->Get_K();
+			B = contract->Get_B();
+			double sigma = starting_point->Get_eq_description()->Get_vol_surface();
+			double r = starting_point->Get_eq_description()->Get_yc();
+			Schedule* sch = contract->Get_schedule();
+			double T = sch->Get_t(sch->Get_dim() - 1);
+			int m = sch->Get_dim();
+			return Evaluate_corridor(r,sigma,m,T,K,B)
+		}
+		else
+		{
+			return -1;
+		}
+
+	}
+
+
+	__host__ double Evaluate_corridor(double rate, double sigma, int m, double T, double K, double B)
+	{
+		estr = min(floor(m * K), m);
+		expected_value = 0;
+		P = Compute_P_corridor_single_step(rate, sigma, m, T, B);
+		for (int n = 0; n < estr; n++)
+		{
+			expected_value += (K - double(m) / double(n)) * double(factorial(m)) / (double(factorial(m-n) * factorilal(n)) * pow(P, n) * pow(P, m - n);
+		}
+		return expected_value;
+	}
+
+
+	__host__ double Compute_P_corridor_single_step(double rate, double sigma, int m, double T, double B)
+	{
+		double deltat = T / double(m);
+		double sup = -sqrt(deltat) * (rate - sigma * sigma/2) + B;
+		double inf = -sqrt(deltat) * (rate - sigma * sigma/2) - B;
+		return -erf(inf/sqrt(2)) + erf(sup/sqrt(2));
 	}
 }
 #endif
