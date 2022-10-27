@@ -108,6 +108,9 @@ namespace prcr
 
 	__host__ double Evaluate_corridor(double rate, double sigma, int m, double T, double K, double B)
 	{
+                std::cout << m << std::endl;
+                std::cout << m*K << std::endl;
+                std::cout << floor(double(m)*K) << std::endl;
 		double estr =int(min(int(floor(m * K)), m));
                 std::cout << "estr" << estr << std::endl;
 		double expected_value = 0;
@@ -117,7 +120,7 @@ namespace prcr
 		for (int n = 0; n <= estr; n++)
 		{
 			std::cout << "n: " << n << std::endl;
-			double a = (K - double(n) / double(m)) * double(Factorial(m)) / (double(Factorial(m-n) * Factorial(n))) * pow(P, n) * pow(P, m - n);
+			double a = (K - double(n) / double(m)) *  double(Factorial(m)) / (double(Factorial(m-n) * Factorial(n))) * pow(P, n) * pow(1-P, m - n);
                         std::cout << a << std::endl;
 			expected_value += a;
 		}
