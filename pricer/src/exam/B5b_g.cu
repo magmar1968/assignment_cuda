@@ -7,18 +7,17 @@
 #define M_STEP 5
 
 
-double __host__ run_device(const prcr::Pricer_args* prcr_args, const uint *, const uint * );
+void __host__ run_device(const prcr::Pricer_args* prcr_args, const uint *, const uint * );
 void __global__ kernel(const prcr::Pricer_args* prcr_args, const  uint *, uint * );
-double __host__   simulate_host(prcr::Pricer_args* prcr_args, uint*, uint);
+void __host__   simulate_host(prcr::Pricer_args* prcr_args, uint*, uint);
 void __device__ simulate_device(const prcr::Pricer_args* prcr_args, prcr::Equity_prices*, prcr::Schedule*, const uint*);
 void __host__ __device__ simulate_generic
 (size_t, const prcr::Pricer_args*, prcr::Equity_prices*, prcr::Schedule*, const uint*);
 
-__host__ double
+__host__ void
 run_device(const prcr::Pricer_args* prcr_args,const uint * host_seeds,const uint * host_m)
 {
     using namespace prcr;
-    Timer * timer = new Timer();
     cudaError_t cudaStatus;
     Pricer_args* dev_prcr_args;
     uint * dev_seeds;
@@ -66,9 +65,7 @@ run_device(const prcr::Pricer_args* prcr_args,const uint * host_seeds,const uint
     cudaFree(dev_prcr_args);
     cudaFree(dev_seeds);
 
-    double time = timer->GetTime();
-    delete(timer);
-    return time;
+    return;
 }
 
 
@@ -99,11 +96,10 @@ kernel(const prcr::Pricer_args* prcr_args, const uint * dev_seeds, uint * dev_m)
 }
 
 
-__host__ double
+__host__ void
 simulate_host(const prcr::Pricer_args* prcr_args, const uint * host_seeds, const uint * host_m)
 {
     using namespace prcr;
-    Timer * timer = new Timer();
     size_t NBLOCKS = prcr_args->dev_opts.N_blocks;
     size_t TPB = prcr_args->dev_opts.N_threads;
 
@@ -132,9 +128,7 @@ simulate_host(const prcr::Pricer_args* prcr_args, const uint * host_seeds, const
     delete(descr);
     delete(starting_point);
     delete(schedule);
-    double time = timer->GetTime();
-    delete(timer);
-    return  time;
+    return;
 }
 
 
@@ -218,15 +212,18 @@ int main(int argc, char** argv)
     cudaDeviceSetLimit(cudaLimitMallocHeapSize, 80000000);
     uint * m_array = new uint[MAX_M];
     size_t m_cont = 0;
+    
     for (size_t m = MIN_M; m < MAX_M; m+=M_STEP){
         m_array[m_cont] = m;
         //simulate
-        double time_gpu,time_cpu;
-
-        time_gpu = run_device(prcr_args,seeds,&m_array[m_cont]);
+        double time_gpu= 0,time_cpu=0;
+        Timer timer_gpu;
+        run_device(prcr_args,seeds,&m_array[m_cont]);
+        time_gpu = timer_gpu.GetDeltamsTime();
         
-        time_cpu = simulate_host(prcr_args,seeds,&m_array[m_cont]);
-        
+        Timer timer_cpu;
+        simulate_host(prcr_args,seeds,&m_array[m_cont]);
+        time_cpu = timer_cpu.GetDeltamsTime();
          
         
         double g = time_cpu/time_gpu;
