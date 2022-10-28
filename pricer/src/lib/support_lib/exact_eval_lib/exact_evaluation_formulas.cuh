@@ -108,20 +108,24 @@ namespace prcr
 
 	__host__ double Evaluate_corridor(double rate, double sigma, int m, double T, double K, double B)
 	{
-                std::cout << m << std::endl;
-                std::cout << m*K << std::endl;
-                std::cout << floor(double(m)*K) << std::endl;
+                if(sigma == 0)
+		{
+			return K;
+		}
+                //std::cout << m << std::endl;
+                //std::cout << m*K << std::endl;
+                //std::cout << floor(double(m)*K) << std::endl;
 		double estr =int(min(int(floor(m * K)), m));
-                std::cout << "estr" << estr << std::endl;
+                //std::cout << "estr" << estr << std::endl;
 		double expected_value = 0;
 		double P = Compute_P_corridor_single_step(rate, sigma, m, T, B);
-                std::cout << "P singola"<< P << std::endl;
-                std::cout << "tempotot" << T << std::endl;
+                //std::cout << "P singola"<< P << std::endl;
+                //std::cout << "tempotot" << T << std::endl;
 		for (int n = 0; n <= estr; n++)
 		{
 			//std::cout << "n: " << n << std::endl;
 			double a = (K - double(n) / double(m)) *  Factorial(m) /( Factorial(m-n) *   Factorial(n)) * pow(P, n) * pow(1-P, m - n);
-                        std::cout << a << std::endl;
+                        //std::cout << a << std::endl;
 			expected_value += a;
 		}
 		return expected_value;
