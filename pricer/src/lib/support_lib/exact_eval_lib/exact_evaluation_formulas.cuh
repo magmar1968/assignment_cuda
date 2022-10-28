@@ -16,7 +16,7 @@ namespace prcr
 
 
 
-	__host__ int Factorial(int x)
+	__host__ double Factorial(int x)
 	{
 		//std::cout << "fact" << x << ": "<< tgamma(double(x + 1)) << std::endl;
 		return tgamma(double(x+1));
@@ -116,11 +116,11 @@ namespace prcr
 		double expected_value = 0;
 		double P = Compute_P_corridor_single_step(rate, sigma, m, T, B);
                 std::cout << "P singola"<< P << std::endl;
-                std::cout << "Kappa" << K << std::endl;
+                std::cout << "tempotot" << T << std::endl;
 		for (int n = 0; n <= estr; n++)
 		{
-			std::cout << "n: " << n << std::endl;
-			double a = (K - double(n) / double(m)) *  double(Factorial(m)) / (double(Factorial(m-n) * Factorial(n))) * pow(P, n) * pow(1-P, m - n);
+			//std::cout << "n: " << n << std::endl;
+			double a = (K - double(n) / double(m)) *  Factorial(m) /( Factorial(m-n) *   Factorial(n)) * pow(P, n) * pow(1-P, m - n);
                         std::cout << a << std::endl;
 			expected_value += a;
 		}
@@ -131,8 +131,8 @@ namespace prcr
 	__host__ double Compute_P_corridor_single_step(double rate, double sigma, int m, double T, double B)
 	{
 		double deltat = T / double(m);
-		double supr = -sqrt(deltat) * (rate - sigma * sigma/2) + B;
-		double infr = -sqrt(deltat) * (rate - sigma * sigma/2) - B;
+		double supr = sqrt(deltat) * (sigma * sigma/2 -rate)/ sigma + B;
+		double infr = sqrt(deltat) * (sigma * sigma/2 -rate)/ sigma - B;
 		return 0.5*( - erf(infr / sqrt(2)) + erf(supr / sqrt(2)));
 	}
 }

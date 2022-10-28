@@ -235,7 +235,7 @@ int main(int argc, char** argv)
 					prcr_args->contract_args.B);
     
     std::cout << "exact value: "<< exact_value << std::endl;
-    std::cout << prcr_args->schedule_args.dim * prcr_args->schedule_args.deltat << std::endl;
+    std::cout << prcr_args->schedule_args.deltat << std::endl;
     std::cout << prcr_args->schedule_args.dim << std::endl;
     bool GPU = prcr_args->dev_opts.GPU;
     bool CPU = prcr_args->dev_opts.CPU;
