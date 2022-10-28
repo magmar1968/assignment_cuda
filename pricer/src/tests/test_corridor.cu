@@ -229,8 +229,8 @@ int main(int argc, char** argv)
     
    exact_value = Evaluate_corridor(     prcr_args->eq_descr_args.rate,
 					prcr_args->eq_descr_args.vol,
-					prcr_args->schedule_args.dim,
-					prcr_args->schedule_args.dim * prcr_args->schedule_args.deltat,
+					prcr_args->schedule_args.dim - 1,
+					(prcr_args->schedule_args.dim - 1) * prcr_args->schedule_args.deltat,
                                         prcr_args->contract_args.K,
 					prcr_args->contract_args.B);
     
@@ -285,6 +285,7 @@ int main(int argc, char** argv)
         cpu_final_result /= double(NBLOCKS * TPB);
         double cpu_MC_error = compute_final_error(cpu_squares_sum, cpu_final_result, NBLOCKS * TPB*PPT);
 
+        std::cout << "cpu result:" << cpu_final_result << std::endl;
         double delta;
         delta = cpu_final_result - exact_value;
         if (abs(delta) > 3 * cpu_MC_error)
