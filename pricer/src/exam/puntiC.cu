@@ -208,14 +208,14 @@ int main(int argc, char** argv)
     printf("Simulating...\n\n");
     printf("\t\t\t\t\t");
 
-    for (int i = 0; i <  16; i++)
+    for (int i = 0; i <  12; i++)
         std::cout <<"▒";
 
     printf("\r");
     printf("\t\t\t\t\t");
     
     
-    for(double b = 0.125 ; b <=2.1 ; b+=0.125)
+    for(double b = 0.125; b <4.1 ; b+=0.25)
     {
     using namespace prcr;
 
