@@ -15,6 +15,7 @@ namespace prcr
 	__host__ double Evaluate_corridor_asymptotic(Equity_prices* starting_point, Contract_eq_option_exotic_corridor* contract);
 	__host__ double Evaluate_corridor_asymptotic(double rate, double sigam, int m, double T, double K, double B);
 	__host__ double Compute_P_corridor_single_step(double rate, double sigma, int m, double T, double B);
+	__host__ double Gaussian_pdf(double w);
 
 
 
@@ -22,6 +23,11 @@ namespace prcr
 	{
 		//std::cout << "fact" << x << ": "<< tgamma(double(x + 1)) << std::endl;
 		return tgamma(double(x+1));
+	}
+
+	__host__ double Gaussian_pdf(double w, double sigma = 1)
+	{
+		return 1. / sqrt(2 * M_PI * sigma * sigma) * exp(-(w * w) / (2 * sigma * sigma));
 	}
 
 	__host__ double Evaluate_forward(const double S_0, const double T, const double rate)
@@ -162,7 +168,11 @@ namespace prcr
 			return k;
 		}
 		double mu = Compute_P_corridor_single_step(rate, sigma, m, 0, B);
-                std::cout << mu << std::endl;
+		double delta_t = T / double(m);
+		double alpha = (sigma * sigma / 2 - rate) / sigma;
+		mu += sqrt(deltat) * alpha / (sigma * sqrt(2 * M_PI)) *
+				(Gaussian_pdf(-alpha * sqrt(deltat) - B) - Gaussian_pdf(-alpha * sqrt(deltat) + B));
+			
 		double stddev = sqrt((mu * (1 - mu)) / m );
 
 		double a = 0.5 * (k -mu) * (erf((k - mu) / (sqrt(2) * stddev)) - erf(-mu / (sqrt(2) * stddev)));
