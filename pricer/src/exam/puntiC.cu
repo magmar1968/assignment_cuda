@@ -263,7 +263,7 @@ int main(int argc, char** argv)
     std::ofstream fs;
     fs.open(filename_output, std::fstream::app);
 
-    double exact_result = Evaluate_corridor( prcr_args->eq_descr_args.rate,
+    double exact_result = Evaluate_corridor_asymptotic( prcr_args->eq_descr_args.rate,
 					     prcr_args->eq_descr_args.vol,
 					     prcr_args->schedule_args.dim - 1,
 					     ( prcr_args->schedule_args.dim - 1) * prcr_args->schedule_args.deltat,
