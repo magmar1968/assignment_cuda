@@ -208,17 +208,15 @@ int main(int argc, char** argv)
     printf("Simulating...\n\n");
     printf("\t\t\t\t\t");
 
-    for (int i = 0; i <  21; i++)
+    for (int i = 0; i <  16; i++)
         std::cout <<"▒";
 
     printf("\r");
     printf("\t\t\t\t\t");
     
     
-    for(size_t m = 0 ; m <=101 ; m+=5)
+    for(double b = 0.125 ; b <=2.1 ; b+=0.125)
     {
-    std::cout << "█";
-    fflush(stdout);
     using namespace prcr;
 
     srand(time(NULL));
@@ -233,11 +231,8 @@ int main(int argc, char** argv)
     std::string filename = "./data/infile_puntiC.txt";
     Pricer_args* prcr_args = new Pricer_args;
     ReadInputOption(filename, prcr_args);
-	
+    prcr_args->contract_args.B = b;	
     size_t NBLOCKS = prcr_args->dev_opts.N_blocks;
-    prcr_args->schedule_args.dim = m+1;
-    if(m == 0)
-	prcr_args->schedule_args.dim = 2;
     size_t TPB = prcr_args->dev_opts.N_threads;
     size_t PPT = prcr_args->mc_args.N_simulations;
     // gen seeds 
@@ -290,7 +285,7 @@ int main(int argc, char** argv)
         gpu_final_result /= double(NBLOCKS * TPB);
         double gpu_MC_error = compute_final_error(gpu_squares_sum, gpu_final_result, NBLOCKS * TPB * PPT);
         bool controllo = (abs(gpu_final_result-exact_result) < 3 * gpu_MC_error);
-        fs << m << "," << std::setprecision(7) << gpu_final_result << "," << std::setprecision(7) << exact_result << "," << gpu_MC_error << "," << controllo << "\n";
+        fs <<  b << "," << std::setprecision(7) << gpu_final_result << "," << std::setprecision(7) << exact_result << "," << gpu_MC_error << "," << controllo << "\n";
 
         fs.close();
 
@@ -313,7 +308,7 @@ int main(int argc, char** argv)
         double cpu_MC_error = compute_final_error(cpu_squares_sum, cpu_final_result, NBLOCKS * TPB * PPT);
 
 
-        fs << m << "," <<  cpu_final_result << "," << exact_result << "," << cpu_MC_error << "\n";
+        fs << b << "," <<  cpu_final_result << "," << exact_result << "," << cpu_MC_error << "\n";
 
         fs.close();
 
@@ -325,7 +320,8 @@ int main(int argc, char** argv)
     delete(prcr_args);
 
 
-
+    std::cout << "█";
+    fflush(stdout);
 
     
     
