@@ -2,7 +2,7 @@
 #GPU 1   !both option can be enabled at the same time but at least one must be true
 
 
-#T 20     ! simulation time range in years
+#T 10     ! simulation time range in years
 #m 10   ! number of time steps 
 
 
@@ -15,7 +15,7 @@
 #N_blocks 120 !N of blocks to use for the computation. 
 #N_threads 32 !N of thread per block. 
 
-#N_simulations 20
+#N_simulations 20000
 
 !#yc_structured !decomment if you'd like to introduce a structured yield curve
 !#yc_rates
@@ -25,7 +25,7 @@
 
 #eq_descr_dy         0.
 #yc_rate             0.0015
-#volatility          0.003 !volatility of the pricer
+#volatility          0.6 !volatility of the pricer
 
 
 !starting conditions
@@ -38,7 +38,7 @@
 #contract_type P  !put C for a call contract or P for a put contract
 #strike_price 0
 #B 0.5 !0, 0.25, 0.5, 0.75, 1, 2, 4 <- possible values
-#K 0.6   !0, 0.1, 0.2 ...
+#K 0.75   !0, 0.1, 0.2 ...
 #Noz 1    !1EUR
 
 
