@@ -208,14 +208,14 @@ int main(int argc, char** argv)
     printf("Simulating...\n\n");
     printf("\t\t\t\t\t");
 
-    for (int i = 0; i <  12; i++)
+    for (int i = 0; i <  41; i++)
         std::cout <<"▒";
 
     printf("\r");
     printf("\t\t\t\t\t");
     
     
-    for(double b = 0.125; b <4.1 ; b+=0.25)
+    for(double k = 0.0; k <1.001 ; k+=0.025)
     {
     using namespace prcr;
 
@@ -231,7 +231,7 @@ int main(int argc, char** argv)
     std::string filename = "./data/infile_puntiC.txt";
     Pricer_args* prcr_args = new Pricer_args;
     ReadInputOption(filename, prcr_args);
-    prcr_args->contract_args.B = b;	
+    prcr_args->contract_args.K = k;	
     size_t NBLOCKS = prcr_args->dev_opts.N_blocks;
     size_t TPB = prcr_args->dev_opts.N_threads;
     size_t PPT = prcr_args->mc_args.N_simulations;
@@ -285,7 +285,7 @@ int main(int argc, char** argv)
         gpu_final_result /= double(NBLOCKS * TPB);
         double gpu_MC_error = compute_final_error(gpu_squares_sum, gpu_final_result, NBLOCKS * TPB * PPT);
         bool controllo = (abs(gpu_final_result-exact_result) < 3 * gpu_MC_error);
-        fs <<  b << "," << std::setprecision(7) << gpu_final_result << "," << std::setprecision(7) << exact_result << "," << gpu_MC_error << "," << controllo << "\n";
+        fs <<  k << "," << std::setprecision(7) << gpu_final_result << "," << std::setprecision(7) << exact_result << "," << gpu_MC_error << "," << controllo << "\n";
 
         fs.close();
 
@@ -308,7 +308,7 @@ int main(int argc, char** argv)
         double cpu_MC_error = compute_final_error(cpu_squares_sum, cpu_final_result, NBLOCKS * TPB * PPT);
 
 
-        fs << b << "," <<  cpu_final_result << "," << exact_result << "," << cpu_MC_error << "\n";
+        fs << k << "," <<  cpu_final_result << "," << exact_result << "," << cpu_MC_error << "\n";
 
         fs.close();
 
