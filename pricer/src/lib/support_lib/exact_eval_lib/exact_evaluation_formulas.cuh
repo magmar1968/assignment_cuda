@@ -12,6 +12,8 @@ namespace prcr
 	__host__ double Evaluate_vanilla(const char contract_type, const double sigma, const double r, const double S_0, const double T, const double E);
 	__host__ double Evaluate_corridor(Equity_prices* starting_point, const Contract_eq_option_exotic_corridor* contract);
 	__host__ double Evaluate_corridor(double rate, double sigam, int m, double T, double K, double B);
+	__host__ double Evaluate_corridor_asymptotic(Equity_prices* starting_point, const Contract_eq_option_exotic_corridor* contract);
+	__host__ double Evaluate_corridor_asymptotic(double rate, double sigam, int m, double T, double K, double B);
 	__host__ double Compute_P_corridor_single_step(double rate, double sigma, int m, double T, double B);
 
 
@@ -129,6 +131,43 @@ namespace prcr
 			expected_value += a;
 		}
 		return expected_value;
+	}
+
+
+	__host__ double Evaluate_corridor_asymptotic(Equity_prices* starting_point, const Contract_eq_option_exotic_corridor* contract)
+	{
+		char ctype = contract->Get_contract_type();
+		if (ctype == 'C')
+		{
+			double K = contract->Get_K();
+			double B = contract->Get_B();
+			double sigma = starting_point->Get_eq_description()->Get_vol_surface();
+			double r = starting_point->Get_eq_description()->Get_yc();
+			Schedule* sch = contract->Get_schedule();
+			double T = sch->Get_t(sch->Get_dim() - 1);
+			int m = sch->Get_dim();
+			return Evaluate_corridor_asymptotic(r, sigma, m, T, K, B);
+		}
+		else
+		{
+			return -1;
+		}
+	}
+
+
+	__host__ double Evaluate_corridor_asymptotic(double rate, double sigam, int m, double T, double K, double B)
+	{
+		if (sigma == 0)
+		{
+			return K;
+		}
+		double mu = Compute_P_corridor_single_step(rate, sigma, m, 0, B);
+		double stddev = P * (1 - P) / sqrt(m);
+
+		double a = 0.5 * (k - u) * sqrt(stddev) * (erf((k - mu) / (sqrt(2) * stddev)) - erf(-mu / (sqrt(2) * stddev)));
+		double b = stddev * stddev / sqrt(2 * M_PI * stddev) * (exp(-(mu * mu) / (2 * stddev * stddev)) - exp(-(k - mu) * (k - mu) / (2 * stddev * stddev)));
+		return  a + b;
+			
 	}
 
 
