@@ -162,10 +162,11 @@ namespace prcr
 			return k;
 		}
 		double mu = Compute_P_corridor_single_step(rate, sigma, m, 0, B);
+                std::cout << mu << std::endl;
 		double stddev = sqrt((mu * (1 - mu)) / m );
 
-		double a = 0.5 * (k -mu) * sqrt(stddev) * (erf((k - mu) / (sqrt(2) * stddev)) - erf(-mu / (sqrt(2) * stddev)));
-		double b = stddev * stddev / sqrt(2 * M_PI * stddev) * (exp(-(mu * mu) / (2 * stddev * stddev)) - exp(-(k - mu) * (k - mu) / (2 * stddev * stddev)));
+		double a = 0.5 * (k -mu) * (erf((k - mu) / (sqrt(2) * stddev)) - erf(-mu / (sqrt(2) * stddev)));
+		double b = stddev / sqrt(2 * M_PI * stddev) * (exp(-(mu * mu) / (2 * stddev * stddev)) - exp(-(k - mu) * (k - mu) / (2 * stddev * stddev)));
 		return  a - b;
 			
 	}
