@@ -208,14 +208,14 @@ int main(int argc, char** argv)
     printf("Simulating...\n\n");
     printf("\t\t\t\t\t");
 
-    for (int i = 0; i <  21; i++)
+    for (int i = 0; i <  15; i++)
         std::cout <<"▒";
 
     printf("\r");
     printf("\t\t\t\t\t");
     
     
-    for(double k = 0.5125; k <1.001 ; k+=0.025)
+    for(int m = 16; m < 31; m+=1)
     {
     using namespace prcr;
 
@@ -231,7 +231,9 @@ int main(int argc, char** argv)
     std::string filename = "./data/infile_puntiC.txt";
     Pricer_args* prcr_args = new Pricer_args;
     ReadInputOption(filename, prcr_args);
-    prcr_args->contract_args.K = k;	
+    prcr_args->schedule_args.dim =m+1;	
+    if(m == 0)
+	prcr_args->schedule_args.dim = 2;
     size_t NBLOCKS = prcr_args->dev_opts.N_blocks;
     size_t TPB = prcr_args->dev_opts.N_threads;
     size_t PPT = prcr_args->mc_args.N_simulations;
@@ -263,13 +265,20 @@ int main(int argc, char** argv)
     std::ofstream fs;
     fs.open(filename_output, std::fstream::app);
 
-    double exact_result = Evaluate_corridor( prcr_args->eq_descr_args.rate,
+    double asymp_result = Evaluate_corridor_asymptotic( prcr_args->eq_descr_args.rate,
 					     prcr_args->eq_descr_args.vol,
 					     prcr_args->schedule_args.dim - 1,
 					     ( prcr_args->schedule_args.dim - 1) * prcr_args->schedule_args.deltat,
                                              prcr_args->contract_args.K,
 					     prcr_args->contract_args.B);
 
+    double exact_result = Evaluate_corridor( prcr_args->eq_descr_args.rate,
+                                             prcr_args->eq_descr_args.vol,
+                                             prcr_args->schedule_args.dim - 1,
+                                             ( prcr_args->schedule_args.dim - 1) * prcr_args->schedule_args.deltat,
+                                             prcr_args->contract_args.K,
+                                             prcr_args->contract_args.B);
+    
     if (GPU == true)
     {   
         //Timer timer_gpu;
@@ -285,7 +294,8 @@ int main(int argc, char** argv)
         gpu_final_result /= double(NBLOCKS * TPB);
         double gpu_MC_error = compute_final_error(gpu_squares_sum, gpu_final_result, NBLOCKS * TPB * PPT);
         bool controllo = (abs(gpu_final_result-exact_result) < 3 * gpu_MC_error);
-        fs <<  k << "," << std::setprecision(7) << gpu_final_result << "," << std::setprecision(7) << exact_result << "," << gpu_MC_error << "," << controllo << "\n";
+        fs <<  m << "," << std::setprecision(7) << gpu_final_result << "," << std::setprecision(7) << asymp_result << "," 
+           << std::setprecision(7) << exact_result << ","<< gpu_MC_error << "," << controllo << "\n";
 
         fs.close();
 
@@ -308,7 +318,7 @@ int main(int argc, char** argv)
         double cpu_MC_error = compute_final_error(cpu_squares_sum, cpu_final_result, NBLOCKS * TPB * PPT);
 
 
-        fs << k << "," <<  cpu_final_result << "," << exact_result << "," << cpu_MC_error << "\n";
+        fs << m << "," <<  cpu_final_result << "," << exact_result << "," << cpu_MC_error << "\n";
 
         fs.close();
 
