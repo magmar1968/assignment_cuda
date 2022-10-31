@@ -208,14 +208,14 @@ int main(int argc, char** argv)
     printf("Simulating...\n\n");
     printf("\t\t\t\t\t");
 
-    for (int i = 0; i <  15; i++)
+    for (int i = 0; i <  30; i++)
         std::cout <<"▒";
 
     printf("\r");
     printf("\t\t\t\t\t");
     
     
-    for(int m = 61; m < 90; m+=1)
+    for(int m = 1; m < 31 ; m+=1)
     {
     using namespace prcr;
 
@@ -261,7 +261,7 @@ int main(int argc, char** argv)
     bool status = true;
 
     std::string filename_output;
-    filename_output = "./data/out_C_m.txt";
+    filename_output = "./data/out_C_4_01.txt";
     std::ofstream fs;
     fs.open(filename_output, std::fstream::app);
 

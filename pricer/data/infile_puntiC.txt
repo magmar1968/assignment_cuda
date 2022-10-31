@@ -2,7 +2,7 @@
 #GPU 1   !both option can be enabled at the same time but at least one must be true
 
 
-#T 1     ! simulation time range in years
+#T 0.1     ! simulation time range in years
 #m 100   ! number of time steps 
 
 
