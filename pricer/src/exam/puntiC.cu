@@ -208,14 +208,14 @@ int main(int argc, char** argv)
     printf("Simulating...\n\n");
     printf("\t\t\t\t\t");
 
-    for (int i = 0; i <  30; i++)
+    for (int i = 0; i <  21; i++)
         std::cout <<"▒";
 
     printf("\r");
     printf("\t\t\t\t\t");
     
     
-    for(int m =100; m < 150 ; m+=10)
+    for(double k =0.0; k < 1.025 ; k+=0.05)
     {
     using namespace prcr;
 
@@ -231,9 +231,9 @@ int main(int argc, char** argv)
     std::string filename = "./data/infile_puntiC.txt";
     Pricer_args* prcr_args = new Pricer_args;
     ReadInputOption(filename, prcr_args);
-    prcr_args->schedule_args.dim =m+1;	
-    if(m == 0)
-	prcr_args->schedule_args.dim = 2;
+    prcr_args->contract_args.K=k;	
+    //if(m == 0)
+	//prcr_args->schedule_args.dim = 2;
     size_t NBLOCKS = prcr_args->dev_opts.N_blocks;
     size_t TPB = prcr_args->dev_opts.N_threads;
     size_t PPT = prcr_args->mc_args.N_simulations;
@@ -261,7 +261,7 @@ int main(int argc, char** argv)
     bool status = true;
 
     std::string filename_output;
-    filename_output = "./data/out_C_4_1.txt";
+    filename_output = "./data/out_C_4_m100.txt";
     std::ofstream fs;
     fs.open(filename_output, std::fstream::app);
 
@@ -294,7 +294,7 @@ int main(int argc, char** argv)
         gpu_final_result /= double(NBLOCKS * TPB);
         double gpu_MC_error = compute_final_error(gpu_squares_sum, gpu_final_result, NBLOCKS * TPB * PPT);
         bool controllo = (abs(gpu_final_result-exact_result) < 3 * gpu_MC_error);
-        fs <<  m << "," << std::setprecision(7) << gpu_final_result << "," << std::setprecision(7) << asymp_result << "," 
+        fs << k << "," << std::setprecision(7) << gpu_final_result << "," << std::setprecision(7) << asymp_result << "," 
            << std::setprecision(7) << exact_result << ","<< gpu_MC_error << "," << controllo << "\n";
 
         fs.close();
@@ -318,7 +318,7 @@ int main(int argc, char** argv)
         double cpu_MC_error = compute_final_error(cpu_squares_sum, cpu_final_result, NBLOCKS * TPB * PPT);
 
 
-        fs << m << "," <<  cpu_final_result << "," << exact_result << "," << cpu_MC_error << "\n";
+        fs << k << "," <<  cpu_final_result << "," << exact_result << "," << cpu_MC_error << "\n";
 
         fs.close();
 
