@@ -215,7 +215,7 @@ int main(int argc, char** argv)
     printf("\t\t\t\t\t");
     
     
-    for(int m =31; m < 61 ; m+=1)
+    for(int m =90; m < 151 ; m+=5)
     {
     using namespace prcr;
 
@@ -261,7 +261,7 @@ int main(int argc, char** argv)
     bool status = true;
 
     std::string filename_output;
-    filename_output = "./data/out_C_4_01.txt";
+    filename_output = "./data/out_C_4_1.txt";
     std::ofstream fs;
     fs.open(filename_output, std::fstream::app);
 
