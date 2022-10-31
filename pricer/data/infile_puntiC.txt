@@ -2,7 +2,7 @@
 #GPU 1   !both option can be enabled at the same time but at least one must be true
 
 
-#T 1     ! simulation time range in years
+#T 0.001     ! simulation time range in years
 #m 100   ! number of time steps 
 
 
@@ -15,7 +15,7 @@
 #N_blocks 120 !N of blocks to use for the computation. 
 #N_threads 32 !N of thread per block. 
 
-#N_simulations 50000
+#N_simulations 50
 
 !#yc_structured !decomment if you'd like to introduce a structured yield curve
 !#yc_rates
@@ -24,7 +24,7 @@
 
 
 #eq_descr_dy         0.
-#yc_rate             0.0015
+#yc_rate             0.1125
 #volatility          0.15 !volatility of the pricer
 
 
