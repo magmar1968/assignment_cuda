@@ -183,6 +183,15 @@ namespace prcr
 	}
 
 
+	/*if (sigma == 0)
+	{
+		return k;
+	}
+	double mu = Compute_P_corridor_single_step(rate, sigma, m, 0, B);
+	return k - mu:*/
+
+
+
 	__host__ double Compute_P_corridor_single_step(double rate, double sigma, int m, double T, double B)
 	{
 		double deltat = T / double(m);
