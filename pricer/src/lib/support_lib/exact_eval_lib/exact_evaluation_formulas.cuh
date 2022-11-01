@@ -188,7 +188,10 @@ namespace prcr
 		return k;
 	}
 	double mu = Compute_P_corridor_single_step(rate, sigma, m, 0, B);
-	return k - mu:*/
+	if(mu < k)
+		return k - mu;
+	else
+		return 0;*/
 
 
 
