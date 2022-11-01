@@ -168,11 +168,11 @@ namespace prcr
 			return k;
 		}
 		double mu = Compute_P_corridor_single_step(rate, sigma, m, 0, B);
-                /*
-		double deltat = T / double(m);
-	        double alpha = (sigma * sigma / 2 - rate) / sigma;
-		mu += sqrt(deltat) * alpha  *(+Gaussian_pdf(alpha * sqrt(deltat) - B) - Gaussian_pdf(alpha * sqrt(deltat) + B));
-		*/	
+                
+		//double deltat = T / double(m);
+	        //double alpha = (sigma * sigma / 2 - rate) / sigma;
+		//mu += sqrt(deltat) * alpha  *(+Gaussian_pdf(alpha * sqrt(deltat) - B) - Gaussian_pdf(alpha * sqrt(deltat) + B));
+			
 		double stddev = sqrt((mu * (1 - mu)) / m );
 
 		double a = 0.5 * (k -mu) * (erf((k - mu) / (sqrt(2) * stddev)) - erf(-mu / (sqrt(2) * stddev)));
@@ -180,7 +180,7 @@ namespace prcr
                 //std::cout << a << "and" << b << std::endl;
 		return  a - b;
 			
-	}
+	
 
 
 	/*if (sigma == 0)
@@ -191,9 +191,9 @@ namespace prcr
 	if(mu < k)
 		return k - mu;
 	else
-		return 0;*/
-
-
+		return 0;
+	*/
+	}
 
 	__host__ double Compute_P_corridor_single_step(double rate, double sigma, int m, double T, double B)
 	{

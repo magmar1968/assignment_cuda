@@ -215,7 +215,7 @@ int main(int argc, char** argv)
     printf("\t\t\t\t\t");
     
     
-    for(double k =0.95; k < 1.025 ; k+=0.05)
+    for(double k =0.5; k < 0.9025 ; k+=0.025)
     {
     using namespace prcr;
 
