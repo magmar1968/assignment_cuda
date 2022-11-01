@@ -215,7 +215,7 @@ int main(int argc, char** argv)
     printf("\t\t\t\t\t");
     
     
-    for(double k =0.0; k < 1.025 ; k+=0.05)
+    for(double k =0.95; k < 1.025 ; k+=0.05)
     {
     using namespace prcr;
 
@@ -261,7 +261,7 @@ int main(int argc, char** argv)
     bool status = true;
 
     std::string filename_output;
-    filename_output = "./data/out_C_4_m100.txt";
+    filename_output = "./data/out_C_4_m500.txt";
     std::ofstream fs;
     fs.open(filename_output, std::fstream::app);
 

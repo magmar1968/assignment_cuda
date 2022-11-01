@@ -3,7 +3,7 @@
 
 
 #T 1     ! simulation time range in years
-#m 200   ! number of time steps 
+#m 500   ! number of time steps 
 
 
 #pr_exact 1  
