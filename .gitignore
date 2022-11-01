@@ -5,7 +5,7 @@
 #ignore data
 *.dat
 #ignore jupyter notebook
-*.ipynb
+//*.ipynb
 #ignore obj
 *obj
 #ignore bin
