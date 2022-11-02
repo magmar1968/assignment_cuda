@@ -211,16 +211,14 @@ simulate_generic(size_t index,
     uint seed2 = seeds[2 + index * 4];
     uint seed3 = seeds[3 + index * 4];
 
-    double p_off;
-    double p_off2;
     rnd::GenCombined gnr_in(seed0,seed1,seed2,seed3);
 
 
-    prcr::Process process;
+    prcr::Process * process = NULL;
     if(prcr_args->stc_pr_args.proc_type == "lognormal"){
-        process = prcr::Process_eq_lognormal(&gnr_in, prcr_args->stc_pr_args.exact);
+        process = new prcr::Process_eq_lognormal(&gnr_in, prcr_args->stc_pr_args.exact);
     }else{
-        process = prcr::Process_eq_binomial(&gnr_in);
+        process = new prcr::Process_eq_binomial(&gnr_in);
     }
 
 
@@ -229,11 +227,12 @@ simulate_generic(size_t index,
                                                prcr_args->contract_args.strike_price,
                                                prcr_args->contract_args.contract_type);
     size_t _N = prcr_args->mc_args.N_simulations;
-    prcr::Option_pricer_montecarlo pricer(&contr_opt, &process, _N);
+    prcr::Option_pricer_montecarlo pricer(&contr_opt, process, _N);
 
 
     res->p_off=pricer.Get_price();
     res->p_off2=pricer.Get_price_square();
+    delete(process);
 }
 
 
