@@ -6,8 +6,8 @@ namespace prcr
     __host__ __device__
     Option_pricer_montecarlo::Option_pricer_montecarlo(
                     Contract_option      *contract_option,
-                    Process_eq_lognormal *process,
-                    size_t             N)
+                    Process              *process,
+                    size_t                N)
             :Option_pricer(contract_option,process),_N(N)
     {
         simulate_option();

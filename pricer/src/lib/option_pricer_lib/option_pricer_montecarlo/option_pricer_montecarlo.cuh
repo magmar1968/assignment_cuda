@@ -22,7 +22,7 @@ namespace prcr
       HD Option_pricer_montecarlo(){}
       HD Option_pricer_montecarlo(
                   Contract_option      *contract_option,
-                  Process_eq_lognormal *process,
+                  Process              *process,
                   size_t             N);
       HD ~Option_pricer_montecarlo(){}
       //getters & setters

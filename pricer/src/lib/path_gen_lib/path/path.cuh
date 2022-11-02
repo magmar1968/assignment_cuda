@@ -18,7 +18,7 @@ namespace prcr
 	private:
 		Equity_prices  * _starting_point;
 		Schedule       * _schedule; 
-		Process_eq_lognormal * _process_eq_lognormal;
+		Process        * _process;
 		double         * _eq_prices_scenario;
 		size_t           _dim;  //number of steps
 		size_t           _start_ind;
@@ -30,7 +30,7 @@ namespace prcr
 		HD Path(void){};
 		HD Path(Equity_prices* starting_point,
 				Schedule     * schedule,
-				Process_eq_lognormal   * process_eq);
+				Process      * process_eq);
 		HD Path(Path* path);
 		HD virtual ~Path(void);
 		

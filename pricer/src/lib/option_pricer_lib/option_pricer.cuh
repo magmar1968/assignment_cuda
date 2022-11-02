@@ -12,13 +12,13 @@ namespace prcr
   {
     protected:// è una buona pratica?
       Contract_option      * _contract_option ;
-      Process_eq_lognormal * _process ;
+      Process              * _process ;
 
     public:
   // Constructors & destructors
       HD Option_pricer(void){}
       HD Option_pricer(Contract_option      *contract_option,
-                      Process_eq_lognormal  *process)
+                      Process               *process)
           :_contract_option(contract_option),_process(process)
       {}
       HD virtual ~Option_pricer(void) {};
