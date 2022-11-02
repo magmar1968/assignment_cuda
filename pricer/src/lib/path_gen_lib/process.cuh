@@ -2,6 +2,7 @@
 #define __PROCESS__
 
 #include "../support_lib/myRandom/myRandom.cuh"
+#include "../equity_lib/equity_prices.cuh"
 namespace prcr{
 
   // cuda macro
@@ -39,6 +40,11 @@ namespace prcr{
           return -100;
           // exit(2);
       }
+
+      HD virtual double Get_new_eq_price(Equity_description * eq_descr,
+                        double eq_price,
+                        double w,
+                        double delta_t)=0;
 
 
   };

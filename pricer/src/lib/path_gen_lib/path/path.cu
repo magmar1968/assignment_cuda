@@ -6,8 +6,8 @@ namespace prcr
 	__host__ __device__
 	Path::Path(Equity_prices * starting_point,
 			   Schedule      * schedule,
-			   Process_eq_lognormal   * process_eq)
-		:_starting_point(starting_point), _schedule(schedule), _process_eq_lognormal(process_eq)
+			   Process       * process_eq)
+		:_starting_point(starting_point), _schedule(schedule), _process(process_eq)
 	{
 		
 		_dim = _schedule -> Get_dim(); // n schedule steps
@@ -47,9 +47,9 @@ namespace prcr
 		}
 		
 		double delta_t = _schedule->Get_t(_start_ind) - start_t;   //first step, from starting_point
-		random_number = _process_eq_lognormal->Get_random_gaussian();
+		random_number = _process->Get_random_gaussian();
 		_eq_prices_scenario[_start_ind] = 
-		                _process_eq_lognormal->Get_new_eq_price(_starting_point->Get_eq_description(), 
+		                _process->Get_new_eq_price(_starting_point->Get_eq_description(), 
 		                                                        _starting_point->Get_price(), 
 																random_number, 
 																delta_t);
@@ -58,9 +58,9 @@ namespace prcr
 		{
 			delta_t = _schedule->Get_t(j) - _schedule->Get_t(j-1);
 
-			random_number = _process_eq_lognormal->Get_random_gaussian(); 
+			random_number = _process->Get_random_gaussian(); 
 			_eq_prices_scenario[j] = 
-				_process_eq_lognormal->Get_new_eq_price(_starting_point->Get_eq_description(),
+				_process->Get_new_eq_price(_starting_point->Get_eq_description(),
 				                                        _eq_prices_scenario[j - 1],
 														random_number,
 														delta_t); 
