@@ -96,7 +96,7 @@ run_device(const prcr::Pricer_args* prcr_args,const uint * host_seeds,const uint
         fprintf(stderr, "%s\n", cudaGetErrorString(cudaStatus));
     }
 
-    cudaStatus = cudaMemcpy(dev_res, host_res, NBLOCKS * TPB * 4 * sizeof(Result), cudaMemcpyHostToDevice);
+    cudaStatus = cudaMemcpy(dev_res, host_res, NBLOCKS * TPB * sizeof(Result), cudaMemcpyHostToDevice);
     if (cudaStatus != cudaSuccess) {
         fprintf(stderr, "cudaMemcpy4 failed!\n");
         fprintf(stderr, "%s\n", cudaGetErrorString(cudaStatus));

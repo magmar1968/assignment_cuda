@@ -3,7 +3,7 @@
 
 #include "../process.cuh"
 #include "../../support_lib/myDouble_lib/myudouble.cuh"
-#include "../../equity_lib/equity_prices.cuh"
+
 
 // cuda macro
 
