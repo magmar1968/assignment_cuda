@@ -279,7 +279,7 @@ int main(int argc, char** argv)
         //simulate
         cudaSetDevice(1);
         cudaDeviceSetLimit(cudaLimitMallocHeapSize, 80000000);
-        strcpy(prcr_args->stc_pr_args.proc_type, "lognormal");
+        strcpy(prcr_args->stc_pr_args.proc_type, "binomial");
         run_device(prcr_args,seeds,&m_array[m_cont],results_lognorm);
 
         cudaSetDevice(2);
