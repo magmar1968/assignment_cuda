@@ -20,6 +20,7 @@
 #include "../lib/support_lib/myRandom/myRandom_gnr/tausworth.cuh"
 #include "../lib/support_lib/myRandom/myRandom_gnr/linCongruential.cuh"
 #include "../lib/path_gen_lib/process_eq_imp/process_eq_lognormal.cuh"
+#include "../lib/path_gen_lib/process_eq_imp/process_eq_binomial.cuh"
 #include "../lib/equity_lib/schedule_lib/schedule.cuh"
 #include "../lib/equity_lib/yield_curve_lib/yield_curve.cuh"
 #include "../lib/equity_lib/yield_curve_lib/yield_curve_flat.cuh"
