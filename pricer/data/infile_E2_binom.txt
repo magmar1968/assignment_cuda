@@ -16,7 +16,7 @@
 #N_blocks  120 !N of blocks to use for the computation. 
 #N_threads 256 !N of thread per block. 
 
-#N_simulations 200
+#N_simulations 400
 
 !#yc_structured !decomment if you'd like to introduce a structured yield curve
 !#yc_rates
