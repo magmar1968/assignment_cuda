@@ -163,7 +163,7 @@ namespace prcr
 
 	__host__ double Evaluate_corridor_asymptotic(double rate, double sigma, int m, double T, double k, double B)
 	{
-		if (sigma == 0)
+		/*if (sigma == 0)
 		{
 			return k;
 		}
@@ -178,12 +178,12 @@ namespace prcr
 		double a = 0.5 * (k -mu) * (erf((k - mu) / (sqrt(2) * stddev)) - erf(-mu / (sqrt(2) * stddev)));
 		double b = stddev / sqrt(2 * M_PI) * (exp(-(mu * mu) / (2 * stddev * stddev)) - exp(-(k - mu) * (k - mu) / (2 * stddev * stddev)));
                 //std::cout << a << "and" << b << std::endl;
-		return  a - b;
+		return  a - b;*/
 			
 	
 
 
-	/*if (sigma == 0)
+	if (sigma == 0)
 	{
 		return k;
 	}
@@ -192,7 +192,7 @@ namespace prcr
 		return k - mu;
 	else
 		return 0;
-	*/
+	
 	}
 
 	__host__ double Compute_P_corridor_single_step(double rate, double sigma, int m, double T, double B)

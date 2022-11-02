@@ -213,9 +213,9 @@ int main(int argc, char** argv)
 
     printf("\r");
     printf("\t\t\t\t\t");
+    double vett[18] = {0.6, 0.6125, 0.625, 0.6375, 0.65, 0.6625, 0.675, 0.682689, 0.6875, 0.7, 0.7125, 0.725, 0.7375, 0.75, 0.7625, 0.775, 0.7875, 0.8};
     
-    
-    for(double k =0.7250; k < 0.800001 ; k+=0.0125)
+    for(int i = 0; i < 19; i++)
     {
     using namespace prcr;
 
@@ -231,7 +231,7 @@ int main(int argc, char** argv)
     std::string filename = "./data/infile_puntiC.txt";
     Pricer_args* prcr_args = new Pricer_args;
     ReadInputOption(filename, prcr_args);
-    prcr_args->contract_args.K=k;	
+    prcr_args->contract_args.K=vett[i];	double k = vett[i];
     //if(m == 0)
 	//prcr_args->schedule_args.dim = 2;
     size_t NBLOCKS = prcr_args->dev_opts.N_blocks;
