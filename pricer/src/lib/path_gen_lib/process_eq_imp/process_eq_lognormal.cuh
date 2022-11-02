@@ -32,11 +32,6 @@ namespace prcr
                 double delta_t);
       
       
-      /*HD virtual Equity_prices* Get_new_prices(
-                Equity_prices * eq_prices_in,
-                double w,
-                double delta_t
-              );*/
 
     HD void Set_to_approximate_solution(){_exact_solution = false;}
     HD void Set_to_exact_solution()      {_exact_solution = true; }
