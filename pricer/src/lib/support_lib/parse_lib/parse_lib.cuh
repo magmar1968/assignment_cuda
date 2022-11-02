@@ -137,6 +137,7 @@ namespace prcr
 
     struct Stc_pr_args
     {
+        char proc_type[16];
         bool exact;
         size_t l;
     };

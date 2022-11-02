@@ -150,9 +150,12 @@ namespace prcr
         }
 
         //-----------------------------------------------------------------------------------------------------
-        // stocastic process options 
+        // stocastic process options
+        std::string process_type;
+        status = status && fileGetOptionValue<std::string>(filename, "#proc_type", &process_type); 
         status = status && fileGetOptionValue<bool>(filename, "#pr_exact",&prcr_args->stc_pr_args.exact);
         status = status && fileGetOptionValue<size_t>(filename,"#l",&prcr_args->stc_pr_args.l);
+        strcpy(prcr_args->stc_pr_args.proc_type,process_type.c_str());
                 
         return status;
     }
