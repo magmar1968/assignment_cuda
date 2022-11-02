@@ -3,8 +3,8 @@
 
 
 #define MAX_M  105
-#define MIN_M  10
-#define M_STEP 5
+#define MIN_M  9
+#define M_STEP 3
 
 
 void __host__ run_device(const prcr::Pricer_args* prcr_args, const uint *, const uint * );
@@ -234,7 +234,7 @@ int main(int argc, char** argv)
             << "," << time_gpu 
             << "," << g << "\n";
        
-        std::cout << "currently at: " << double(m)/double(MAX_M) * 100 << "% " << "\t\r" << std::flush;
+        std::cout << "currently at:" << double(m)/double(MAX_M) * 100 << "% " << std::endl;
         m_cont ++;
     }
     delete[](m_array);
