@@ -230,8 +230,8 @@ simulate_generic(size_t index,
     prcr::Option_pricer_montecarlo pricer(&contr_opt, process, _N);
 
 
-    res->p_off=pricer.Get_price();
-    res->p_off2=pricer.Get_price_square();
+    res[index].p_off=pricer.Get_price();
+    res[index].p_off2=pricer.Get_price_square();
     delete(process);
 }
 
@@ -276,11 +276,11 @@ int main(int argc, char** argv)
     for (size_t m = MIN_M; m < MAX_M; m+=M_STEP){
         m_array[m_cont] = m;
     
-        //simulate
+        // simulate
         cudaSetDevice(1);
         cudaDeviceSetLimit(cudaLimitMallocHeapSize, 80000000);
         strcpy(prcr_args->stc_pr_args.proc_type, "lognormal");
-        run_device(prcr_args,seeds,&m_array[m_cont],results_lognorm);
+        simulate_host(prcr_args,seeds,&m_array[m_cont],results_lognorm);
 
         cudaSetDevice(2);
         cudaDeviceSetLimit(cudaLimitMallocHeapSize,80000000);
