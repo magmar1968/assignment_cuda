@@ -1,4 +1,6 @@
-#k = 0.5
+#sigma = 0.3, yield_rate = 0.0015, 20 fixing dates, K = 0.5, Noz = 1, NBLOCKS = 128, TPB = 512, N_simulations (per thread) = 15k, processo esatto. Di seguito: B, price, error
+#al variare di B, osserviamo prezzo e errore MC
+#B, prezzo, errore_MC
 0,0.5,0
 0.0375,0.470102,1.21457e-06
 0.075,0.440247,1.69043e-06
