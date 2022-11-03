@@ -263,7 +263,7 @@ int main(int argc, char** argv)
     bool status = true;
 
     std::string filename_output;
-    filename_output = "./data/out_B5_GPU_m2_long_range512.txt";
+    filename_output = "./data/out_B5_GPU_m50.txt";
     std::ofstream fs;
     fs.open(filename_output, std::fstream::app);
 
