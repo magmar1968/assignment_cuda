@@ -188,8 +188,8 @@ int main(int argc, char** argv)
     srand(time(NULL));
 
 
-    std::string filename = "./data/infile_B5b_g.txt";
-    std::string outfilename  = "./data/outfile_B5b_g.csv";
+    std::string filename     = path_infile  + "infile_B5b.txt";
+    std::string outfilename  = path_outfile + "outfile_B5b_g.csv";
     
     Pricer_args* prcr_args = new Pricer_args;
     ReadInputOption(filename, prcr_args);
@@ -227,8 +227,7 @@ int main(int argc, char** argv)
          
         
         double g = time_cpu/time_gpu;
-        
-
+    
         ofs << m
             << "," << time_cpu
             << "," << time_gpu 
