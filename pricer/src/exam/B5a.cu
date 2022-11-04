@@ -216,7 +216,9 @@ int main(int argc, char** argv)
     printf("\t\t\t\t\t");
     
     size_t N_m_values = 4;
-    int m_values[N_m_values] = {2,5,100,200};
+    int m_values[N_m_values];
+    m_values[0] = 2; m_values[1] = 5;
+    m_values[3] = 100; m_values[4] = 200;
 
     for(size_t i = 0; i < N_m_values; ++i)
     {
