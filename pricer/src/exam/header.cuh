@@ -38,5 +38,6 @@
 
 
 
-
+std::string path_infile = "./data/infile_exam";
+std::string path_outfile = "./data/outfile_exam";
 
