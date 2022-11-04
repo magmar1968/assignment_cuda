@@ -210,8 +210,8 @@ int main(int argc, char** argv)
     srand(time(NULL));
 
 
-    std::string filename = "./data/infile_B3a.txt";
-    std::string outfilename  = "./data/outfile_B3a.csv";
+    std::string filename = path_infile + "infile_B3a.txt";
+    std::string outfilename  = path_outfile + "outfile_B3a.csv";
     
     Pricer_args* prcr_args = new Pricer_args;
     ReadInputOption(filename, prcr_args);
