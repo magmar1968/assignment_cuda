@@ -2,7 +2,7 @@
 #include <iomanip>
 
 
-#define MAX_M  120
+#define MAX_M  102
 #define MIN_M  5
 
 struct Result
@@ -224,8 +224,9 @@ int main(int argc, char** argv)
     srand(time(NULL));
     uint* seeds = new uint[4 * NBLOCKS * TPB];
 
-
-    std::fstream ofs(outfilename.c_str(),std::fstream::out);
+    std::ofstream ofs;
+    ofs.open(outfilename, std::fstream::app);
+    //std::fstream ofs(outfilename.c_str(),std::fstream::out);
     ofs << "m,exact_result,exact_error,approx_result,approx_erro\n";
 
     for (size_t m = MIN_M; m < MAX_M; m+=5){
