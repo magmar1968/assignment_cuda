@@ -110,7 +110,7 @@ namespace prcr
         status = status && fileGetOptionValue<size_t>(filename, "#m",&steps);
 
         prcr_args->schedule_args.T = T;        
-        prcr_args->schedule_args.dim = steps; //devi considerare anche lo 0
+        prcr_args->schedule_args.dim = steps+1; //devi considerare anche lo 0
         prcr_args->schedule_args.t_ref = 0.; //non ha senso fare altrimenti
         prcr_args->schedule_args.deltat = T/ static_cast<double>(steps);
 
@@ -151,12 +151,12 @@ namespace prcr
 
         //-----------------------------------------------------------------------------------------------------
         // stocastic process options
-        std::string process_type;
-        status = status && fileGetOptionValue<std::string>(filename, "#proc_type", &process_type); 
+        char process_type;
+        status = status && fileGetOptionValue<char>(filename, "#proc_type", &process_type); 
         status = status && fileGetOptionValue<bool>(filename, "#pr_exact",&prcr_args->stc_pr_args.exact);
         status = status && fileGetOptionValue<size_t>(filename,"#l",&prcr_args->stc_pr_args.l);
-        strcpy(prcr_args->stc_pr_args.proc_type,process_type.c_str());
-                
+        //strcpy(prcr_args->stc_pr_args.proc_type,process_type.c_str());
+                 prcr_args->stc_pr_args.proc_type = process_type;        
         return status;
     }
 }

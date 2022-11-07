@@ -13,11 +13,10 @@
 
 !both the following option must be filled even if the CPU option is the only one
 !setted to true
-#N_blocks  120 !N of blocks to use for the computation. 
-#N_threads 256 !N of thread per block. 
+#N_blocks  960 !N of blocks to use for the computation. 
+#N_threads 32  !N of thread per block. 
 
-#N_simulations 400
-
+#N_simulations 2500
 !#yc_structured !decomment if you'd like to introduce a structured yield curve
 !#yc_rates
 !#yc_times 
@@ -26,7 +25,7 @@
 
 #eq_descr_dy         0.
 #yc_rate             0.0015
-#volatility          0.15 !volatility of the pricer
+#volatility          0.30 !volatility of the pricer
 
 
 !starting conditions
@@ -37,7 +36,7 @@
 !contract option input
 #option_type vanilla
 #contract_type C  !put C for a call contract or P for a put contract
-#strike_price 20
+#strike_price 80
 
 !decomment for corridor option
 !#B    !0, 0.25, 0.5, 0.75, 1, 2, 4 <- possible values

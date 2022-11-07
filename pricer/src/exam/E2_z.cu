@@ -3,8 +3,8 @@
 
 
 #define MAX_M  105
-#define MIN_M  9
-#define M_STEP 3
+#define MIN_M  5
+#define M_STEP 5
 
 struct MC_result
 {
@@ -140,7 +140,7 @@ kernel(const prcr::Pricer_args* prcr_args, const uint * dev_seeds, uint * dev_m,
     Schedule schedule(
         0.,
         prcr_args->schedule_args.T/double(*dev_m),
-        *dev_m);
+        *dev_m+1);
 
     simulate_device(prcr_args, &starting_point, &schedule,dev_seeds,dev_res);
 
@@ -167,7 +167,7 @@ simulate_host(const prcr::Pricer_args* prcr_args, const uint * host_seeds, const
     Schedule * schedule = new Schedule(
         0.,
         prcr_args->schedule_args.T/double(*host_m),
-        *host_m);
+        *host_m+1);
 
 
     for (int index = 0; index < NBLOCKS * TPB; ++index)
@@ -215,10 +215,12 @@ simulate_generic(size_t index,
 
 
     prcr::Process * process = NULL;
-    if(prcr_args->stc_pr_args.proc_type == "lognormal"){
+    if(prcr_args->stc_pr_args.proc_type == 'l'){
         process = new prcr::Process_eq_lognormal(&gnr_in, prcr_args->stc_pr_args.exact);
+        
     }else{
         process = new prcr::Process_eq_binomial(&gnr_in);
+        
     }
 
 
@@ -247,7 +249,7 @@ int main(int argc, char** argv)
 
 
     std::string filename = "./data/infile_E2_binom.txt";
-    std::string outfilename  = "./data/outfile_E2_binom.csv";
+    std::string outfilename  = "./data/outfile_E2_binom_v2.csv";
     
     Pricer_args* prcr_args = new Pricer_args;
     ReadInputOption(filename, prcr_args);
@@ -279,12 +281,12 @@ int main(int argc, char** argv)
         // simulate
         cudaSetDevice(1);
         cudaDeviceSetLimit(cudaLimitMallocHeapSize, 80000000);
-        strcpy(prcr_args->stc_pr_args.proc_type, "lognormal");
+        prcr_args->stc_pr_args.proc_type= 'l';
         simulate_host(prcr_args,seeds,&m_array[m_cont],results_lognorm);
 
         cudaSetDevice(2);
         cudaDeviceSetLimit(cudaLimitMallocHeapSize,80000000);
-        strcpy(prcr_args->stc_pr_args.proc_type, "binomial");
+        prcr_args->stc_pr_args.proc_type= 'b';
         run_device(prcr_args,seeds,&m_array[m_cont],results_binom);
 
         MC_result mc_result_log,mc_result_bin;
