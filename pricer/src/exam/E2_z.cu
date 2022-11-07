@@ -265,8 +265,8 @@ int main(int argc, char** argv)
 
 
 
-    std::fstream ofs(outfilename.c_str(),std::fstream::out);
-    ofs << "m,p_off_lognorm,MC_err_lognorm,p_off_binom,MC_error_binom\n";
+    //std::fstream ofs(outfilename.c_str(),std::fstream::out);
+    //ofs << "m,p_off_lognorm,MC_err_lognorm,p_off_binom,MC_error_binom\n";
 
     
     uint * m_array = new uint[MAX_M];
@@ -277,7 +277,8 @@ int main(int argc, char** argv)
     
     for (size_t m = MIN_M; m < MAX_M; m+=M_STEP){
         m_array[m_cont] = m;
-    
+    	std::ofstream ofs;
+        ofs.open(outfilename, std::fstream::app);
         // simulate
         cudaSetDevice(1);
         cudaDeviceSetLimit(cudaLimitMallocHeapSize, 80000000);
@@ -302,7 +303,8 @@ int main(int argc, char** argv)
       
         std::cout << "currently at:" << double(m)/double(MAX_M) * 100 << "% " << std::endl;
         m_cont ++;
+        ofs.close();
     }
     delete[](m_array);
-    ofs.close();
+    //ofs.close();
 }
