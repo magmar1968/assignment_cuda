@@ -3,7 +3,7 @@
 
 
 #define MAX_M  105
-#define MIN_M  5
+#define MIN_M  90
 #define M_STEP 5
 
 struct MC_result
