@@ -211,7 +211,7 @@ int main(int argc, char** argv)
 
 
     std::string filename = path_infile + "infile_B3a.txt";
-    std::string outfilename  = path_outfile + "outfile_B3a.csv";
+    std::string outfilename  = path_outfile + "outfile_B3a_v2.csv";
     
     Pricer_args* prcr_args = new Pricer_args;
     ReadInputOption(filename, prcr_args);
@@ -223,8 +223,8 @@ int main(int argc, char** argv)
     //gen seeds 
     srand(time(NULL));
     uint* seeds = new uint[4 * NBLOCKS * TPB];
-
-
+    //std::ofstream ofs;
+    //ofs.open(outfilename,std::fstream::app);	
     std::fstream ofs(outfilename.c_str(),std::fstream::out);
     ofs << "m,exact_result,exact_error,approx_result,approx_erro\n";
 
