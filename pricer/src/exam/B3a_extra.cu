@@ -211,7 +211,7 @@ int main(int argc, char** argv)
 
 
     std::string filename = path_infile + "infile_B3a.txt";
-    std::string outfilename  = path_outfile + "outfile_B3a_v2.csv";
+    std::string outfilename  = path_outfile + "outfile_B3a_extra.csv";
     
     Pricer_args* prcr_args = new Pricer_args;
     ReadInputOption(filename, prcr_args);
