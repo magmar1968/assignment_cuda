@@ -2,9 +2,9 @@
 #include <iomanip>
 
 
-#define MAX_M  5
-#define MIN_M  1
-#define M_STEP 1
+#define MAX_M  180
+#define MIN_M  20
+#define M_STEP 5
 
 struct MC_result
 {
@@ -249,7 +249,7 @@ int main(int argc, char** argv)
 
 
     std::string filename = "./data/infile_E2_binom.txt";
-    std::string outfilename  = "./data/outfile_E2_binom_v2.csv";
+    std::string outfilename  = "./data/outfile_E2_binom_v4.csv";
     
     Pricer_args* prcr_args = new Pricer_args;
     ReadInputOption(filename, prcr_args);
