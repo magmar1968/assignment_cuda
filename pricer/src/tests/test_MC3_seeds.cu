@@ -271,7 +271,7 @@ int main(int argc, char** argv)
         }
         gpu_final_result /= double(NBLOCKS * TPB);
         double gpu_MC_error = compute_final_error(gpu_squares_sum, gpu_final_result, NBLOCKS * TPB*PPT);
-
+        std::cout << gpu_final_result << std::endl;
         double delta;
         delta = gpu_final_result - exact_value;
         if (abs(delta) > 3 * gpu_MC_error)

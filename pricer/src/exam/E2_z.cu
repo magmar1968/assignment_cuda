@@ -2,8 +2,8 @@
 #include <iomanip>
 
 
-#define MAX_M  180
-#define MIN_M  20
+#define MAX_M  160
+#define MIN_M  95
 #define M_STEP 5
 
 struct MC_result
