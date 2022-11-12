@@ -2,8 +2,8 @@
 #include <iomanip>
 
 
-#define MAX_M  120
-#define MIN_M  5
+#define MAX_M  305
+#define MIN_M  240
 
 struct Result
 {
@@ -225,7 +225,8 @@ int main(int argc, char** argv)
     uint* seeds = new uint[4 * NBLOCKS * TPB];
     //std::ofstream ofs;
     //ofs.open(outfilename,std::fstream::app);	
-    std::fstream ofs(outfilename.c_str(),std::fstream::out);
+    std::ofstream ofs;//(outfilename.c_str(),std::fstream::out);
+  //ofs.open(outfilename, std::fstream::app);
     ofs << "m,t_exact,t_approx,g\n";
 
     for (size_t m = MIN_M; m < MAX_M; m+=5){
@@ -234,6 +235,7 @@ int main(int argc, char** argv)
         else
             prcr_args->schedule_args.dim = m;
         
+  ofs.open(outfilename, std::fstream::app);
 
         //last_steps
         Result* exact_results = new Result[NBLOCKS * TPB];
@@ -276,10 +278,10 @@ int main(int argc, char** argv)
             << "," << time_exact
             << "," << time_approx
             << "," << time_approx/time_exact << "\n";
-       
+       ofs.close();
         delete[](exact_results);
         delete[](approx_results);
         std::cout << "currently at: " << double(m)/double(MAX_M) * 100 << "% " << "\t\r" << std::flush;
     }
-    ofs.close();
+//    ofs.close();
 }
